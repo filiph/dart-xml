@@ -1,4 +1,4 @@
-//   Copyright (c) 2012, John Evans & LUCA Studios LLC
+//   Copyright (c) 2012, John Evans
 //
 //   http://www.lucastudios.com/contact
 //   John: https://plus.google.com/u/0/115427174005651655317/about
@@ -20,7 +20,8 @@
 // Does not support DTD validation.
 // Does not support !ELEMENT constraints.
 // Does not support CDATA nodes (yet).
-
+// Does not yet support comment nodes.
+// See README.md for more info.
 
 #library('Xml');
 #source('XmlElement.dart');
@@ -32,28 +33,25 @@
 #source('XmlText.dart');
 #source('XmlAttribute.dart');
 #source('XmlDocument.dart');
+#source('XmlException.dart');
 
 
 /**
-* Utility class to parse XML. To get serialized [String], call
-* .toString() on any [XmlNode].
+* Utility class to work with XML data.
 */
 class XML{
 
   /**
-  * Returns a [XmlNode] tree representing the raw XML [String].
+  * Returns a [XmlElement] tree representing the raw XML [String].
   */
-  static XmlNode parse(String xml){
-    throw new NotImplementedException();
-  }
+  static XmlElement parse(String xml) => XmlParser._parse(xml);
 
   /**
   * Returns a stringified version of an [XmlNode] tree.
   * You can also call .toString() on any [XmlNode].
   */
-  static String stringify(XmlNode node){
-    return node.toString();
-  }
+  static String stringify(XmlNode node) => node.toString();
+
 }
 
 

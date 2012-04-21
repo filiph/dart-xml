@@ -1,42 +1,36 @@
-#import('../Xml/Xml.dart');
-
+#import('../xml.dart');
 
 void main() {
- 
+
   XmlElement test = new XmlElement('StackPanel',
     [new XmlElement('TextBlock',
        [
         new XmlAttribute('text', 'hello world!'),
         new XmlAttribute('fontSize', '12')
        ]),
-     new XmlElement('Border', 
+     new XmlElement('Border',
        [
-        new XmlElement('Image', 
+        new XmlElement('Image',
           [
            new XmlText('Now is the time for all good people to blah blah blah')
           ])
        ])
     ]);
-  
-  
-  var doc = new XmlDocument(test);
 
-  XmlTokenizer t = new XmlTokenizer(testTemplate);
-  
-  var tok = t.next();
+  print('\r\rOriginal Xml');
+  print(testTemplate);
 
-  print('Tokens');
-  while(tok != null){
-    print(tok);
-    tok = t.next();
+  try{
+    XmlElement newTest = XML.parse(testTemplate);
+    print('\r\rNew Xml');
+    print(newTest);
+  }catch (XmlException e){
+    print(e.toString());
   }
-  
-  print('\r\r Xml');
-  print(doc);
 }
 
 
-String get testTemplate() => 
+String get testTemplate() =>
 '''
 <stackpanel orientation="horizontal" horizontalAlignment="center">
   <resourcecollection>
@@ -117,7 +111,6 @@ String get testTemplate() =>
 
   </stackpanel>
   <stackpanel margin="0,0,0,10" width="700">
-    <!-- border.horizontalAlignment="stretch" isn't working properly here (textblock wont center), so setting width explicitely instead -->
     <textblock margin="0,10" fontsize="20" fontfamily="arial" text="Select a sample or design your own in the Input area below."></textblock>
     <stackpanel margin="0,0,10,0" orientation="horizontal">
       <textblock margin="0,10,0,0" text="Elements:" fontfamily="arial"></textblock>

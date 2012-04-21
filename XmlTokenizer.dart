@@ -1,4 +1,4 @@
-//   Copyright (c) 2012, John Evans & LUCA Studios LLC
+//   Copyright (c) 2012, John Evans
 //
 //   http://www.lucastudios.com/contact
 //   John: https://plus.google.com/u/0/115427174005651655317/about
@@ -21,7 +21,7 @@
 class XmlTokenizer {
   static final int TAB = 9;
   static final int NEW_LINE = 10;
-  static final int CARRIAGE_RETURN = 13; 
+  static final int CARRIAGE_RETURN = 13;
   static final int SPACE = 32;
   static final int QUOTE = 34;
   static final int SQUOTE = 39;
@@ -32,52 +32,60 @@ class XmlTokenizer {
   static final int EQ = 61; //=
   static final int Q = 63;  //?
   static final int B = 33;  //!
-  
+  static final int DASH = 45; //-
+
   final Queue<_XmlToken> _tq;
   final String _xml;
   int _length;
   int _i = 0;
-  
-  XmlTokenizer(this._xml) 
+
+  XmlTokenizer(this._xml)
   :
     _i = 0,
     _tq = new Queue<_XmlToken>()
   {
     _length = _xml.length;
   }
-  
-    
+
+
   _XmlToken next()
   {
-    void addToQueue(_XmlToken token) => _tq.addLast(token);
-    
+    void addToQueue(_XmlToken token){
+      token._location = _i;
+      _tq.addLast(token);
+    }
+
     _XmlToken getNextToken() =>  _tq.isEmpty() ? null : _tq.removeFirst();
-    
-    
+
+
     // Returns the first char in the list that appears ahead.
     int peekUntil(List chars){
       int z = _i;
-      
+
       while (z < _length && chars.indexOf(_xml.charCodeAt(z)) == -1){
         z++;
       }
-      
+
       return _xml.charCodeAt(z);
     }
-    
+
     // Peel off and return a token if there are any in the queue.
     if (!_tq.isEmpty()) return getNextToken();
-        
+
     while(_i < _length && isWhitespace(_xml.charCodeAt(_i)))
       {
         _i++;
       }
-    
+
     if (_i == _length) return null;
-    //print('char: $_i code: ${_xml.charCodeAt(_i)} ' + _xml.substring(_i, _i+1));
+  //print('char: $_i code: ${_xml.charCodeAt(_i)} ' + _xml.substring(_i, _i+1));
     final int char = _xml.charCodeAt(_i);
-    
+
     switch(char){
+      case DASH:
+        _i++;
+        addToQueue(new _XmlToken(_XmlToken.DASH));
+        break;
       case Q:
         _i++;
         addToQueue(new _XmlToken(_XmlToken.QUESTION));
@@ -116,29 +124,32 @@ class XmlTokenizer {
       case SQUOTE:
         _i++;
         addToQueue(new _XmlToken(_XmlToken.QUOTE));
+        // TODO ignore nested quotes until matching quote kind is
+        // found.
         break;
       default:
         StringBuffer s = new StringBuffer();
-        
+
         while(_i < _length && !isReserved(_xml.charCodeAt(_i))){
           s.add(_xml.substring(_i, _i + 1));
           _i++;
         }
-        
-        addToQueue(new _XmlToken.string(s.toString()));
+
+        addToQueue(new _XmlToken.string(s.toString().trim()));
         break;
     }
     return getNextToken();
   }
 
   static bool isReserved(int c){
-    return c == LT || c == GT || c == Q || c == B || c == COLON || c == SLASH || c == QUOTE || c == SQUOTE || c == EQ;
+    return c == LT || c == GT || c == Q || c == B || c == COLON || c == SLASH
+        || c == QUOTE || c == SQUOTE || c == EQ;
   }
-  
+
   static bool isWhitespace(int c) {
     return c == SPACE || c == TAB || c == NEW_LINE || c == CARRIAGE_RETURN;
   }
-  
+
 }
 
 class _XmlToken {
@@ -152,13 +163,15 @@ class _XmlToken {
   static final int EQ = 8;
   static final int QUOTE = 9;
   static final int IGNORE = 10;
-  
+  static final int DASH = 11;
+
   final int kind;
   final String _str;
-  
-  const _XmlToken._internal(this.kind, this._str);
- 
-  
+  int _location;
+
+  _XmlToken._internal(this.kind, this._str);
+
+
   factory _XmlToken.string(String s) {
     return new _XmlToken._internal(STRING, s);
   }
@@ -167,9 +180,11 @@ class _XmlToken {
     return new _XmlToken._internal(kind, '');
   }
 
-  
+
   String toString() {
     switch(kind){
+      case DASH:
+        return "(-)";
       case LT:
         return "(<)";
       case GT:
@@ -190,7 +205,33 @@ class _XmlToken {
         return '(")';
       case IGNORE:
         return 'INVALID()';
-            
+
+    }
+  }
+
+  String toStringLiteral() {
+    switch(kind){
+      case DASH:
+        return "-";
+      case GT:
+        return ">";
+      case QUESTION:
+        return "?";
+      case STRING:
+        return _str;
+      case BANG:
+        return "!";
+      case COLON:
+        return ":";
+      case SLASH:
+        return "/";
+      case EQ:
+        return "=";
+      case QUOTE:
+        return '"';
+      case IGNORE:
+        return 'INVALID()';
+
     }
   }
 }

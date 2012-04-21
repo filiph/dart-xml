@@ -15,15 +15,33 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-/**
-* Represents an attribute component of an [XmlNode].
-*/
-class XmlAttribute extends XmlNode
+class XmlException implements Exception
 {
-  final String name;
-  final String value;
+  final String msg;
+  final String debugXml;
+  final int errorLocation;
 
-  XmlAttribute(this.name, this.value)
+  const XmlException(this.msg)
   :
-    super(XmlNodeType.Attribute, const []);
+    debugXml = '',
+    errorLocation = 0;
+
+  const XmlException.withDebug(this.msg, this.debugXml, this.errorLocation);
+
+  String toString() {
+    if (debugXml == '') return 'Xml Exception: $msg';
+
+    StringBuffer s = new StringBuffer();
+    s.add('Xml Exception: $msg');
+    s.add('\r');
+
+    int bLoc = (errorLocation < 41) ? 0 : errorLocation - 40;
+    int aLoc = (errorLocation > debugXml.length - 41)
+        ? debugXml.length - 1
+        : errorLocation + 40;
+
+    s.add(debugXml.substring(bLoc, aLoc));
+    return s.toString();
+
+  }
 }

@@ -6,7 +6,7 @@ Dart Xml is a lightweight library for parsing and emitting xml.
 
 ### Parsing ###
     // Returns a strongly-typed XmlNode tree
-    XmlNode myXmlTree = Xml.parse(myXmlString);
+    XmlElement myXmlTree = Xml.parse(myXmlString);
 	
 ### Serialization ###
 	// Returns a stringified xml document from a given XmlNode tree
@@ -19,6 +19,8 @@ Dart Xml is a lightweight library for parsing and emitting xml.
 * Doesn't enforce DTD
 * Doesn't enforce any local schema declarations
 * Doesn't yet support namespaces
+* Nested quotes in attributes are not yet supported.
+* Comment nodes are not yet supported.
 	
 ## License ##
 Apache 2.0

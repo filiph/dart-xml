@@ -1,4 +1,4 @@
-//   Copyright (c) 2012, John Evans & LUCA Studios LLC
+//   Copyright (c) 2012, John Evans
 //
 //   http://www.lucastudios.com/contact
 //   John: https://plus.google.com/u/0/115427174005651655317/about
@@ -19,7 +19,7 @@
 * Emits a text representation of an [XmlNode] tree.
 */
 class XmlStringifier {
-  
+
   /**
   * Returns a text representation of the given [xmlNode] tree.
   */
@@ -28,7 +28,7 @@ class XmlStringifier {
     _stringifyInternal(s, xmlNode, 0);
     return s.toString();
   }
-  
+
   void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
       case XmlNodeType.Document:
@@ -44,7 +44,7 @@ class XmlStringifier {
         }else{
           b.add('>');
         }
-        
+
         if (n.dynamic.elements.length > 0){
           b.add('\r${_space(indent)}</${n.dynamic.tagName}>');
         }else{
@@ -60,7 +60,7 @@ class XmlStringifier {
         break;
     }
   }
-  
+
   String _space(int amount) {
    StringBuffer s = new StringBuffer();
    for (int i = 0; i < amount; i++){
@@ -68,5 +68,5 @@ class XmlStringifier {
    }
    return s.toString();
   }
-  
+
 }

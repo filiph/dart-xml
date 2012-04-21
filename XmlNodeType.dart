@@ -1,4 +1,4 @@
-//   Copyright (c) 2012, John Evans & LUCA Studios LLC
+//   Copyright (c) 2012, John Evans
 //
 //   http://www.lucastudios.com/contact
 //   John: https://plus.google.com/u/0/115427174005651655317/about
