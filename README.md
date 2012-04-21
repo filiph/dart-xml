@@ -31,7 +31,7 @@ XML trees can be created manually in code:
                new XmlText('The quick brown fox jumped over the lazy dog.')
               ])
            ])
-        ]);
+    ]);
 
 Though it's probably easier to let the parser do the work for you:
 
