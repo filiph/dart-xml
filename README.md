@@ -6,11 +6,11 @@ Dart Xml is a lightweight library for parsing and emitting xml.
 
 ### Parsing ###
     // Returns a strongly-typed XmlNode tree
-    XmlElement myXmlTree = Xml.parse(myXmlString);
+    XmlElement myXmlTree = XML.parse(myXmlString);
 	
 ### Serialization ###
 	// Returns a stringified xml document from a given XmlNode tree
-	String myXmlString = Xml.stringify(myXmlNode);
+	String myXmlString = XML.stringify(myXmlNode);
 	
 	// or...
 	String myXmlString = myXmlNode.toString();
