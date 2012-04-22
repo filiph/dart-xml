@@ -53,7 +53,6 @@ Though it's probably easier to let the parser do the work for you:
 * Doesn't enforce any local schema declarations
 * Doesn't yet support namespaces
 * Nested quotes in attributes are not yet supported.
-* Comment nodes are not yet supported.
 * XmlNodes are not yet queryable.
 	
 ## License ##

@@ -57,7 +57,6 @@ class XmlParser {
             //throw this error if at top level
             _assertKind(tok, _XmlToken.LT);
           }else{
-            print('text node');
             _processTextNode(t, tok._str);
             _processTag(t);
           }
@@ -73,9 +72,9 @@ class XmlParser {
   }
 
 
+  //TODO create and XMLComment object instead of just ignoring?
   _processComment(XmlTokenizer t){
     _XmlToken next = t.next();
-    print('enter comment processor');
 
     while (next.kind != _XmlToken.END_COMMENT){
 
@@ -89,7 +88,6 @@ class XmlParser {
         throw const XmlException('Unexpected end of file.');
       }
     }
-    print('left comment processor');
   }
 
   _processTag(XmlTokenizer t){

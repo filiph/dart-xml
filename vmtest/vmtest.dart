@@ -34,16 +34,21 @@ void main() {
 
 String get testSimple() =>
 '''
+<!-- comment -->
 <StackPanel>
    <TextBlock text="hello world!" fontSize="12"></TextBlock>
    text node
+   <!-- comment -->
    <Border>
+      <!-- comment -->
       <Image>
          Now is the time for all good people to blah blah blah
       </Image>
+      <!-- comment -->
    </Border>
  another text node
 </StackPanel>
+<!-- comment -->
 ''';
 
 String get testTemplate() =>
