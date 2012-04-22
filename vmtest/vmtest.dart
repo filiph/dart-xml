@@ -18,10 +18,12 @@ void main() {
     ]);
 
   print('\r\rOriginal Xml');
-  print(testTemplate);
+  //print(testTemplate);
+  print(testSimple);
 
   try{
-    XmlElement newTest = XML.parse(testTemplate);
+   // XmlElement newTest = XML.parse(testTemplate);
+    XmlElement newTest = XML.parse(testSimple);
     print('\r\rNew Xml');
     print(newTest);
   }catch (XmlException e){
@@ -29,6 +31,20 @@ void main() {
   }
 }
 
+
+String get testSimple() =>
+'''
+<StackPanel>
+   <TextBlock text="hello world!" fontSize="12"></TextBlock>
+   text node
+   <Border>
+      <Image>
+         Now is the time for all good people to blah blah blah
+      </Image>
+   </Border>
+ another text node
+</StackPanel>
+''';
 
 String get testTemplate() =>
 '''

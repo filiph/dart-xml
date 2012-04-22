@@ -69,6 +69,20 @@ class XmlTokenizer {
       return _xml.charCodeAt(z);
     }
 
+
+    // Returns the index of the last char of a given word, if found from
+    // the current index onward; otherwise returns -1;
+    int matchWord(String word){
+      int z = _i;
+
+      for(int ii = 0; ii < word.length; ii++){
+        if(_xml.charCodeAt(z) != word.charCodeAt(ii)) return -1;
+        z++;
+      }
+
+      return z - 1;
+    }
+
     // Peel off and return a token if there are any in the queue.
     if (!_tq.isEmpty()) return getNextToken();
 
@@ -83,8 +97,11 @@ class XmlTokenizer {
 
     switch(char){
       case DASH:
-        _i++;
-        addToQueue(new _XmlToken(_XmlToken.DASH));
+        var m = matchWord('-->');
+        if (m != -1){
+          addToQueue(new _XmlToken(_XmlToken.END_COMMENT));
+          _i = m + 1;
+        }
         break;
       case Q:
         _i++;
@@ -103,14 +120,23 @@ class XmlTokenizer {
         addToQueue(new _XmlToken(_XmlToken.SLASH));
         break;
       case LT:
-        _i++;
-        addToQueue(new _XmlToken(_XmlToken.LT));
-        int c = peekUntil([SPACE, GT]);
-        if (c == SPACE){
-          var _ii = _i;
-          _i = _xml.indexOf(' ', _ii) + 1;
-          addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+        var m = matchWord('<!--');
+        if (m != -1){
+          //start comment
+          addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
+          _i = m + 1;
+        }else{
+          _i++;
+          addToQueue(new _XmlToken(_XmlToken.LT));
+          int c = peekUntil([SPACE, GT]);
+          if (c == SPACE){
+            var _ii = _i;
+            _i = _xml.indexOf(' ', _ii) + 1;
+            addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+          }
         }
+
+
         break;
       case GT:
         _i++;
@@ -143,7 +169,7 @@ class XmlTokenizer {
 
   static bool isReserved(int c){
     return c == LT || c == GT || c == Q || c == B || c == COLON || c == SLASH
-        || c == QUOTE || c == SQUOTE || c == EQ;
+        || c == QUOTE || c == SQUOTE || c == EQ || c == DASH;
   }
 
   static bool isWhitespace(int c) {
@@ -164,6 +190,8 @@ class _XmlToken {
   static final int QUOTE = 9;
   static final int IGNORE = 10;
   static final int DASH = 11;
+  static final int START_COMMENT = 12;
+  static final int END_COMMENT = 13;
 
   final int kind;
   final String _str;
@@ -203,6 +231,10 @@ class _XmlToken {
         return "(=)";
       case QUOTE:
         return '(")';
+      case START_COMMENT:
+        return '(<!--)';
+      case END_COMMENT:
+        return '(-->)';
       case IGNORE:
         return 'INVALID()';
 
@@ -211,8 +243,6 @@ class _XmlToken {
 
   String toStringLiteral() {
     switch(kind){
-      case DASH:
-        return "-";
       case GT:
         return ">";
       case QUESTION:

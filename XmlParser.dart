@@ -42,25 +42,58 @@ class XmlParser {
     _XmlToken tok = t.next();
 
     while(tok != null){
-      _assertKind(tok, _XmlToken.LT);
 
-      _processTag(t);
-
-      // finished.
-      if (_scopes.isEmpty()) return;
-
+      switch(tok.kind){
+        case _XmlToken.START_COMMENT:
+          _processComment(t);
+          break;
+        case _XmlToken.LT:
+          _processTag(t);
+          // finished.
+          if (_scopes.isEmpty()) return;
+          break;
+        case _XmlToken.STRING:
+          if (_scopes.isEmpty()){
+            //throw this error if at top level
+            _assertKind(tok, _XmlToken.LT);
+          }else{
+            print('text node');
+            _processTextNode(t, tok._str);
+            _processTag(t);
+          }
+          break;
+      }
       tok = t.next();
     }
+
+    if (!_scopes.isEmpty()){
+      throw const XmlException('Unexpected end of file.  Not all tags were'
+        ' closed.');
+    }
+  }
+
+
+  _processComment(XmlTokenizer t){
+    _XmlToken next = t.next();
+    print('enter comment processor');
+
+    while (next.kind != _XmlToken.END_COMMENT){
+
+      if (next.kind == _XmlToken.START_COMMENT){
+        throw new XmlException.withDebug('Nested comments not allowed.',
+          _xml, next._location);
+      }
+      next = t.next();
+
+      if (next == null){
+        throw const XmlException('Unexpected end of file.');
+      }
+    }
+    print('left comment processor');
   }
 
   _processTag(XmlTokenizer t){
     _XmlToken next = t.next();
-
-// TODO handle comment nodes
-//    if (next.kind == _XmlToken.BANG){
-//      // possible comment node
-//      return;
-//    }
 
     if (next.kind == _XmlToken.SLASH){
       // this is a close tag
@@ -115,7 +148,11 @@ class XmlParser {
             _processTag(t);
           }else if (next.kind == _XmlToken.LT){
             _processTag(t);
-          }else{
+          }else if (next.kind == _XmlToken.START_COMMENT){
+            _processComment(t);
+          }
+          else
+          {
             throw new XmlException('Unexpected item "${next}" found.');
           }
 
@@ -150,8 +187,11 @@ class XmlParser {
 
     while(next.kind != _XmlToken.LT){
 
-      s.add(next.toStringLiteral());
-
+      if (next.kind == _XmlToken.START_COMMENT){
+        _processComment(t);
+      }else{
+        s.add(next.toStringLiteral());
+      }
       next = t.next();
 
       if (next == null){
