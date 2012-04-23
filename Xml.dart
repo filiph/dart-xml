@@ -18,7 +18,6 @@
 
 // A lightweight, NOT standards-compliant xml parser and emitter.
 // Does not support DTD or WSD validation.
-// Does not support CDATA nodes (yet).
 // See README.md for more info.
 
 #library('Xml');
