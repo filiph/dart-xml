@@ -1,7 +1,7 @@
 ## Dart Xml ##
 Dart Xml is a lightweight library for parsing and emitting xml.
 
-## Lightweight Means Exactly That ##
+## About "Lightweight" ##
 Many programmatic scenarios concerning XML deal with serialization and
 deserialization of data (usually for transmission between services), 
 and the querying of said data.  Typically these data are XML fragments 

@@ -35,6 +35,9 @@ class XmlTokenizer {
   static final int DASH = 45; //-
   static final int RBRACK = 93; //]
 
+  static final List _reserved = const [LT, GT, Q, B, COLON, SLASH, QUOTE,
+                                      SQUOTE, EQ, DASH, RBRACK];
+
   final Queue<_XmlToken> _tq;
   final String _xml;
   int _length;
@@ -203,11 +206,15 @@ class XmlTokenizer {
     return getNextToken();
   }
 
-  static bool isReserved(int c){
-    return c == LT || c == GT || c == Q || c == B || c == COLON || c == SLASH
-        || c == QUOTE || c == SQUOTE || c == EQ || c == DASH || c == RBRACK;
-  }
+  /**
+  * Returns true if the charCode is one of the special reserved
+  * charCodes
+  */
+  static bool isReserved(int c) => _reserved.indexOf(c) > -1;
 
+  /**
+  * Returns true if the charCode is considered to be whitespace.
+  */
   static bool isWhitespace(int c) {
     return c == SPACE || c == TAB || c == NEW_LINE || c == CARRIAGE_RETURN;
   }
