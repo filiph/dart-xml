@@ -21,7 +21,7 @@ class XmlProcessingInstruction extends XmlNode {
 
   XmlProcessingInstruction(this.text)
   :
-    super(XmlNodeType.PI, const []);
+    super(XmlNodeType.PI);
 
   String toString() => '<?\r$text\r?>';
 }

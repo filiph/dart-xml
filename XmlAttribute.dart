@@ -16,7 +16,7 @@
 //   limitations under the License.
 
 /**
-* Represents an attribute component of an [XmlNode].
+* Represents an attribute component of an XML element.
 */
 class XmlAttribute extends XmlNode
 {
@@ -25,7 +25,7 @@ class XmlAttribute extends XmlNode
 
   XmlAttribute(this.name, this.value)
   :
-    super(XmlNodeType.Attribute, const []);
+    super(XmlNodeType.Attribute);
 
   String toString() => ' $name="$value"';
 }

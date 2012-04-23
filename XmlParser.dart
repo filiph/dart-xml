@@ -154,9 +154,9 @@ class XmlParser {
       next = t.next();
       _assertKind(next, _XmlToken.STRING);
 
-      if (_peek().tagName != next._str){
+      if (_peek().name != next._str){
         throw new XmlException.withDebug(
-        'Expected closing tag "${_peek().tagName}"'
+        'Expected closing tag "${_peek().name}"'
         ' but found "${next._str}" instead.', _xml, next._location);
       }
 
@@ -268,7 +268,8 @@ class XmlParser {
     XmlElement el = _peek();
 
     void setAttribute(String name, String value){
-      el.addChild(new XmlAttribute(name, value));
+      //TODO validate well-formed attribute names
+      _peek().attributes[name] = value;
     }
 
     _XmlToken next = t.next();

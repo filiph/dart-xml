@@ -17,14 +17,18 @@
 
 
 /**
-* Represents an element of an [XmlNode].
+* Represents an element node of XML.
 */
 class XmlElement extends XmlNode {
-  final String tagName;
+  final String name;
+  final List<XmlNode> _children;
+  final Map<String, String> _attributes;
 
-  XmlElement(this.tagName, [List<XmlNode> elements = const []])
+  XmlElement(this.name, [List<XmlNode> elements = const []])
   :
-    super(XmlNodeType.Element, new List<XmlNode>())
+    _children = [],
+    _attributes = {},
+    super(XmlNodeType.Element)
   {
     addChildren(elements);
   }
@@ -39,6 +43,12 @@ class XmlElement extends XmlNode {
   }
 
   void addChild(XmlNode element){
+    //shunt any XmlAttributes into the map
+    if (element is XmlAttribute){
+      attributes[element.dynamic.name] = element.dynamic.value;
+      return;
+    }
+
     element.parent = this;
     _children.add(element);
   }
@@ -48,6 +58,70 @@ class XmlElement extends XmlNode {
       elements.forEach((XmlNode e) => addChild(e));
     }
   }
+
+  List<XmlNode> queryAttributes(Map<String, String> nameValuePairs){
+
+  }
+
+  /**
+  * Returns the first node in the tree that matches the given [tagName].
+  */
+  List<XmlNode> query(String tagName){
+    var list = [];
+
+    _queryInternal(tagName, list);
+
+    return list;
+  }
+
+  _queryInternal(String tagName, List list){
+
+    if (this.name == tagName){
+      list.add(this);
+      return;
+    }else{
+      if (hasChildren){
+        children
+          .filter((el) => el is XmlElement)
+          .forEach((el){
+            if (!list.isEmpty()) return;
+            el._queryInternal(tagName, list);
+          });
+      }
+    }
+  }
+
+  /**
+  * Returns a [List] of all nodes in the tree that match the given
+  * [tagName].
+  */
+  List<XmlNode> queryAll(String tagName){
+    var list = [];
+
+    _queryAllInternal(tagName, list);
+
+    return list;
+  }
+
+  _queryAllInternal(String tagName, List list){
+    if (this.name == tagName){
+      list.add(this);
+    }
+
+    if (hasChildren){
+      children
+      .filter((el) => el is XmlElement)
+      .forEach((el){
+        el._queryInternal(tagName, list);
+      });
+    }
+  }
+
+  Map<String, String> get attributes() => _attributes;
+
+  Collection<XmlNode> get children() => _children;
+
+  bool get hasChildren() => !_children.isEmpty();
 }
 
 

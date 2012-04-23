@@ -18,52 +18,25 @@
 
 /**
 * Represents a base class for XML nodes.  This node is essentially
-* read-only.  Use [XmlElement] for manipulating with attributes
+* read-only.  Use [XmlElement] for manipulating attributes
 * and heirarchies.
 */
 class XmlNode {
-  final List<XmlNode> _children;
   final XmlNodeType type;
   XmlElement parent;
 
-  XmlNode(this.type, this._children);
+  XmlNode(this.type);
 
   void remove(){
+    if (parent == null) return;
+
     var i = parent._children.indexOf(this);
     if (i == -1){
-      throw const Exception('Element not found.');
+      throw const XmlException('Element not found.');
     }
 
     parent._children.removeRange(i, 1);
   }
-
-
-  List<XmlNode> queryAttributes(Map<String, String> nameValuePairs){
-
-  }
-
-  /**
-  * Returns the first node in the tree that matches the given [queryString].
-  */
-  List<XmlNode> queryFirst(String queryString){
-
-  }
-
-  /**
-  * Returns a [List] of all nodes in the tree that match the given
-  * [queryString].
-  */
-  List<XmlNode> query(String queryString){
-
-  }
-
-  Collection<XmlNode> get attributes()
-  => _children == null ? [] : _children.filter((el) => el is XmlAttribute);
-
-  Collection<XmlNode> get elements()
-  => _children == null ? [] : _children.filter((el) => el is! XmlAttribute);
-
-  bool hasChildNodes() => _children != null && !_children.isEmpty();
 
   /// Returns a text representation of the XmlNode tree.
   String toString() {
@@ -75,21 +48,27 @@ class XmlNode {
   static void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
       case XmlNodeType.Element:
-        b.add('\r${_space(indent)}<${n.dynamic.tagName}');
-        if (n.hasChildNodes()){
-          n.dynamic.attributes.forEach((a) =>
-              _stringifyInternal(b, a, indent));
+        b.add('\r${_space(indent)}<${n.dynamic.name}');
+
+        if (n.dynamic.attributes.length > 0){
+
+          n.dynamic.attributes.forEach((k, v) =>
+              b.add(new XmlAttribute(k, v).toString()));
+
           b.add('>');
-          n.dynamic.elements.forEach((e) =>
-              _stringifyInternal(b, e, indent + 3));
         }else{
           b.add('>');
         }
 
-        if (n.dynamic.elements.length > 0){
-          b.add('\r${_space(indent)}</${n.dynamic.tagName}>');
+        if (n.dynamic.hasChildren){
+          n.dynamic.children.forEach((e) =>
+              _stringifyInternal(b, e, indent + 3));
+        }
+
+        if (n.dynamic.children.length > 0){
+          b.add('\r${_space(indent)}</${n.dynamic.name}>');
         }else{
-          b.add('</${n.dynamic.tagName}>');
+          b.add('</${n.dynamic.name}>');
         }
 
         break;

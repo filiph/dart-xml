@@ -26,6 +26,7 @@ void main() {
     XmlElement newTest = XML.parse(testSimple);
     print('\r\rNew Xml');
     print(newTest);
+
   }catch (XmlException e){
     print(e.toString());
   }
@@ -37,6 +38,7 @@ String get testSimple() =>
 <!-- comment -->
 <StackPanel>
 <?hello world?>
+   <TextBlock text='hello' />
    <TextBlock text="hello world!" fontSize="12"></TextBlock>
    text node
    <Border>

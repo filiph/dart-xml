@@ -16,7 +16,7 @@
 //   limitations under the License.
 
 /**
-* Represents a text node component of an [XmlNode].
+* Represents a text node component of XML.
 */
 class XmlText extends XmlNode
 {
@@ -24,7 +24,7 @@ class XmlText extends XmlNode
 
   XmlText(this.text)
   :
-    super(XmlNodeType.Text, const []);
+    super(XmlNodeType.Text);
 
   String toString() => text;
 }

@@ -24,7 +24,7 @@ class XmlCDATA extends XmlNode
 
   XmlCDATA(this.text)
   :
-    super(XmlNodeType.CDATA, const []);
+    super(XmlNodeType.CDATA);
 
   String toString() =>'<![CDATA[\r$text\r]]>';
 }
