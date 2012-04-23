@@ -9,7 +9,7 @@ void main() {
 
   var parsed = XML.parse(testXml);
 
-  group('syntax tests', (){
+  group('parser', (){
     test('no fidelity lost during successive parse/stringify', (){
       var str1 = parsed.toString();
       var parsed2 = XML.parse(str1);
@@ -92,7 +92,7 @@ void main() {
     });
   });
 
-  group('query tests', (){
+  group('query', (){
     test('single tag name query succeeds', (){
       var result = parsed.query('TextBlock');
       Expect.equals(1, result.length);
@@ -112,14 +112,14 @@ void main() {
       Expect.equals('hello world!', result[0].attributes['text']);
     });
 
-    test('query all on tag name succeeds', (){
+    test('all on tag name succeeds', (){
       var result = parsed.queryAll('TextBlock');
       Expect.equals(2, result.length);
       Expect.equals('hello', result[0].attributes['text']);
       Expect.equals('hello world!', result[1].attributes['text']);
     });
 
-    test('query all on XmlNodeType succeeds', (){
+    test('all on XmlNodeType succeeds', (){
       var result = parsed.queryAll(XmlNodeType.PI);
       Expect.equals(2, result.length);
       Expect.isTrue(result[0] is XmlProcessingInstruction);
@@ -128,7 +128,7 @@ void main() {
       Expect.equals('PI entry #2', result[1].text);
     });
 
-    test('query all on attributes succeeds', (){
+    test('all on attributes succeeds', (){
       var result = parsed.queryAll({'fontSize':'12'});
       Expect.equals(2, result.length);
       Expect.isTrue(result[0] is XmlElement);
