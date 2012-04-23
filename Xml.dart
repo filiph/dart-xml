@@ -24,12 +24,10 @@
 #source('XmlElement.dart');
 #source('XmlParser.dart');
 #source('XmlTokenizer.dart');
-#source('XmlStringifier.dart');
 #source('XmlNode.dart');
 #source('XmlNodeType.dart');
 #source('XmlText.dart');
 #source('XmlAttribute.dart');
-#source('XmlDocument.dart');
 #source('XmlException.dart');
 #source('XmlCDATA.dart');
 #source('XmlProcessingInstruction.dart');

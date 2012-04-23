@@ -16,24 +16,102 @@
 //   limitations under the License.
 
 
-/** Represents a base node of an XML tree */
+/**
+* Represents a base class for XML nodes.  This node is essentially
+* read-only.  Use [XmlElement] for working with attributes and heirarchies.
+*/
 class XmlNode {
-  final List<XmlNode> children;
+  final List<XmlNode> _children;
   final XmlNodeType type;
   XmlElement parent;
 
-  XmlNode(this.type, this.children);
+  XmlNode(this.type, this._children);
 
   void remove(){
-    var i = parent.children.indexOf(this);
+    var i = parent._children.indexOf(this);
     if (i == -1){
       throw const Exception('Element not found.');
     }
 
-    parent.children.removeRange(i, 1);
+    parent._children.removeRange(i, 1);
   }
 
-  bool hasChildNodes() => !children.isEmpty();
 
-  toString() => new XmlStringifier().stringify(this);
+  List<XmlNode> queryAttributes(Map<String, String> nameValuePairs){
+
+  }
+
+  /**
+  * Returns the first node in the tree that matches the given [queryString].
+  */
+  List<XmlNode> queryFirst(String queryString){
+
+  }
+
+  /**
+  * Returns a [List] of all nodes in the tree that match the given
+  * [queryString].
+  */
+  List<XmlNode> query(String queryString){
+
+  }
+
+  Collection<XmlNode> get attributes()
+  => _children == null ? [] : _children.filter((el) => el is XmlAttribute);
+
+  Collection<XmlNode> get elements()
+  => _children == null ? [] : _children.filter((el) => el is! XmlAttribute);
+
+  bool hasChildNodes() => _children != null && !_children.isEmpty();
+
+  /// Returns a text representation of the XmlNode tree.
+  String toString() {
+    StringBuffer s = new StringBuffer();
+    _stringifyInternal(s, this, 0);
+    return s.toString();
+  }
+
+  static void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
+    switch(n.type){
+      case XmlNodeType.PI:
+        b.add('\r<?\r${n.dynamic.text}\r?>');
+        break;
+      case XmlNodeType.CDATA:
+        b.add('\r<![CDATA[\r${n.dynamic.text}\r]]>');
+        break;
+      case XmlNodeType.Element:
+        b.add('\r${_space(indent)}<${n.dynamic.tagName}');
+        if (n.hasChildNodes()){
+          n.dynamic.attributes.forEach((a) =>
+              _stringifyInternal(b, a, indent));
+          b.add('>');
+          n.dynamic.elements.forEach((e) =>
+              _stringifyInternal(b, e, indent + 3));
+        }else{
+          b.add('>');
+        }
+
+        if (n.dynamic.elements.length > 0){
+          b.add('\r${_space(indent)}</${n.dynamic.tagName}>');
+        }else{
+          b.add('</${n.dynamic.tagName}>');
+        }
+
+        break;
+      case XmlNodeType.Attribute:
+        b.add(' ${n.dynamic.name}="${n.dynamic.value}"');
+        break;
+      case XmlNodeType.Text:
+        b.add('\r${_space(indent)}${n.dynamic.text}');
+        break;
+    }
+  }
+
+  static String _space(int amount) {
+    StringBuffer s = new StringBuffer();
+    for (int i = 0; i < amount; i++){
+      s.add(' ');
+    }
+    return s.toString();
+   }
 }

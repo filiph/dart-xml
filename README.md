@@ -8,7 +8,7 @@ and the querying of said data.  Typically these data are XML fragments
 and not fully formed XML documents. 
 
 This project focuses the most common scenarios and does not concern itself with 
-parsing of fully formed XML documents (with prologues, DOCTYPES, etc). With the 
+parsing of fully formed XML documents (with prologues, DOCTYPEs, etc). With the 
 exception of comments, the parser expects a single node in the root of the XML
 string (see **Limitations** below for more info).
 
@@ -47,7 +47,7 @@ XML trees can be created manually in code:
            ])
     ]);
 
-Though it's probably easier to let the parser do the work for you:
+... or you can let the parser do the work for you:
 
     XmlElement test = 
     XML.parse(
@@ -61,6 +61,13 @@ Though it's probably easier to let the parser do the work for you:
    		</stackpanel>
 	'''
 	);
+
+## Supports ##
+* Standard well-formed XML.
+* Comment nodes
+* CDATA nodes
+* Text nodes
+* Processing Instruction (PI) nodes
 
 ## Limitations ##
 * Doesn't enforce DTD

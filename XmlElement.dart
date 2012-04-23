@@ -29,12 +29,8 @@ class XmlElement extends XmlNode {
     addChildren(elements);
   }
 
-  Collection<XmlNode> get attributes() => children.filter((el) => el is XmlAttribute);
-
-  Collection<XmlNode> get elements() => children.filter((el) => el is! XmlAttribute);
-
   String get text() {
-    var tNodes = children.filter((el) => el is XmlText);
+    var tNodes = _children.filter((el) => el is XmlText);
     if (tNodes.isEmpty()) return '';
 
     var s = new StringBuffer();
@@ -47,7 +43,7 @@ class XmlElement extends XmlNode {
       throw const Exception('XmlDocument cannot be a child of any other node.');
     }
     element.parent = this;
-    children.add(element);
+    _children.add(element);
   }
 
   void addChildren(List<XmlNode> elements){
@@ -55,7 +51,6 @@ class XmlElement extends XmlNode {
       elements.forEach((XmlNode e) => addChild(e));
     }
   }
-
 }
 
 
