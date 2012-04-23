@@ -23,6 +23,7 @@ class XmlElement extends XmlNode {
   final String name;
   final List<XmlNode> _children;
   final Map<String, String> _attributes;
+  //final String namespace; //future
 
   XmlElement(this.name, [List<XmlNode> elements = const []])
   :
