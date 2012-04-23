@@ -37,7 +37,7 @@ String get testSimple() =>
 <!-- comment -->
 <StackPanel>
    <TextBlock text="hello world!" fontSize="12"></TextBlock>
-text node
+   text node
    <Border>
 <![CDATA[
 the markup below should be escaped

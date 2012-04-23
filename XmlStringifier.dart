@@ -31,10 +31,11 @@ class XmlStringifier {
 
   void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
+      case XmlNodeType.PI:
+        b.add('\r<?\r${n.dynamic.text}\r?>');
+        break;
       case XmlNodeType.CDATA:
-        b.add(
-          '\r<![CDATA[\r${n.dynamic.text}\r]]>'
-          );
+        b.add('\r<![CDATA[\r${n.dynamic.text}\r]]>');
         break;
       case XmlNodeType.Document:
         //TODO support prolog & doctype

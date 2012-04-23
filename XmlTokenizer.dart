@@ -112,8 +112,14 @@ class XmlTokenizer {
         }
         break;
       case Q:
-        _i++;
-        addToQueue(new _XmlToken(_XmlToken.QUESTION));
+        var m = matchWord('?>');
+        if (m != -1){
+          addToQueue(new _XmlToken(_XmlToken.END_PI));
+          _i = m + 1;
+        }else{
+          _i++;
+          addToQueue(new _XmlToken(_XmlToken.QUESTION));
+        }
         break;
       case B:
         _i++;
@@ -128,17 +134,35 @@ class XmlTokenizer {
         addToQueue(new _XmlToken(_XmlToken.SLASH));
         break;
       case LT:
-        var m = matchWord('<!--');
-        if (m != -1){
-          //start comment
-          addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
-          _i = m + 1;
-        }else{
-          var cd = matchWord('<![CDATA[');
-          if (cd != -1){
+        final specialTags = const ['<!--', '<![CDATA[', '<?'];
+        var found = '';
+        var endIndex = -1;
+
+        for(final tag in specialTags){
+          var m = matchWord(tag);
+          if (m != -1){
+            found = tag;
+            endIndex = m;
+            break;
+          }
+        }
+
+        switch(found)
+        {
+          case specialTags[0]:
+            addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
+            _i = endIndex + 1;
+            break;
+          case specialTags[1]:
             addToQueue(new _XmlToken(_XmlToken.START_CDATA));
-            _i = cd + 1;
-          }else{
+            _i = endIndex + 1;
+            break;
+          case specialTags[2]:
+            addToQueue(new _XmlToken(_XmlToken.START_PI));
+            _i = endIndex + 1;
+            break;
+          default:
+            //standard start tag
             _i++;
             addToQueue(new _XmlToken(_XmlToken.LT));
             int c = peekUntil([SPACE, GT]);
@@ -147,10 +171,8 @@ class XmlTokenizer {
               _i = _xml.indexOf(' ', _ii) + 1;
               addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
             }
-          }
+            break;
         }
-
-
         break;
       case GT:
         _i++;
@@ -208,6 +230,8 @@ class _XmlToken {
   static final int END_COMMENT = 13;
   static final int START_CDATA = 14;
   static final int END_CDATA = 15;
+  static final int START_PI = 16;
+  static final int END_PI = 17;
 
   final int kind;
   final String _str;
@@ -227,6 +251,10 @@ class _XmlToken {
 
   String toString() {
     switch(kind){
+      case START_PI:
+        return "(<?)";
+      case END_PI:
+        return "(?>)";
       case DASH:
         return "(-)";
       case LT:

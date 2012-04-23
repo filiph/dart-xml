@@ -32,21 +32,6 @@ class XmlParser {
     return p._root;
   }
 
-  static XmlDocument _parseDocument(String xml)
-  {
-    throw const NotImplementedException();
-
-    //TODO implement
-
-    XmlParser p = new XmlParser._internal(xml);
-
-    final XmlTokenizer t = new XmlTokenizer(p._xml);
-
-    p._parseElement(t);
-
-    return p._root.dynamic;
-  }
-
   XmlParser._internal(this._xml)
   :
     _scopes = new Queue<XmlElement>()
@@ -60,13 +45,16 @@ class XmlParser {
 
       switch(tok.kind){
         case _XmlToken.START_COMMENT:
-          _processComment(t);
+          _parseComment(t);
           break;
         case _XmlToken.START_CDATA:
-          _processCDATA(t);
+          _parseCDATA(t);
+          break;
+        case _XmlToken.START_PI:
+          _parsePI(t);
           break;
         case _XmlToken.LT:
-          _processTag(t);
+          _parseTag(t);
           // finished.
           if (_scopes.isEmpty()) return;
           break;
@@ -75,8 +63,8 @@ class XmlParser {
             //throw this error if at top level
             _assertKind(tok, _XmlToken.LT);
           }else{
-            _processTextNode(t, tok._str);
-            _processTag(t);
+            _parseTextNode(t, tok._str);
+            _parseTag(t);
           }
           break;
       }
@@ -89,7 +77,32 @@ class XmlParser {
     }
   }
 
-  _processCDATA(XmlTokenizer t){
+  _parsePI(XmlTokenizer t){
+    //in CDATA node all tokens until ']]>' are joined to a single string
+    StringBuffer s = new StringBuffer();
+
+    _XmlToken next = t.next();
+
+    while(next.kind != _XmlToken.END_PI){
+
+      s.add(next.toStringLiteral());
+
+      next = t.next();
+
+      if (next == null){
+        throw const XmlException('Unexpected end of file.');
+      }
+    }
+
+    if (_scopes.isEmpty()){
+      throw const XmlException('PI nodes are not supported in the top'
+        ' level.');
+    }
+
+    _peek().addChild(new XmlProcessingInstruction(s.toString()));
+  }
+
+  _parseCDATA(XmlTokenizer t){
     //in CDATA node all tokens until ']]>' are joined to a single string
     StringBuffer s = new StringBuffer();
 
@@ -107,7 +120,7 @@ class XmlParser {
     }
 
     if (_scopes.isEmpty()){
-      throw const XmlException('CDATA nodes are not yet supported in the top'
+      throw const XmlException('CDATA nodes are not supported in the top'
         ' level.');
     }
 
@@ -115,7 +128,7 @@ class XmlParser {
   }
 
   //TODO create and XMLComment object instead of just ignoring?
-  _processComment(XmlTokenizer t){
+  _parseComment(XmlTokenizer t){
     _XmlToken next = t.next();
 
     while (next.kind != _XmlToken.END_COMMENT){
@@ -132,7 +145,7 @@ class XmlParser {
     }
   }
 
-  _processTag(XmlTokenizer t){
+  _parseTag(XmlTokenizer t){
     _XmlToken next = t.next();
 
     if (next.kind == _XmlToken.SLASH){
@@ -179,25 +192,10 @@ class XmlParser {
 
       switch(next.kind){
         case _XmlToken.STRING:
-          _processAttributes(t, next._str);
+          _parseAttributes(t, next._str);
           break;
         case _XmlToken.GT:
-          next = t.next();
-          if (next.kind == _XmlToken.STRING){
-            _processTextNode(t, next._str);
-            _processTag(t);
-          }else if (next.kind == _XmlToken.LT){
-            _processTag(t);
-          }else if (next.kind == _XmlToken.START_COMMENT){
-            _processComment(t);
-          }else if (next.kind == _XmlToken.START_CDATA){
-            _processCDATA(t);
-          }
-          else
-          {
-            throw new XmlException('Unexpected item "${next}" found.');
-          }
-
+          _parseElement(t);
           return;
         case _XmlToken.SLASH:
           next = t.next();
@@ -219,23 +217,43 @@ class XmlParser {
     }
   }
 
-  void _processTextNode(XmlTokenizer t, String text){
+  void _parseTextNode(XmlTokenizer t, String text){
+
     //in text node all tokens until < are joined to a single string
     StringBuffer s = new StringBuffer();
+
+    writeStringNode(){
+      var string = s.toString();
+      if (!string.isEmpty())
+        _peek().addChild(new XmlText(s.toString()));
+    }
 
     s.add(text);
 
     _XmlToken next = t.next();
 
     while(next.kind != _XmlToken.LT){
-
-      if (next.kind == _XmlToken.START_COMMENT){
-        _processComment(t);
-      }else if (next.kind == _XmlToken.START_CDATA){
-        _processCDATA(t);
-      }else{
-        s.add(next.toStringLiteral());
+      switch(next.kind){
+        case _XmlToken.START_COMMENT:
+          writeStringNode();
+          _parseComment(t);
+          s = new StringBuffer();
+          break;
+        case _XmlToken.START_CDATA:
+          writeStringNode();
+          _parseCDATA(t);
+          s = new StringBuffer();
+          break;
+        case _XmlToken.START_PI:
+          writeStringNode();
+          _parsePI(t);
+          s = new StringBuffer();
+          break;
+        default:
+          s.add(next.toStringLiteral());
+          break;
       }
+
       next = t.next();
 
       if (next == null){
@@ -243,10 +261,10 @@ class XmlParser {
       }
     }
 
-    _peek().addChild(new XmlText(s.toString()));
+    writeStringNode();
   }
 
-  void _processAttributes(XmlTokenizer t, String attributeName){
+  void _parseAttributes(XmlTokenizer t, String attributeName){
     XmlElement el = _peek();
 
     void setAttribute(String name, String value){

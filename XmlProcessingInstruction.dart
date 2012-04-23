@@ -15,23 +15,11 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-/**
-* Enumerates [XmlNode] types.
-*/
-class XmlNodeType{
-  final String _type;
+/** Represents and XML Processing Instruction (PI) node. */
+class XmlProcessingInstruction extends XmlNode {
+  final String text;
 
-  const XmlNodeType(this._type);
-
-  static final Element = const XmlNodeType('Element');
-  static final Attribute = const XmlNodeType('Attribute');
-  static final Text = const XmlNodeType('Text');
-  static final Namespace = const XmlNodeType('Namespace');
-  static final Prologue = const XmlNodeType('Prologue');
-  static final DocType = const XmlNodeType('DocType');
-  static final Document = const XmlNodeType('Document');
-  static final CDATA = const XmlNodeType('CDATA');
-  static final PI = const XmlNodeType('PI'); //Processing Instruction
-
-  String toString() => _type;
+  XmlProcessingInstruction(this.text)
+  :
+    super(XmlNodeType.PI, const []);
 }

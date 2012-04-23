@@ -32,24 +32,19 @@
 #source('XmlDocument.dart');
 #source('XmlException.dart');
 #source('XmlCDATA.dart');
+#source('XmlProcessingInstruction.dart');
 
 
 /**
 * Utility class to work with XML data.
 */
-class XML{
+class XML
+{
 
   /**
-  * Returns a [XmlElement] tree representing the raw XML [String] fragment.
+  * Returns a [XmlElement] tree representing the raw XML fragment [String].
   */
   static XmlElement parse(String xml) => XmlParser._parse(xml.trim());
-
-  /**
-  * Parses and returns a [XmlDocument] tree and assumes the xml [String]
-  * is a fully formed XML document.
-  */
-  static XmlDocument parseDocument(String xml)
-          => XmlParser._parseDocument(xml.trim());
 
   /**
   * Returns a stringified version of an [XmlNode] tree.
