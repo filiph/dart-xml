@@ -60,21 +60,93 @@ class XmlElement extends XmlNode {
   }
 
   List<XmlNode> queryAttributes(Map<String, String> nameValuePairs){
-
+    if (this is! XmlElement){
+      throw const XmlException('Can only query attributes on XmlElement'
+        ' objects');
+    }
   }
 
   /**
-  * Returns the first node in the tree that matches the given [tagName].
+  * Returns the first node in the tree that matches the given [queryOn]
+  * parameter.
+  *
+  * ## Usage ##
+  * * query('tagName') // returns first occurance matching tag name.
+  * * query(XmlNodeType.CDATA) // returns first occurance of element matching
+  * the given node type (CDATA node in this example).
+  * * query({'attributeName':'attributeValue'}) // returns the first occurance
+  * of any [XmlElement] where the given attributes/values are found.
   */
-  List<XmlNode> query(String tagName){
+  List<XmlNode> query(queryOn){
     var list = [];
 
-    _queryInternal(tagName, list);
+    if (queryOn is String){
+      _queryNameInternal(queryOn, list);
+    }else if (queryOn is XmlNodeType){
+      _queryNodeTypeInternal(queryOn, list);
+    }else if (queryOn is Map){
+      _queryAttributeInternal(queryOn, list);
+    }
 
     return list;
   }
 
-  _queryInternal(String tagName, List list){
+
+  void _queryAttributeInternal(Map aMap, List list){
+    bool checkAttribs(){
+      var succeed = true;
+
+      //TODO needs better implementation to
+      //break out on first false
+      aMap.forEach((k, v){
+        if (succeed && attributes.containsKey(k)) {
+          if (attributes[k] != v) succeed = false;
+        }else{
+          succeed = false;
+        }
+      });
+
+      return succeed;
+    }
+
+    if (checkAttribs()){
+      list.add(this);
+      return;
+    }else{
+      if (hasChildren){
+        children
+        .filter((el) => el is XmlElement)
+        .forEach((el){
+          if (!list.isEmpty()) return;
+          el._queryAttributeInternal(aMap, list);
+        });
+      }
+    }
+  }
+
+  void _queryNodeTypeInternal(XmlNodeType nodeType, List list){
+    if (type == nodeType){
+      list.add(this);
+      return;
+    }else{
+      if (hasChildren){
+        children
+          .forEach((el){
+            if (!list.isEmpty()) return;
+            if (el is XmlElement){
+              el._queryNodeTypeInternal(nodeType, list);
+            }else{
+              if (el.type == nodeType){
+                list.add(el);
+                return;
+              }
+            }
+          });
+      }
+    }
+  }
+
+  void _queryNameInternal(String tagName, List list){
 
     if (this.name == tagName){
       list.add(this);
@@ -85,25 +157,85 @@ class XmlElement extends XmlNode {
           .filter((el) => el is XmlElement)
           .forEach((el){
             if (!list.isEmpty()) return;
-            el._queryInternal(tagName, list);
+            el._queryNameInternal(tagName, list);
           });
       }
     }
   }
 
   /**
-  * Returns a [List] of all nodes in the tree that match the given
-  * [tagName].
+  * Returns a list of nodes in the tree that match the given [queryOn]
+  * parameter.
+  *
+  * ## Usage ##
+  * * query('tagName') = returns first occurance matching tag name.
+  * * query(XmlNodeType.CDATA) // returns first occurance of element matching
+  * the given node type (CDATA node in this example).
   */
-  List<XmlNode> queryAll(String tagName){
+  List<XmlNode> queryAll(queryOn){
     var list = [];
 
-    _queryAllInternal(tagName, list);
+    if (queryOn is String){
+      _queryAllNamesInternal(queryOn, list);
+    }else if (queryOn is XmlNodeType){
+      _queryAllNodeTypesInternal(queryOn, list);
+    }else if (queryOn is Map){
+      _queryAllAttributesInternal(queryOn, list);
+    }
 
     return list;
   }
 
-  _queryAllInternal(String tagName, List list){
+  void _queryAllAttributesInternal(Map aMap, List list){
+    bool checkAttribs(){
+      var succeed = true;
+
+      //TODO needs better implementation to
+      //break out on first false
+      aMap.forEach((k, v){
+        if (succeed && attributes.containsKey(k)) {
+          if (attributes[k] != v) succeed = false;
+        }else{
+          succeed = false;
+        }
+      });
+
+      return succeed;
+    }
+
+    if (checkAttribs()){
+      list.add(this);
+    }else{
+      if (hasChildren){
+        children
+        .filter((el) => el is XmlElement)
+        .forEach((el){
+          el._queryAttributeInternal(aMap, list);
+        });
+      }
+    }
+  }
+
+  void _queryAllNodeTypesInternal(XmlNodeType nodeType, List list){
+    if (type == nodeType){
+      list.add(this);
+    }else{
+      if (hasChildren){
+        children
+          .forEach((el){
+            if (el is XmlElement){
+              el._queryAllNodeTypesInternal(nodeType, list);
+            }else{
+              if (el.type == nodeType){
+                list.add(el);
+              }
+            }
+          });
+      }
+    }
+  }
+
+  _queryAllNamesInternal(String tagName, List list){
     if (this.name == tagName){
       list.add(this);
     }
@@ -112,7 +244,7 @@ class XmlElement extends XmlNode {
       children
       .filter((el) => el is XmlElement)
       .forEach((el){
-        el._queryInternal(tagName, list);
+        el._queryAllNamesInternal(tagName, list);
       });
     }
   }

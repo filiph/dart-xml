@@ -16,9 +16,8 @@
 //   limitations under the License.
 
 
-// A lightweight, NOT standards-compliant xml parser and emitter.
-// Does not support DTD or WSD validation.
-// See README.md for more info.
+// A lightweight, XML parser and emitter.
+// See README.md for more info on features and limitations.
 
 #library('Xml');
 #source('XmlElement.dart');

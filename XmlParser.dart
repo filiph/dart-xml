@@ -23,6 +23,9 @@ class XmlParser {
 
   static XmlElement _parse(String xml)
   {
+    if (xml.isEmpty()){
+      throw const XmlException('Nothing to parse.');
+    }
     XmlParser p = new XmlParser._internal(xml);
 
     final XmlTokenizer t = new XmlTokenizer(p._xml);

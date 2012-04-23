@@ -27,9 +27,6 @@ class XmlNodeType{
   static final Attribute = const XmlNodeType('Attribute');
   static final Text = const XmlNodeType('Text');
   static final Namespace = const XmlNodeType('Namespace');
-  static final Prologue = const XmlNodeType('Prologue');
-  static final DocType = const XmlNodeType('DocType');
-  static final Document = const XmlNodeType('Document');
   static final CDATA = const XmlNodeType('CDATA');
   static final PI = const XmlNodeType('PI'); //Processing Instruction
 

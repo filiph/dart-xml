@@ -62,19 +62,47 @@ XML trees can be created manually in code:
 	'''
 	);
 
+### Queries ###
+Any XmlElement can be queried a number of ways.  All queries return 
+List<XmlElement>, even the first-occurance queries.  Query functions support
+these parameter types:
+
+* String (match tag name)
+* XmlNodeType (match XmlNodeType)
+* Map (match one or more attribute/value pairs)
+
+	// By tag name
+    // returns the first occurance of any XmlElement matching the given tagName
+    myXmlElement.query('div');
+    myXmlElement.queryAll('div'); //returns all matches
+    
+    // By xml node type
+    // returns the first occurance of any XmlElement matching the XmlNodeType
+    myXmlElement.query(XmlNodeType.CDATA);
+    myXmlElement.queryAll(XmlNodeType.CDATA); //returns all matches
+
+	// By attribute
+	// returns the first occurance of any XmlElement that contains all of
+	// the provided attributes and matching values
+	myXmlElement.query({'id':'foo', 'style':'bar'});
+	myXmlElement.queryAll({'id':'foo', 'style':'bar'}); //returns all matches	
+
+All queries are case-sensitive.
+
 ## Supports ##
 * Standard well-formed XML.
 * Comment nodes
 * CDATA nodes
 * Text nodes
 * Processing Instruction (PI) nodes
+* Querying of XML nodes by tagName, attribute(s), or XmlNodeType (combinators
+soon hopefully)
 
 ## Limitations ##
 * Doesn't enforce DTD
 * Doesn't enforce any local schema declarations
 * Doesn't yet support namespaces
 * Nested quotes in attributes are not yet supported.
-* XmlNodes are not yet queryable.
 	
 ## License ##
 Apache 2.0
