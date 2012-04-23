@@ -71,6 +71,8 @@ these parameter types:
 * XmlNodeType (match XmlNodeType)
 * Map (match one or more attribute/value pairs)
 
+
+#### Example Queries ####
     // By tag name
     // returns the first occurance of any XmlElement matching the given tagName
     myXmlElement.query('div');
