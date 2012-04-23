@@ -36,6 +36,7 @@ String get testSimple() =>
 '''
 <!-- comment -->
 <StackPanel>
+<?hello world?>
    <TextBlock text="hello world!" fontSize="12"></TextBlock>
    text node
    <Border>

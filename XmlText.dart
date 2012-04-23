@@ -25,4 +25,6 @@ class XmlText extends XmlNode
   XmlText(this.text)
   :
     super(XmlNodeType.Text, const []);
+
+  String toString() => text;
 }

@@ -45,10 +45,10 @@ class XML
   static XmlElement parse(String xml) => XmlParser._parse(xml.trim());
 
   /**
-  * Returns a stringified version of an [XmlNode] tree.
-  * You can also call .toString() on any [XmlNode].
+  * Returns a stringified version of an [XmlElement] tree.
+  * You can also call .toString() on any [XmlElement].
   */
-  static String stringify(XmlNode node) => node.toString();
+  static String stringify(XmlElement element) => element.toString();
 
 }
 

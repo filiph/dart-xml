@@ -16,12 +16,15 @@
 //   limitations under the License.
 
 /**
-* Represents a CDATA component of an XML tree.
+* Represents a CDATA node of an XML tree.
 */
-class XmlCDATA extends XmlNode{
+class XmlCDATA extends XmlNode
+{
   final String text;
 
   XmlCDATA(this.text)
   :
     super(XmlNodeType.CDATA, const []);
+
+  String toString() =>'<![CDATA[\r$text\r]]>';
 }

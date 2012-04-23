@@ -26,4 +26,6 @@ class XmlAttribute extends XmlNode
   XmlAttribute(this.name, this.value)
   :
     super(XmlNodeType.Attribute, const []);
+
+  String toString() => ' $name="$value"';
 }

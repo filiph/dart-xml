@@ -39,9 +39,6 @@ class XmlElement extends XmlNode {
   }
 
   void addChild(XmlNode element){
-    if (element is XmlDocument){
-      throw const Exception('XmlDocument cannot be a child of any other node.');
-    }
     element.parent = this;
     _children.add(element);
   }

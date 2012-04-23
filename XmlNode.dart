@@ -18,7 +18,8 @@
 
 /**
 * Represents a base class for XML nodes.  This node is essentially
-* read-only.  Use [XmlElement] for working with attributes and heirarchies.
+* read-only.  Use [XmlElement] for manipulating with attributes
+* and heirarchies.
 */
 class XmlNode {
   final List<XmlNode> _children;
@@ -73,12 +74,6 @@ class XmlNode {
 
   static void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
-      case XmlNodeType.PI:
-        b.add('\r<?\r${n.dynamic.text}\r?>');
-        break;
-      case XmlNodeType.CDATA:
-        b.add('\r<![CDATA[\r${n.dynamic.text}\r]]>');
-        break;
       case XmlNodeType.Element:
         b.add('\r${_space(indent)}<${n.dynamic.tagName}');
         if (n.hasChildNodes()){
@@ -99,10 +94,14 @@ class XmlNode {
 
         break;
       case XmlNodeType.Attribute:
-        b.add(' ${n.dynamic.name}="${n.dynamic.value}"');
+        b.add(n.toString());
         break;
       case XmlNodeType.Text:
-        b.add('\r${_space(indent)}${n.dynamic.text}');
+        b.add('\r${_space(indent)}$n');
+        break;
+      case XmlNodeType.PI:
+      case XmlNodeType.CDATA:
+        b.add('\r$n');
         break;
     }
   }
