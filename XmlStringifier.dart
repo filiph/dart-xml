@@ -31,6 +31,11 @@ class XmlStringifier {
 
   void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
+      case XmlNodeType.CDATA:
+        b.add(
+          '\r<![CDATA[\r${n.dynamic.text}\r]]>'
+          );
+        break;
       case XmlNodeType.Document:
         //TODO support prolog & doctype
         _stringifyInternal(b, n.dynamic.root, 0);

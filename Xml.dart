@@ -32,6 +32,7 @@
 #source('XmlAttribute.dart');
 #source('XmlDocument.dart');
 #source('XmlException.dart');
+#source('XmlCDATA.dart');
 
 
 /**
@@ -40,9 +41,16 @@
 class XML{
 
   /**
-  * Returns a [XmlElement] tree representing the raw XML [String].
+  * Returns a [XmlElement] tree representing the raw XML [String] fragment.
   */
   static XmlElement parse(String xml) => XmlParser._parse(xml.trim());
+
+  /**
+  * Parses and returns a [XmlDocument] tree and assumes the xml [String]
+  * is a fully formed XML document.
+  */
+  static XmlDocument parseDocument(String xml)
+          => XmlParser._parseDocument(xml.trim());
 
   /**
   * Returns a stringified version of an [XmlNode] tree.

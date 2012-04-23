@@ -33,6 +33,7 @@ class XmlTokenizer {
   static final int Q = 63;  //?
   static final int B = 33;  //!
   static final int DASH = 45; //-
+  static final int RBRACK = 93; //]
 
   final Queue<_XmlToken> _tq;
   final String _xml;
@@ -96,6 +97,13 @@ class XmlTokenizer {
     final int char = _xml.charCodeAt(_i);
 
     switch(char){
+      case RBRACK:
+        var m = matchWord(']]>');
+        if (m != -1){
+          addToQueue(new _XmlToken(_XmlToken.END_CDATA));
+          _i = m + 1;
+        }
+        break;
       case DASH:
         var m = matchWord('-->');
         if (m != -1){
@@ -126,13 +134,19 @@ class XmlTokenizer {
           addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
           _i = m + 1;
         }else{
-          _i++;
-          addToQueue(new _XmlToken(_XmlToken.LT));
-          int c = peekUntil([SPACE, GT]);
-          if (c == SPACE){
-            var _ii = _i;
-            _i = _xml.indexOf(' ', _ii) + 1;
-            addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+          var cd = matchWord('<![CDATA[');
+          if (cd != -1){
+            addToQueue(new _XmlToken(_XmlToken.START_CDATA));
+            _i = cd + 1;
+          }else{
+            _i++;
+            addToQueue(new _XmlToken(_XmlToken.LT));
+            int c = peekUntil([SPACE, GT]);
+            if (c == SPACE){
+              var _ii = _i;
+              _i = _xml.indexOf(' ', _ii) + 1;
+              addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+            }
           }
         }
 
@@ -169,7 +183,7 @@ class XmlTokenizer {
 
   static bool isReserved(int c){
     return c == LT || c == GT || c == Q || c == B || c == COLON || c == SLASH
-        || c == QUOTE || c == SQUOTE || c == EQ || c == DASH;
+        || c == QUOTE || c == SQUOTE || c == EQ || c == DASH || c == RBRACK;
   }
 
   static bool isWhitespace(int c) {
@@ -192,6 +206,8 @@ class _XmlToken {
   static final int DASH = 11;
   static final int START_COMMENT = 12;
   static final int END_COMMENT = 13;
+  static final int START_CDATA = 14;
+  static final int END_CDATA = 15;
 
   final int kind;
   final String _str;
@@ -235,6 +251,10 @@ class _XmlToken {
         return '(<!--)';
       case END_COMMENT:
         return '(-->)';
+      case START_CDATA:
+        return ('(<![CDATA[)');
+      case END_CDATA:
+        return ('(]]>)');
       case IGNORE:
         return 'INVALID()';
 
@@ -245,6 +265,8 @@ class _XmlToken {
     switch(kind){
       case GT:
         return ">";
+      case LT:
+        return "<";
       case QUESTION:
         return "?";
       case STRING:
@@ -261,6 +283,8 @@ class _XmlToken {
         return '"';
       case IGNORE:
         return 'INVALID()';
+      default:
+        throw new XmlException('String literal unavailable for $this');
 
     }
   }

@@ -31,7 +31,7 @@ class XmlElement extends XmlNode {
 
   Collection<XmlNode> get attributes() => children.filter((el) => el is XmlAttribute);
 
-  Collection<XmlNode> get elements() => children.filter((el) => el is XmlElement || el is XmlText);
+  Collection<XmlNode> get elements() => children.filter((el) => el is! XmlAttribute);
 
   String get text() {
     var tNodes = children.filter((el) => el is XmlText);

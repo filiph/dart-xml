@@ -32,6 +32,21 @@ class XmlParser {
     return p._root;
   }
 
+  static XmlDocument _parseDocument(String xml)
+  {
+    throw const NotImplementedException();
+
+    //TODO implement
+
+    XmlParser p = new XmlParser._internal(xml);
+
+    final XmlTokenizer t = new XmlTokenizer(p._xml);
+
+    p._parseElement(t);
+
+    return p._root.dynamic;
+  }
+
   XmlParser._internal(this._xml)
   :
     _scopes = new Queue<XmlElement>()
@@ -46,6 +61,9 @@ class XmlParser {
       switch(tok.kind){
         case _XmlToken.START_COMMENT:
           _processComment(t);
+          break;
+        case _XmlToken.START_CDATA:
+          _processCDATA(t);
           break;
         case _XmlToken.LT:
           _processTag(t);
@@ -71,6 +89,30 @@ class XmlParser {
     }
   }
 
+  _processCDATA(XmlTokenizer t){
+    //in CDATA node all tokens until ']]>' are joined to a single string
+    StringBuffer s = new StringBuffer();
+
+    _XmlToken next = t.next();
+
+    while(next.kind != _XmlToken.END_CDATA){
+
+      s.add(next.toStringLiteral());
+
+      next = t.next();
+
+      if (next == null){
+        throw const XmlException('Unexpected end of file.');
+      }
+    }
+
+    if (_scopes.isEmpty()){
+      throw const XmlException('CDATA nodes are not yet supported in the top'
+        ' level.');
+    }
+
+    _peek().addChild(new XmlCDATA(s.toString()));
+  }
 
   //TODO create and XMLComment object instead of just ignoring?
   _processComment(XmlTokenizer t){
@@ -148,6 +190,8 @@ class XmlParser {
             _processTag(t);
           }else if (next.kind == _XmlToken.START_COMMENT){
             _processComment(t);
+          }else if (next.kind == _XmlToken.START_CDATA){
+            _processCDATA(t);
           }
           else
           {
@@ -187,6 +231,8 @@ class XmlParser {
 
       if (next.kind == _XmlToken.START_COMMENT){
         _processComment(t);
+      }else if (next.kind == _XmlToken.START_CDATA){
+        _processCDATA(t);
       }else{
         s.add(next.toStringLiteral());
       }

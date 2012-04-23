@@ -16,21 +16,12 @@
 //   limitations under the License.
 
 /**
-* Enumerates [XmlNode] types.
+* Represents a CDATA component of an XML tree.
 */
-class XmlNodeType{
-  final String _type;
+class XmlCDATA extends XmlNode{
+  final String text;
 
-  const XmlNodeType(this._type);
-
-  static final Element = const XmlNodeType('Element');
-  static final Attribute = const XmlNodeType('Attribute');
-  static final Text = const XmlNodeType('Text');
-  static final Namespace = const XmlNodeType('Namespace');
-  static final Prologue = const XmlNodeType('Prologue');
-  static final DocType = const XmlNodeType('DocType');
-  static final Document = const XmlNodeType('Document');
-  static final CDATA = const XmlNodeType('CDATA');
-
-  String toString() => _type;
+  XmlCDATA(this.text)
+  :
+    super(XmlNodeType.CDATA, const []);
 }
