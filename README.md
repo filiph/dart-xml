@@ -71,7 +71,7 @@ these parameter types:
 * XmlNodeType (match XmlNodeType)
 * Map (match one or more attribute/value pairs)
 
-	// By tag name
+    // By tag name
     // returns the first occurance of any XmlElement matching the given tagName
     myXmlElement.query('div');
     myXmlElement.queryAll('div'); //returns all matches
@@ -81,11 +81,11 @@ these parameter types:
     myXmlElement.query(XmlNodeType.CDATA);
     myXmlElement.queryAll(XmlNodeType.CDATA); //returns all matches
 
-	// By attribute
-	// returns the first occurance of any XmlElement that contains all of
-	// the provided attributes and matching values
-	myXmlElement.query({'id':'foo', 'style':'bar'});
-	myXmlElement.queryAll({'id':'foo', 'style':'bar'}); //returns all matches	
+    // By attribute
+    // returns the first occurance of any XmlElement that contains all of
+    // the provided attributes and matching values
+    myXmlElement.query({'id':'foo', 'style':'bar'});
+    myXmlElement.queryAll({'id':'foo', 'style':'bar'}); //returns all matches	
 
 All queries are case-sensitive.
 
