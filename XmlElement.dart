@@ -43,6 +43,29 @@ class XmlElement extends XmlNode {
     return s.toString();
   }
 
+  Map<String, String> get attributes() => _attributes;
+
+  Collection<XmlNode> get children() => _children;
+
+  Collection<XmlNode> get siblings() => parent.children;
+
+  XmlNode get previousSibling() {
+    var i = parent._children.indexOf(this);
+    if (i <= 0) return null;
+
+    return parent._children.getRange(i - 1, 1)[0];
+  }
+
+  XmlNode get nextSibling() {
+    if (parent._children.last() == this) return null;
+
+    var i = parent._children.indexOf(this);
+
+    return parent._children.getRange(i + 1, 1)[0];
+  }
+
+  bool get hasChildren() => !_children.isEmpty();
+
   void addChild(XmlNode element){
     //shunt any XmlAttributes into the map
     if (element is XmlAttribute){
@@ -57,13 +80,6 @@ class XmlElement extends XmlNode {
   void addChildren(List<XmlNode> elements){
     if (!elements.isEmpty()){
       elements.forEach((XmlNode e) => addChild(e));
-    }
-  }
-
-  List<XmlNode> queryAttributes(Map<String, String> nameValuePairs){
-    if (this is! XmlElement){
-      throw const XmlException('Can only query attributes on XmlElement'
-        ' objects');
     }
   }
 
@@ -249,12 +265,6 @@ class XmlElement extends XmlNode {
       });
     }
   }
-
-  Map<String, String> get attributes() => _attributes;
-
-  Collection<XmlNode> get children() => _children;
-
-  bool get hasChildren() => !_children.isEmpty();
 }
 
 
