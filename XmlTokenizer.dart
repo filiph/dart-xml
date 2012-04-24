@@ -186,11 +186,12 @@ class XmlTokenizer {
         addToQueue(new _XmlToken(_XmlToken.EQ));
         break;
       case QUOTE:
+        _i++;
+        addToQueue(new _XmlToken.quote(QUOTE));
+        break;
       case SQUOTE:
         _i++;
-        addToQueue(new _XmlToken(_XmlToken.QUOTE));
-        // TODO ignore nested quotes until matching quote kind is
-        // found.
+        addToQueue(new _XmlToken.quote(SQUOTE));
         break;
       default:
         StringBuffer s = new StringBuffer();
@@ -241,18 +242,24 @@ class _XmlToken {
   static final int END_PI = 17;
 
   final int kind;
+  final int quoteKind;
   final String _str;
   int _location;
 
-  _XmlToken._internal(this.kind, this._str);
+  _XmlToken._internal(this.kind, this._str, this.quoteKind);
 
 
   factory _XmlToken.string(String s) {
-    return new _XmlToken._internal(STRING, s);
+    return new _XmlToken._internal(STRING, s, -1);
   }
 
+  factory _XmlToken.quote(int quoteKind){
+    return new _XmlToken._internal(QUOTE, '', quoteKind);
+  }
+
+
   factory _XmlToken(int kind) {
-    return new _XmlToken._internal(kind, '');
+    return new _XmlToken._internal(kind, '', -1);
   }
 
 
@@ -315,7 +322,7 @@ class _XmlToken {
       case EQ:
         return "=";
       case QUOTE:
-        return '"';
+        return quoteKind == XmlTokenizer.QUOTE ? '"' : "'";
       case IGNORE:
         return 'INVALID()';
       default:

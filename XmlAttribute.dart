@@ -27,5 +27,6 @@ class XmlAttribute extends XmlNode
   :
     super(XmlNodeType.Attribute);
 
-  String toString() => ' $name="$value"';
+  String toString() =>
+      value.contains('"') ? " $name='$value'" : ' $name="$value"';
 }

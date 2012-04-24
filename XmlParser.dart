@@ -284,19 +284,29 @@ class XmlParser {
     _assertKind(next, _XmlToken.QUOTE, "Quotes are required around"
       " attribute values.");
 
-    next = t.next();
     StringBuffer s = new StringBuffer();
 
-    while (next.kind != _XmlToken.QUOTE){
+    int qkind = next.quoteKind;
 
-      s.add(next.toStringLiteral());
-
+    do {
       next = t.next();
 
       if (next == null){
         throw const XmlException('Unexpected end of file.');
       }
-    }
+
+      if (next.kind != _XmlToken.QUOTE){
+        s.add(next.toStringLiteral());
+      }else{
+        if (next.quoteKind != qkind){
+          s.add(next.toStringLiteral());
+        }else{
+          qkind = -1;
+        }
+      }
+
+    } while (qkind != -1);
+
 
     setAttribute(attributeName, s.toString());
   }
