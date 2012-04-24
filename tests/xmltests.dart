@@ -15,6 +15,37 @@ void main() {
 }
 
 
+final String dbXml =
+'''
+<books>
+  <book id='1'>
+    <title>ABCs</title>
+    <subject>Self Help</subject>
+    <author>Sydney O'Shannahan</author>
+  </book>
+  <book id='2'>
+    <title>Build A House</title>
+    <subject>Self Help</subject>
+    <author>Marko Stajic</author>
+  </book>
+  <book id='3'>
+    <title>A Bridge Too Expensive</title>
+    <subject>Fiction</subject>
+    <author>Stefan Handsomly</author>
+  </book>
+  <book id='4'>
+    <title>My Cousin Ed</title>
+    <subject>Fiction</subject>
+    <author>Jasna Bradshaw</author>
+  </book>
+  <book id='5'>
+    <title>Boring Places</title>
+    <subject>Travel & Leisure</subject>
+    <author>John Henryson</author>
+  </book>
+</books>
+''';
+
 final String testXml =
 '''
 <!-- comment -->

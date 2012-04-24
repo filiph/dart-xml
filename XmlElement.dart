@@ -21,13 +21,13 @@
 */
 class XmlElement extends XmlNode {
   final String name;
-  final List<XmlNode> _children;
+  final XmlCollection<XmlNode> _children;
   final Map<String, String> _attributes;
   //final String namespace; //future
 
   XmlElement(this.name, [List<XmlNode> elements = const []])
   :
-    _children = [],
+    _children = new XmlCollection<XmlNode>(),
     _attributes = {},
     super(XmlNodeType.Element)
   {
@@ -75,7 +75,7 @@ class XmlElement extends XmlNode {
     }
 
     element.parent = this;
-    _children.add(element);
+    _children._add(element);
   }
 
   void addChildren(List<XmlNode> elements){
@@ -95,8 +95,8 @@ class XmlElement extends XmlNode {
   * * query({'attributeName':'attributeValue'}) // returns the first occurance
   * of any [XmlElement] where the given attributes/values are found.
   */
-  List<XmlNode> query(queryOn){
-    var list = [];
+  XmlCollection<XmlNode> query(queryOn){
+    XmlCollection<XmlNode> list = new XmlCollection();
 
     if (queryOn is String){
       _queryNameInternal(queryOn, list);
@@ -110,7 +110,7 @@ class XmlElement extends XmlNode {
   }
 
 
-  void _queryAttributeInternal(Map aMap, List list){
+  void _queryAttributeInternal(Map aMap, XmlCollection<XmlNode> list){
     bool checkAttribs(){
       var succeed = true;
 
@@ -128,7 +128,7 @@ class XmlElement extends XmlNode {
     }
 
     if (checkAttribs()){
-      list.add(this);
+      list._add(this);
       return;
     }else{
       if (hasChildren){
@@ -142,9 +142,9 @@ class XmlElement extends XmlNode {
     }
   }
 
-  void _queryNodeTypeInternal(XmlNodeType nodeType, List list){
+  void _queryNodeTypeInternal(XmlNodeType nodeType, XmlCollection<XmlNode> list){
     if (type == nodeType){
-      list.add(this);
+      list._add(this);
       return;
     }else{
       if (hasChildren){
@@ -155,7 +155,7 @@ class XmlElement extends XmlNode {
               el._queryNodeTypeInternal(nodeType, list);
             }else{
               if (el.type == nodeType){
-                list.add(el);
+                list._add(el);
                 return;
               }
             }
@@ -164,10 +164,10 @@ class XmlElement extends XmlNode {
     }
   }
 
-  void _queryNameInternal(String tagName, List list){
+  void _queryNameInternal(String tagName, XmlCollection<XmlNode> list){
 
     if (this.name == tagName){
-      list.add(this);
+      list._add(this);
       return;
     }else{
       if (hasChildren){
@@ -190,8 +190,8 @@ class XmlElement extends XmlNode {
   * * query(XmlNodeType.CDATA) // returns first occurance of element matching
   * the given node type (CDATA node in this example).
   */
-  List<XmlNode> queryAll(queryOn){
-    var list = [];
+  XmlCollection<XmlNode> queryAll(queryOn){
+    var list = new XmlCollection<XmlNode>();
 
     if (queryOn is String){
       _queryAllNamesInternal(queryOn, list);
@@ -204,7 +204,7 @@ class XmlElement extends XmlNode {
     return list;
   }
 
-  void _queryAllAttributesInternal(Map aMap, List list){
+  void _queryAllAttributesInternal(Map aMap, XmlCollection<XmlNode> list){
     bool checkAttribs(){
       var succeed = true;
 
@@ -222,7 +222,7 @@ class XmlElement extends XmlNode {
     }
 
     if (checkAttribs()){
-      list.add(this);
+      list._add(this);
     }else{
       if (hasChildren){
         children
@@ -234,9 +234,9 @@ class XmlElement extends XmlNode {
     }
   }
 
-  void _queryAllNodeTypesInternal(XmlNodeType nodeType, List list){
+  void _queryAllNodeTypesInternal(XmlNodeType nodeType, XmlCollection<XmlNode> list){
     if (type == nodeType){
-      list.add(this);
+      list._add(this);
     }else{
       if (hasChildren){
         children
@@ -245,7 +245,7 @@ class XmlElement extends XmlNode {
               el._queryAllNodeTypesInternal(nodeType, list);
             }else{
               if (el.type == nodeType){
-                list.add(el);
+                list._add(el);
               }
             }
           });
@@ -253,9 +253,9 @@ class XmlElement extends XmlNode {
     }
   }
 
-  _queryAllNamesInternal(String tagName, List list){
+  _queryAllNamesInternal(String tagName, XmlCollection<XmlNode> list){
     if (this.name == tagName){
-      list.add(this);
+      list._add(this);
     }
 
     if (hasChildren){

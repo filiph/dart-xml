@@ -30,6 +30,7 @@
 #source('XmlException.dart');
 #source('XmlCDATA.dart');
 #source('XmlProcessingInstruction.dart');
+#source('XmlCollection.dart');
 
 
 /**

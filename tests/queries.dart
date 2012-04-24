@@ -2,7 +2,7 @@
 
 queryTests(){
   var parsed = XML.parse(testXml);
-  
+
   group('query', (){
     test('single tag name query succeeds', (){
       var result = parsed.query('TextBlock');
@@ -50,6 +50,19 @@ queryTests(){
       Expect.equals('hello world!', result[1].attributes['text']);
     });
 
+    test('Xml DB query', (){
+      XmlElement books = XML.parse(dbXml);
+
+      var result = books
+                    .queryAll('book')
+                    .queryAll('author')
+                    .filter((e) => e.text == 'John Henryson');
+
+      Expect.isTrue(result is XmlCollection);
+      Expect.equals(1, result.length);
+      Expect.equals('John Henryson', result[0].text);
+    });
+
   });
-  
+
 }
