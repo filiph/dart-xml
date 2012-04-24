@@ -104,7 +104,6 @@ soon hopefully)
 * Doesn't enforce DTD
 * Doesn't enforce any local schema declarations
 * Doesn't yet support namespaces
-* Nested quotes in attributes are not yet supported.
 	
 ## License ##
 Apache 2.0

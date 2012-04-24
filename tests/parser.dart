@@ -1,7 +1,6 @@
 
 parserTests(){
   var parsed = XML.parse(testXml);
-  print(parsed.toString());
 
   group('parser', (){
     test('no fidelity lost during successive parse/stringify', (){
