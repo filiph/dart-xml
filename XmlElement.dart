@@ -51,9 +51,10 @@ class XmlElement extends XmlNode {
 
   XmlNode get previousSibling() {
     var i = parent._children.indexOf(this);
+
     if (i <= 0) return null;
 
-    return parent._children.getRange(i - 1, 1)[0];
+    return parent._children[i - 1];
   }
 
   XmlNode get nextSibling() {
@@ -61,7 +62,7 @@ class XmlElement extends XmlNode {
 
     var i = parent._children.indexOf(this);
 
-    return parent._children.getRange(i + 1, 1)[0];
+    return parent._children[i + 1];
   }
 
   bool get hasChildren() => !_children.isEmpty();
