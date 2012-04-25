@@ -99,11 +99,15 @@ Quirks mode is off by default, but can be enabled like so:
 Currently quirks mode allows:
 
 * optional quotes around attribute values where a single word is the value.
-    <!-- this is ok in quirks mode -->
+
+#### Example ####
+    // this is ok in quirks mode
     <foo bar=bloo></foo>
-    <!-- otherwise it would have to be -->
+    
+    // otherwise it would have to be
     <foo bar='bloo'></foo>
-    <!-- multiple words must be in quotes -->
+    
+    // multiple words must be in quotes
     <foo bar='blee bloo'></foo>
     
 ## Supports ##
