@@ -64,7 +64,7 @@ XML trees can be created manually in code:
 
 ### Queries ###
 Any XmlElement can be queried a number of ways.  All queries return 
-XmlCollectiont&lt;XmlElement&gt;, even the first-occurance queries. 
+XmlCollection&lt;XmlElement&gt;, even the first-occurance queries. 
 Query functions support these parameter types:
 
 * String (match tag name)
