@@ -33,7 +33,6 @@
 #source('XmlCollection.dart');
 #source('XmlNamespace.dart');
 
-
 /**
 * Utility class to work with XML data.
 */
@@ -42,6 +41,10 @@ class XML
 
   /**
   * Returns a [XmlElement] tree representing the raw XML fragment [String].
+  *
+  * Optional parameter [withQuirks] will allow the following when set to true:
+  *
+  * * Optional quotes for simple attribute values (no spaces).
   */
   static XmlElement parse(String xml, [withQuirks = false]) =>
       XmlParser._parse(xml.trim(), withQuirks);

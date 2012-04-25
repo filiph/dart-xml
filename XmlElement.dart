@@ -134,6 +134,12 @@ class XmlElement extends XmlNode {
       return;
     }
 
+    //shunt any XmlNamespaces into the map
+    if (element is XmlNamespace){
+      namespaces[element.dynamic.name] = element.dynamic.uri;
+      return;
+    }
+
     element.parent = this;
     _children._add(element);
   }
