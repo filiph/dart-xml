@@ -64,13 +64,12 @@ XML trees can be created manually in code:
 
 ### Queries ###
 Any XmlElement can be queried a number of ways.  All queries return 
-List&lt;XmlElement&gt;, even the first-occurance queries.  Query functions support
-these parameter types:
+XmlCollectiont&lt;XmlElement&gt;, even the first-occurance queries. 
+Query functions support these parameter types:
 
 * String (match tag name)
 * XmlNodeType (match XmlNodeType)
 * Map (match one or more attribute/value pairs)
-
 
 #### Example Queries ####
     // By tag name
@@ -89,16 +88,17 @@ these parameter types:
     myXmlElement.query({'id':'foo', 'style':'bar'});
     myXmlElement.queryAll({'id':'foo', 'style':'bar'}); //returns all matches	
 
+    
 All queries are case-sensitive.
 
 ### Quirks Mode ###
 Quirks mode is off by default, but can be enabled like so:
 
-    XML.parse('<foo></foo>', quirksMode:true);
+    XML.parse('<foo></foo>', withQuirks:true);
 
 Currently quirks mode allows:
 
-* optional quotes around attribute values where a single word is the value.
+* Optional quotes around attribute values where a single word is the value.
 
 #### Example ####
     // this is ok in quirks mode
