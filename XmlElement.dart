@@ -27,7 +27,7 @@ class XmlElement extends XmlNode {
 
   XmlElement(this.name, [List<XmlNode> elements = const []])
   :
-    _children = new XmlCollection<XmlNode>(),
+    _children = new XmlCollection<XmlNode>._internal(),
     _attributes = {},
     super(XmlNodeType.Element)
   {
@@ -96,7 +96,7 @@ class XmlElement extends XmlNode {
   * of any [XmlElement] where the given attributes/values are found.
   */
   XmlCollection<XmlNode> query(queryOn){
-    XmlCollection<XmlNode> list = new XmlCollection();
+    XmlCollection<XmlNode> list = new XmlCollection._internal();
 
     if (queryOn is String){
       _queryNameInternal(queryOn, list);
@@ -142,7 +142,8 @@ class XmlElement extends XmlNode {
     }
   }
 
-  void _queryNodeTypeInternal(XmlNodeType nodeType, XmlCollection<XmlNode> list){
+  void _queryNodeTypeInternal(XmlNodeType nodeType,
+                              XmlCollection<XmlNode> list){
     if (type == nodeType){
       list._add(this);
       return;
@@ -191,7 +192,7 @@ class XmlElement extends XmlNode {
   * the given node type (CDATA node in this example).
   */
   XmlCollection<XmlNode> queryAll(queryOn){
-    var list = new XmlCollection<XmlNode>();
+    var list = new XmlCollection<XmlNode>._internal();
 
     if (queryOn is String){
       _queryAllNamesInternal(queryOn, list);

@@ -21,21 +21,34 @@
 class XmlCollection<E extends XmlNode> implements Collection<E> {
   final List<E> _collection;
 
-  XmlCollection()
+  XmlCollection._internal()
   :
     _collection = new List<E>();
 
-  XmlCollection._fromCollection(Collection<E> list)
+  XmlCollection._from(Collection<E> list)
   :
     _collection = new List<E>()
   {
     _collection.addAll(list);
   }
 
+  /**
+   * Returns the last element of the [XmlCollection], or throws an out of bounds
+   * exception if the [XmlCollection] is empty.
+   */
   E last() => _collection.last();
 
+  /**
+   * Returns the first index of [element] in this [XmlCollection].
+   * Searches this [XmlCollection] from index [start] to the length of the
+   * [XmlCollection]. Returns -1 if [element] is not found.
+   */
   indexOf(E element) => _collection.indexOf(element);
 
+  /**
+   * Returns the element at the given [index] in the [XmlCollection] or throws
+   * an [IndexOutOfRangeException] if [index] is out of bounds.
+   */
   E operator [](int index) => _collection[index];
 
   void _add(E element) => _collection.add(element);
@@ -57,7 +70,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
    * typeis Collection.
    */
   XmlCollection map(f(E element)) =>
-      new XmlCollection._fromCollection(_collection.map(f));
+      new XmlCollection._from(_collection.map(f));
 
   /**
    * Returns a new [XmlCollection] with the elements of this collection
@@ -67,7 +80,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
    * returns true.
    */
   XmlCollection<E> filter(bool f(E element))
-  => new XmlCollection._fromCollection(_collection.filter(f));
+  => new XmlCollection._from(_collection.filter(f));
 
   /**
    * Returns true if every elements of this collection satisify the
@@ -109,7 +122,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   * of any [XmlElement] where the given attributes/values are found.
   */
   XmlCollection<XmlNode> query(queryOn){
-    XmlCollection<XmlNode> list = new XmlCollection();
+    XmlCollection<XmlNode> list = new XmlCollection._internal();
 
     if (queryOn is String){
       for (final node in this){
@@ -134,7 +147,9 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   }
 
 
-  void _queryAttributeInternal(Map aMap, XmlCollection<XmlNode> list, XmlElement n){
+  void _queryAttributeInternal(Map aMap,
+                               XmlCollection<XmlNode> list,
+                               XmlElement n){
     bool checkAttribs(){
       var succeed = true;
 
@@ -218,7 +233,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   * the given node type (CDATA node in this example).
   */
   XmlCollection<XmlNode> queryAll(queryOn){
-    var list = new XmlCollection<XmlNode>();
+    var list = new XmlCollection<XmlNode>._internal();
 
     if (queryOn is String){
       for (final node in this){
@@ -308,4 +323,5 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     }
   }
 
+  String toString() => _collection.toString();
 }

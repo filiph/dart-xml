@@ -53,14 +53,15 @@ queryTests(){
     test('Xml DB query', (){
       XmlElement books = XML.parse(dbXml);
 
+      //any book by author 'Stefan Handsomly'
       var result = books
                     .queryAll('book')
-                    .queryAll('author')
-                    .filter((e) => e.text == 'John Henryson');
+                    .filter((e) =>
+                        e.query('author')[0].text == 'Stefan Handsomly');
 
       Expect.isTrue(result is XmlCollection);
-      Expect.equals(1, result.length);
-      Expect.equals('John Henryson', result[0].text);
+      Expect.equals(2, result.length);
+      Expect.equals('book', result[0].name);
     });
 
   });

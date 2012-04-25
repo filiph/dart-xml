@@ -58,13 +58,11 @@ class XmlParser {
           break;
         case _XmlToken.LT:
           _parseTag(t);
-          // finished.
-          if (_scopes.isEmpty()) return;
           break;
         case _XmlToken.STRING:
           if (_scopes.isEmpty()){
-            //throw this error if at top level
-            _assertKind(tok, _XmlToken.LT);
+            throw const XmlException('Text not allowed in root level.'
+              ' Use comments instead.');
           }else{
             _parseTextNode(t, tok._str);
             _parseTag(t);

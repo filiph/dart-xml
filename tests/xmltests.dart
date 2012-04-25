@@ -3,8 +3,8 @@
 #import('../../../src/lib/unittest/html_enhanced_config.dart');
 
 #import('../xml.dart');
-#source('parser.dart');
-#source('queries.dart');
+#source('parserTests.dart');
+#source('queryTests.dart');
 
 void main() {
   useHtmlEnhancedConfiguration();
@@ -42,6 +42,11 @@ final String dbXml =
     <title>Boring Places</title>
     <subject>Travel & Leisure</subject>
     <author>John Henryson</author>
+  </book>
+  <book id='6'>
+    <title>Ice 10</title>
+    <subject>Fiction</subject>
+    <author>Stefan Handsomly</author>
   </book>
 </books>
 ''';
