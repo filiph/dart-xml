@@ -91,6 +91,21 @@ these parameter types:
 
 All queries are case-sensitive.
 
+### Quirks Mode ###
+Quirks mode is off by default, but can be enabled like so:
+
+    XML.parse('<foo></foo>', quirksMode:true);
+
+Currently quirks mode allows:
+
+* optional quotes around attribute values where a single word is the value.
+    <!-- this is ok in quirks mode -->
+    <foo bar=bloo></foo>
+    <!-- otherwise it would have to be -->
+    <foo bar='bloo'></foo>
+    <!-- multiple words must be in quotes -->
+    <foo bar='blee bloo'></foo>
+    
 ## Supports ##
 * Standard well-formed XML.
 * Comment nodes

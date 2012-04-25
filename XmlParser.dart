@@ -15,18 +15,24 @@
 //   See the License for the specific language governing permissions and
 //   limitations under the License.
 
-/** XML Parser */
+/**
+* ## XML Parser ##
+*
+* ### When _withQuirks == true: ###
+* * Allows optional attribute quotes for single string values
+*/
 class XmlParser {
   final String _xml;
   final Queue<XmlElement> _scopes;
+  final bool _withQuirks;
   XmlElement _root;
 
-  static XmlElement _parse(String xml)
+  static XmlElement _parse(String xml, [withQuirks = false])
   {
     if (xml.isEmpty()){
       throw const XmlException('Nothing to parse.');
     }
-    XmlParser p = new XmlParser._internal(xml);
+    XmlParser p = new XmlParser._internal(xml, withQuirks);
 
     final XmlTokenizer t = new XmlTokenizer(p._xml);
 
@@ -35,7 +41,7 @@ class XmlParser {
     return p._root;
   }
 
-  XmlParser._internal(this._xml)
+  XmlParser._internal(this._xml, this._withQuirks)
   :
     _scopes = new Queue<XmlElement>()
   ;
@@ -277,36 +283,51 @@ class XmlParser {
     _assertKind(next, _XmlToken.EQ, "Must have an = after an"
       " attribute name.");
 
-    //require quotes
     next = t.next();
-    _assertKind(next, _XmlToken.QUOTE, "Quotes are required around"
-      " attribute values.");
 
-    StringBuffer s = new StringBuffer();
+    void quotesRequired(){
+      //require quotes
 
-    int qkind = next.quoteKind;
+      _assertKind(next, _XmlToken.QUOTE, "Quotes are required around"
+        " attribute values.");
 
-    do {
-      next = t.next();
+      StringBuffer s = new StringBuffer();
 
-      if (next == null){
-        throw const XmlException('Unexpected end of file.');
-      }
+      int qkind = next.quoteKind;
 
-      if (next.kind != _XmlToken.QUOTE){
-        s.add(next.toStringLiteral());
-      }else{
-        if (next.quoteKind != qkind){
+      do {
+        next = t.next();
+
+        if (next == null){
+          throw const XmlException('Unexpected end of file.');
+        }
+
+        if (next.kind != _XmlToken.QUOTE){
           s.add(next.toStringLiteral());
         }else{
-          qkind = -1;
+          if (next.quoteKind != qkind){
+            s.add(next.toStringLiteral());
+          }else{
+            qkind = -1;
+          }
         }
+
+      } while (qkind != -1);
+
+
+      setAttribute(attributeName, s.toString());
+    }
+
+
+    if (_withQuirks){
+      if (next.kind == _XmlToken.STRING){
+        setAttribute(attributeName, next._str);
+      }else if (next.kind == _XmlToken.QUOTE){
+        quotesRequired();
       }
-
-    } while (qkind != -1);
-
-
-    setAttribute(attributeName, s.toString());
+    }else{
+      quotesRequired();
+    }
   }
 
 
@@ -319,7 +340,6 @@ class XmlParser {
     _scopes.removeFirst();
   }
   XmlElement _peek() => _scopes.first();
-
 
   void _assertKind(_XmlToken tok, int matchID, [String info = null]){
     _XmlToken match = new _XmlToken(matchID);

@@ -34,6 +34,17 @@ parserTests(){
         (e) => e is XmlException);
     });
 
+    test('attribute no quotes OK when in quirks mode', (){
+        var result = XML.parse('<foo bar=bloo></foo>', true);
+        Expect.equals('bloo', result.attributes['bar']);
+    });
+
+    test('throw on attributes syntax error in quirks mode', (){
+      Expect.throws(
+        () => XML.parse('<foo bar=bloo blee bleep="hello"></foo>'),
+        (e) => e is XmlException);
+    });
+
     test('throw on attribute unbalanced quotes', (){
       Expect.throws(
         () => XML.parse('<foo bar="bloo></foo>'),

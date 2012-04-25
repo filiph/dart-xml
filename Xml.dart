@@ -42,7 +42,8 @@ class XML
   /**
   * Returns a [XmlElement] tree representing the raw XML fragment [String].
   */
-  static XmlElement parse(String xml) => XmlParser._parse(xml.trim());
+  static XmlElement parse(String xml, [withQuirks = false]) =>
+      XmlParser._parse(xml.trim(), withQuirks);
 
   /**
   * Returns a stringified version of an [XmlElement] tree.
