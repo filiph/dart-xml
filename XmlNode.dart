@@ -50,15 +50,17 @@ class XmlNode {
       case XmlNodeType.Element:
         b.add('\r${_space(indent)}<${n.dynamic.name}');
 
-        if (n.dynamic.attributes.length > 0){
+        if (n.dynamic.namespaces.length > 0){
+          n.dynamic.namespaces.forEach((k, v) =>
+              b.add(new XmlNamespace(k, v).toString()));
+        }
 
+        if (n.dynamic.attributes.length > 0){
           n.dynamic.attributes.forEach((k, v) =>
               b.add(new XmlAttribute(k, v).toString()));
-
-          b.add('>');
-        }else{
-          b.add('>');
         }
+
+        b.add('>');
 
         if (n.dynamic.hasChildren){
           n.dynamic.children.forEach((e) =>
@@ -72,6 +74,7 @@ class XmlNode {
         }
 
         break;
+      case XmlNodeType.Namespace:
       case XmlNodeType.Attribute:
         b.add(n.toString());
         break;

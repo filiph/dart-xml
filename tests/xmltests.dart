@@ -54,14 +54,15 @@ final String dbXml =
 final String testXml =
 '''
 <!-- comment -->
-<StackPanel>
+<StackPanel xmlns:test='http://www.lucastudios.com/'>
 <?hello world?>
-   <TextBlock text='hello' fontSize="12" />
+   <TextBlock test:foo='namespace attribute' text='hello' fontSize="12" />
    <TextBlock text="hello world!" fontSize="12"></TextBlock>
    <foo bar="nested 'quotes 'are' cool' and are 'ok'"></foo>
+   <test:blah test:attr="rtta" flower="power"></test:blah>
    <foo bar='nested "quotes "are" cool" and are "ok"'></foo>
    text node
-   <Border>
+   <Border xmlns:foons='http://www.foo.org' xmlns:barns='http://www.bar.org'>
 <![CDATA[
 the markup below should be escaped
 <greeting>hello world</greeting>

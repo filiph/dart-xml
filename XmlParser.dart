@@ -161,13 +161,28 @@ class XmlParser {
       next = t.next();
       _assertKind(next, _XmlToken.STRING);
 
-      if (_peek().name != next._str){
-        throw new XmlException.withDebug(
-        'Expected closing tag "${_peek().name}"'
-        ' but found "${next._str}" instead.', _xml, next._location);
-      }
+      var name = next._str;
 
       next = t.next();
+
+      if (next.kind == _XmlToken.COLON){
+        //process as namespace
+        next = t.next();
+
+        _assertKind(next, _XmlToken.STRING, 'Namespace prefix must pair with'
+        ' an tag name: (<myNamespace:tagName ...)');
+
+        name = '${name}:${next._str}';
+        next = t.next();
+      }
+
+
+      if (_peek().name != name){
+        throw new XmlException.withDebug(
+        'Expected closing tag "${_peek().name}"'
+        ' but found "${name}" instead.', _xml, next._location);
+      }
+
       _assertKind(next, _XmlToken.GT);
 
       _pop();
@@ -181,7 +196,21 @@ class XmlParser {
 
     //TODO check tag name for invalid chars
 
-    XmlElement newElement = new XmlElement(next._str);
+    var name = next._str;
+
+    next = t.next();
+
+    if (next.kind == _XmlToken.COLON){
+      //process as namespace
+      next = t.next();
+
+      _assertKind(next, _XmlToken.STRING, 'Namespace prefix must pair with'
+      ' an tag name: (<myNamespace:tagName ...)');
+
+      name = '${name}:${next._str}';
+    }
+
+    XmlElement newElement = new XmlElement(name);
 
     if (_root == null){
       //set to root and push
@@ -193,13 +222,24 @@ class XmlParser {
       _push(newElement);
     }
 
-    next = t.next();
+    if (_peek().name.contains(':')){
+      var ns = _peek().name.split(':')[0];
+
+      if (!_peek().isNamespaceInScope(ns)){
+        throw new XmlException.withDebug('Namespace "${ns}" is'
+          ' not declared in scope.', _xml, next._location);
+      }
+      next = t.next();
+    }
 
     while(next != null){
 
       switch(next.kind){
+        case _XmlToken.NAMESPACE:
+          _parseNamespace(t);
+          break;
         case _XmlToken.STRING:
-          _parseAttributes(t, next._str);
+          _parseAttribute(t, next._str);
           break;
         case _XmlToken.GT:
           _parseElement(t);
@@ -271,15 +311,94 @@ class XmlParser {
     writeStringNode();
   }
 
-  void _parseAttributes(XmlTokenizer t, String attributeName){
+  void _parseNamespace(XmlTokenizer t){
+    XmlElement el = _peek();
+
+    void setNamespace(String name, String uri){
+      el.namespaces[name] = uri;
+    }
+
+    _XmlToken next = t.next();
+    _assertKind(next, _XmlToken.STRING, "Must declare namespace name.");
+    var name = next._str;
+
+    next = t.next();
+    _assertKind(next, _XmlToken.EQ, "Must have an = after a"
+      " namespace name.");
+
+    next = t.next();
+
+    void quotesRequired(){
+      //require quotes
+
+      _assertKind(next, _XmlToken.QUOTE, "Quotes are required around"
+        " attribute values.");
+
+      StringBuffer s = new StringBuffer();
+
+      int qkind = next.quoteKind;
+
+      do {
+        next = t.next();
+
+        if (next == null){
+          throw const XmlException('Unexpected end of file.');
+        }
+
+        if (next.kind != _XmlToken.QUOTE){
+          s.add(next.toStringLiteral());
+        }else{
+          if (next.quoteKind != qkind){
+            s.add(next.toStringLiteral());
+          }else{
+            qkind = -1;
+          }
+        }
+
+      } while (qkind != -1);
+
+
+      setNamespace(name, s.toString());
+    }
+
+
+    if (_withQuirks){
+      if (next.kind == _XmlToken.STRING){
+        setNamespace(name, next._str);
+      }else if (next.kind == _XmlToken.QUOTE){
+        quotesRequired();
+      }
+    }else{
+      quotesRequired();
+    }
+  }
+
+  void _parseAttribute(XmlTokenizer t, String attributeName){
     XmlElement el = _peek();
 
     void setAttribute(String name, String value){
       //TODO validate well-formed attribute names
-      _peek().attributes[name] = value;
+      el.attributes[name] = value;
     }
 
     _XmlToken next = t.next();
+
+    if (next.kind == _XmlToken.COLON){
+      //process as namespace
+      next = t.next();
+
+      _assertKind(next, _XmlToken.STRING, 'Namespace prefix must pair with'
+      ' an attribute name: (myNamespace:myattribute="...")');
+
+      if (!el.isNamespaceInScope(attributeName)){
+        throw new XmlException.withDebug('Namespace "$attributeName" is'
+          ' not declared in scope.', _xml, next._location);
+      }
+
+      attributeName = '${attributeName}:${next._str}';
+      next = t.next();
+    }
+
     _assertKind(next, _XmlToken.EQ, "Must have an = after an"
       " attribute name.");
 

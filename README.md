@@ -111,10 +111,11 @@ Currently quirks mode allows:
     <foo bar='blee bloo'></foo>
     
 ## Supports ##
-* Standard well-formed XML.
+* Standard well-formed XML
 * Comment nodes
 * CDATA nodes
 * Text nodes
+* Namespace declarations and usage
 * Processing Instruction (PI) nodes
 * Querying of XML nodes by tagName, attribute(s), or XmlNodeType (combinators
 soon hopefully)
@@ -122,7 +123,6 @@ soon hopefully)
 ## Limitations ##
 * Doesn't enforce DTD
 * Doesn't enforce any local schema declarations
-* Doesn't yet support namespaces
-	
+
 ## License ##
 Apache 2.0

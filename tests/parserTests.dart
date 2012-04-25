@@ -1,9 +1,9 @@
 
 parserTests(){
-  var parsed = XML.parse(testXml);
 
   group('parser', (){
     test('no fidelity lost during successive parse/stringify', (){
+      var parsed = XML.parse(testXml);
       var str1 = parsed.toString();
       var parsed2 = XML.parse(str1);
       var str2 = parsed2.toString();
@@ -68,6 +68,7 @@ parserTests(){
     });
 
     test('all comments stripped', (){
+      var parsed = XML.parse(testXml);
       var str = parsed.toString();
       Expect.isFalse(str.contains("<!--") || str.contains("-->"));
     });
@@ -166,6 +167,13 @@ parserTests(){
     test('throw on text node  EOF', (){
       Expect.throws(
         () => XML.parse('<foo>bar'),
+        (e) => e is Exception);
+    });
+
+    test('throw on namespace out of scope', (){
+      Expect.throws(
+        () => XML.parse('<foo xmlns:test1="bar" xmlns:test2="bar">'
+          '<bar test3:help="me"></bar></foo>'),
         (e) => e is Exception);
     });
   });

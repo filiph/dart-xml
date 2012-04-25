@@ -1,22 +1,25 @@
 
 
 queryTests(){
-  var parsed = XML.parse(testXml);
-
   group('query', (){
     test('single tag name query succeeds', (){
+      var parsed = XML.parse(testXml);
       var result = parsed.query('TextBlock');
       Expect.equals(1, result.length);
       Expect.equals('hello', result[0].attributes['text']);
     });
 
     test('single XmlNodeType query succeeds', (){
+      var parsed = XML.parse(testXml);
+
       var result = parsed.query(XmlNodeType.CDATA);
       Expect.equals(1, result.length);
       Expect.isTrue(result[0] is XmlCDATA);
     });
 
     test('single attribute match query succeeds', (){
+      var parsed = XML.parse(testXml);
+
       var result = parsed.query({'text':'hello world!'});
 
       Expect.equals(1, result.length);
@@ -24,6 +27,8 @@ queryTests(){
     });
 
     test('all on tag name succeeds', (){
+      var parsed = XML.parse(testXml);
+
       var result = parsed.queryAll('TextBlock');
       Expect.equals(2, result.length);
       Expect.equals('hello', result[0].attributes['text']);
@@ -31,6 +36,8 @@ queryTests(){
     });
 
     test('all on XmlNodeType succeeds', (){
+      var parsed = XML.parse(testXml);
+
       var result = parsed.queryAll(XmlNodeType.PI);
       Expect.equals(2, result.length);
       Expect.isTrue(result[0] is XmlProcessingInstruction);
@@ -40,6 +47,8 @@ queryTests(){
     });
 
     test('all on attributes succeeds', (){
+      var parsed = XML.parse(testXml);
+
       var result = parsed.queryAll({'fontSize':'12'});
       Expect.equals(2, result.length);
       Expect.isTrue(result[0] is XmlElement);

@@ -31,6 +31,7 @@
 #source('XmlCDATA.dart');
 #source('XmlProcessingInstruction.dart');
 #source('XmlCollection.dart');
+#source('XmlNamespace.dart');
 
 
 /**

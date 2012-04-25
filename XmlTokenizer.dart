@@ -137,7 +137,7 @@ class XmlTokenizer {
         addToQueue(new _XmlToken(_XmlToken.SLASH));
         break;
       case LT:
-        final specialTags = const ['<!--', '<![CDATA[', '<?'];
+        final specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
         var found = '';
         var endIndex = -1;
 
@@ -164,15 +164,28 @@ class XmlTokenizer {
             addToQueue(new _XmlToken(_XmlToken.START_PI));
             _i = endIndex + 1;
             break;
+          case specialTags[3]:
+            addToQueue(new _XmlToken(_XmlToken.LT));
+            addToQueue(new _XmlToken(_XmlToken.SLASH));
+            _i = endIndex + 1;
+            break;
           default:
             //standard start tag
             _i++;
             addToQueue(new _XmlToken(_XmlToken.LT));
-            int c = peekUntil([SPACE, GT]);
+            int c = peekUntil([SPACE, COLON, GT]);
             if (c == SPACE){
               var _ii = _i;
               _i = _xml.indexOf(' ', _ii) + 1;
               addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+            }else if (c == COLON){
+              var _ii = _i;
+              _i = _xml.indexOf(':', _ii) + 1;
+              addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+              addToQueue(new _XmlToken(_XmlToken.COLON));
+              _ii = _xml.indexOf(' ', _i) + 1;
+              addToQueue(new _XmlToken.string(_xml.substring(_i, _ii - 1)));
+              _i = _ii;
             }
             break;
         }
@@ -194,14 +207,20 @@ class XmlTokenizer {
         addToQueue(new _XmlToken.quote(SQUOTE));
         break;
       default:
-        StringBuffer s = new StringBuffer();
+        var m = matchWord('xmlns:');
+        if (m != -1){
+          _i = m + 1;
+          addToQueue(new _XmlToken(_XmlToken.NAMESPACE));
+        }else{
+          StringBuffer s = new StringBuffer();
 
-        while(_i < _length && !isReserved(_xml.charCodeAt(_i))){
-          s.add(_xml.substring(_i, _i + 1));
-          _i++;
+          while(_i < _length && !isReserved(_xml.charCodeAt(_i))){
+            s.add(_xml.substring(_i, _i + 1));
+            _i++;
+          }
+
+          addToQueue(new _XmlToken.string(s.toString().trim()));
         }
-
-        addToQueue(new _XmlToken.string(s.toString().trim()));
         break;
     }
     return getNextToken();
@@ -240,6 +259,7 @@ class _XmlToken {
   static final int END_CDATA = 15;
   static final int START_PI = 16;
   static final int END_PI = 17;
+  static final int NAMESPACE = 18;
 
   final int kind;
   final int quoteKind;
@@ -297,6 +317,8 @@ class _XmlToken {
         return ('(<![CDATA[)');
       case END_CDATA:
         return ('(]]>)');
+      case NAMESPACE:
+        return ('xmlns:');
       case IGNORE:
         return 'INVALID()';
 
@@ -305,6 +327,8 @@ class _XmlToken {
 
   String toStringLiteral() {
     switch(kind){
+      case NAMESPACE:
+        return "xmlns:";
       case GT:
         return ">";
       case LT:

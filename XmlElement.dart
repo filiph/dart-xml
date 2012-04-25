@@ -23,17 +23,23 @@ class XmlElement extends XmlNode {
   final String name;
   final XmlCollection<XmlNode> _children;
   final Map<String, String> _attributes;
+  final Map<String, String> _namespaces;
+
   //final String namespace; //future
 
   XmlElement(this.name, [List<XmlNode> elements = const []])
   :
     _children = new XmlCollection<XmlNode>._internal(),
     _attributes = {},
+    _namespaces = {},
     super(XmlNodeType.Element)
   {
     addChildren(elements);
   }
 
+  /**
+  * Gets a [String] of any text within this [XmlElement].
+  */
   String get text() {
     var tNodes = _children.filter((el) => el is XmlText);
     if (tNodes.isEmpty()) return '';
@@ -43,12 +49,56 @@ class XmlElement extends XmlNode {
     return s.toString();
   }
 
+  /**
+  * Gets a map of name/uri namespace pairs associated with
+  * this [XmlElement].
+  */
+  Map<String, String> get namespaces() => _namespaces;
+
+  /**
+  * Gets a map of name/value attributue pairs associated with
+  * this [XmlElement].
+  */
   Map<String, String> get attributes() => _attributes;
 
+  /**
+  * Gets a collection of children under this [XmlElement].
+  */
   Collection<XmlNode> get children() => _children;
 
+  /**
+  * Gets a collection of siblings related to this [XmlElement].
+  */
   Collection<XmlNode> get siblings() => parent.children;
 
+  /**
+  * Gets a collection of [XmlNamespace]s that are in scope to this
+  * [XmlElement].
+  */
+  Collection<XmlNamespace> get namespacesInScope() {
+    List<XmlNamespace> l = [];
+
+    _namespaces.forEach((nname, uri){
+      l.add(new XmlNamespace(nname, uri));
+    });
+
+    if (parent != null && parent is XmlElement){
+      l.addAll(parent.namespacesInScope);
+    }
+
+    return l;
+  }
+
+  /**
+  * Returns true if the given [namespace] name is found in the current
+  * scope of namespaces.
+  */
+  bool isNamespaceInScope(String namespace) =>
+      namespacesInScope.some((ns) => ns.name == namespace);
+
+  /**
+  * Gets the previous sibling to the this [XmlElement], or null if none exists.
+  */
   XmlNode get previousSibling() {
     var i = parent._children.indexOf(this);
 
@@ -57,6 +107,10 @@ class XmlElement extends XmlNode {
     return parent._children[i - 1];
   }
 
+  /**
+  * Gets the next sibling adjacent to this [XmlElement], or null if none
+  * exists.
+  */
   XmlNode get nextSibling() {
     if (parent._children.last() == this) return null;
 
@@ -65,8 +119,14 @@ class XmlElement extends XmlNode {
     return parent._children[i + 1];
   }
 
+  /**
+  * Gets a boolean indicating of this [XmlElement] has any child elements.
+  */
   bool get hasChildren() => !_children.isEmpty();
 
+  /**
+  * Adds a child [XmlNode] to this [XmlElement].
+  */
   void addChild(XmlNode element){
     //shunt any XmlAttributes into the map
     if (element is XmlAttribute){
@@ -78,7 +138,10 @@ class XmlElement extends XmlNode {
     _children._add(element);
   }
 
-  void addChildren(List<XmlNode> elements){
+  /**
+  * Adds a collection of [XmlNode]s to this [XmlElement].
+  */
+  void addChildren(Collection<XmlNode> elements){
     if (!elements.isEmpty()){
       elements.forEach((XmlNode e) => addChild(e));
     }
