@@ -192,6 +192,7 @@ class XmlTokenizer {
             //standard start tag
             _i++;
             addToQueue(new _XmlToken(_XmlToken.LT));
+            _i = nextNonWhitespace(_i);
             int c = peekUntil([SPACE, COLON, GT]);
             if (c == SPACE){
               var _ii = _i;

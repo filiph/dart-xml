@@ -177,12 +177,18 @@ parserTests(){
         (e) => e is Exception);
     });
 
-    test('line breaks (all whitespace) ignored after tag name.', (){
+    test('line breaks (all whitespace) ignored in tag parsing.', (){
       var p = XML.parse(
 '''
-<foo
+<
+
+  foo
   bar='hello'
-  bloo='hello again'>
+  bloo 
+ =   
+'hello again'
+
+  >
 </foo>
 '''
 );
