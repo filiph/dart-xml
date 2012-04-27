@@ -59,7 +59,12 @@ class XmlTokenizer {
       _tq.addLast(token);
     }
 
-    _XmlToken getNextToken() =>  _tq.isEmpty() ? null : _tq.removeFirst();
+    _XmlToken getNextToken() {
+//      if (!_tq.isEmpty()){
+//        print('token: ${_tq.first()}');
+//      }
+      return _tq.isEmpty() ? null : _tq.removeFirst();
+    }
 
 
     // Returns the first char in the list that appears ahead.
@@ -73,7 +78,6 @@ class XmlTokenizer {
       return _xml.charCodeAt(z);
     }
 
-
     // Returns the index of the last char of a given word, if found from
     // the current index onward; otherwise returns -1;
     int matchWord(String word){
@@ -85,6 +89,21 @@ class XmlTokenizer {
       }
 
       return z - 1;
+    }
+
+    int nextNonWhitespace(int from){
+
+      while(isWhitespace(_xml.charCodeAt(from))){
+        from++;
+      }
+      return from;
+    }
+
+    int nextWhitespace(int from){
+      while(!isWhitespace(_xml.charCodeAt(from))){
+        from++;
+      }
+      return from;
     }
 
     // Peel off and return a token if there are any in the queue.
@@ -176,16 +195,17 @@ class XmlTokenizer {
             int c = peekUntil([SPACE, COLON, GT]);
             if (c == SPACE){
               var _ii = _i;
-              _i = _xml.indexOf(' ', _ii) + 1;
-              addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
+              _i = nextWhitespace(_ii);
+              addToQueue(new _XmlToken.string(_xml.substring(_ii, _i)));
+              _i = nextNonWhitespace(_i);
             }else if (c == COLON){
               var _ii = _i;
               _i = _xml.indexOf(':', _ii) + 1;
               addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
               addToQueue(new _XmlToken(_XmlToken.COLON));
-              _ii = _xml.indexOf(' ', _i) + 1;
-              addToQueue(new _XmlToken.string(_xml.substring(_i, _ii - 1)));
-              _i = _ii;
+              _ii = nextWhitespace(_i);
+              addToQueue(new _XmlToken.string(_xml.substring(_i, _ii)));
+              _i = nextNonWhitespace(_ii);
             }
             break;
         }
@@ -218,7 +238,6 @@ class XmlTokenizer {
             s.add(_xml.substring(_i, _i + 1));
             _i++;
           }
-
           addToQueue(new _XmlToken.string(s.toString().trim()));
         }
         break;

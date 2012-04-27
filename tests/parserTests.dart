@@ -176,6 +176,17 @@ parserTests(){
           '<bar test3:help="me"></bar></foo>'),
         (e) => e is Exception);
     });
+
+    test('line breaks (all whitespace) ignored after tag name.', (){
+      var p = XML.parse(
+'''
+<foo
+  bar='hello'
+  bloo='hello again'>
+</foo>
+'''
+);
+    });
   });
 
 }
