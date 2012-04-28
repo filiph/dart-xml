@@ -60,9 +60,9 @@ class XmlTokenizer {
     }
 
     _XmlToken getNextToken() {
-      if (!_tq.isEmpty()){
-        print('token: ${_tq.first()}, ${_tq.first()._str}');
-      }
+//      if (!_tq.isEmpty()){
+//        print('token: ${_tq.first()}, ${_tq.first()._str}');
+//      }
       return _tq.isEmpty() ? null : _tq.removeFirst();
     }
 
