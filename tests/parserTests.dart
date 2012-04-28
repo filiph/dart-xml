@@ -7,6 +7,9 @@ parserTests(){
       var str1 = parsed.toString();
       var parsed2 = XML.parse(str1);
       var str2 = parsed2.toString();
+      print(str1);
+      print('');
+      print(str2);
       Expect.equals(str1, str2);
     });
 

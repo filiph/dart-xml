@@ -35,8 +35,8 @@ class XmlTokenizer {
   static final int DASH = 45; //-
   static final int RBRACK = 93; //]
 
-  static final List _reserved = const [LT, GT, Q, B, COLON, SLASH, QUOTE,
-                                      SQUOTE, EQ, RBRACK];
+  static final List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
+                                      SQUOTE, EQ];
 
   final Queue<_XmlToken> _tq;
   final String _xml;
@@ -119,31 +119,6 @@ class XmlTokenizer {
     final int char = _xml.charCodeAt(_i);
 
     switch(char){
-      case RBRACK:
-        var m = matchWord(']]>');
-        if (m != -1){
-          addToQueue(new _XmlToken(_XmlToken.END_CDATA));
-          _i = m + 1;
-        }
-        break;
-//      case DASH:
-//        var m = matchWord('-->');
-//        if (m != -1){
-//          print('end comment');
-//          addToQueue(new _XmlToken(_XmlToken.END_COMMENT));
-//          _i = m + 1;
-//        }
-//        break;
-      case Q:
-        var m = matchWord('?>');
-        if (m != -1){
-          addToQueue(new _XmlToken(_XmlToken.END_PI));
-          _i = m + 1;
-        }else{
-          _i++;
-          addToQueue(new _XmlToken(_XmlToken.QUESTION));
-        }
-        break;
       case B:
         _i++;
         addToQueue(new _XmlToken(_XmlToken.BANG));
@@ -178,9 +153,11 @@ class XmlTokenizer {
 
             var endComment = _xml.indexOf('-->', _i);
             var nestedTest = _xml.indexOf('<!--', _i);
+
             if (endComment == -1){
               throw const XmlException('End comment tag not found.');
             }
+
             if (nestedTest != -1 && nestedTest < endComment){
               throw const XmlException('Nested comments not allowed.');
             }
@@ -192,10 +169,40 @@ class XmlTokenizer {
           case specialTags[1]:
             addToQueue(new _XmlToken(_XmlToken.START_CDATA));
             _i = endIndex + 1;
+
+            var endCDATA = _xml.indexOf(']]>', _i);
+            var nestedTest = _xml.indexOf('<![CDATA[', _i);
+
+            if (endCDATA == -1){
+              throw const XmlException('End CDATA tag not found.');
+            }
+
+            if (nestedTest != -1 && nestedTest < endCDATA){
+              throw const XmlException('Nested CDATA not allowed.');
+            }
+
+            addToQueue(new _XmlToken.string(_xml.substring(_i, endCDATA).trim()));
+            addToQueue(new _XmlToken(_XmlToken.END_CDATA));
+            _i = endCDATA + 3;
             break;
           case specialTags[2]:
             addToQueue(new _XmlToken(_XmlToken.START_PI));
             _i = endIndex + 1;
+
+            var endPI= _xml.indexOf('?>', _i);
+            var nestedTest = _xml.indexOf('<?', _i);
+
+            if (endPI == -1){
+              throw const XmlException('End PI tag not found.');
+            }
+
+            if (nestedTest != -1 && nestedTest < endPI){
+              throw const XmlException('Nested PI not allowed.');
+            }
+
+            addToQueue(new _XmlToken.string(_xml.substring(_i, endPI).trim()));
+            addToQueue(new _XmlToken(_XmlToken.END_PI));
+            _i = endPI+ 2;
             break;
           case specialTags[3]:
             addToQueue(new _XmlToken(_XmlToken.LT));

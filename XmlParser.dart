@@ -85,71 +85,49 @@ class XmlParser {
   }
 
   _parsePI(XmlTokenizer t){
-    //in CDATA node all tokens until ']]>' are joined to a single string
-    StringBuffer s = new StringBuffer();
-
-    _XmlToken next = t.next();
-
-    while(next.kind != _XmlToken.END_PI){
-
-      s.add(next.toStringLiteral());
-
-      next = t.next();
-
-      if (next == null){
-        throw const XmlException('Unexpected end of file.');
-      }
-    }
 
     if (_scopes.isEmpty()){
       throw const XmlException('PI nodes are not supported in the top'
         ' level.');
     }
 
-    _peek().addChild(new XmlProcessingInstruction(s.toString()));
+    _XmlToken next = t.next();
+
+    _assertKind(next, _XmlToken.STRING);
+    var data = next._str;
+
+    next = t.next();
+    _assertKind(next, _XmlToken.END_PI);
+
+    _peek().addChild(new XmlProcessingInstruction(data));
   }
 
   _parseCDATA(XmlTokenizer t){
-    //in CDATA node all tokens until ']]>' are joined to a single string
-    StringBuffer s = new StringBuffer();
-
-    _XmlToken next = t.next();
-
-    while(next.kind != _XmlToken.END_CDATA){
-
-      s.add(next.toStringLiteral());
-
-      next = t.next();
-
-      if (next == null){
-        throw const XmlException('Unexpected end of file.');
-      }
-    }
 
     if (_scopes.isEmpty()){
       throw const XmlException('CDATA nodes are not supported in the top'
         ' level.');
     }
 
-    _peek().addChild(new XmlCDATA(s.toString()));
+    _XmlToken next = t.next();
+
+    _assertKind(next, _XmlToken.STRING);
+    var data = next._str;
+
+    next = t.next();
+    _assertKind(next, _XmlToken.END_CDATA);
+
+    _peek().addChild(new XmlCDATA(data));
   }
 
   //TODO create and XMLComment object instead of just ignoring?
   _parseComment(XmlTokenizer t){
     _XmlToken next = t.next();
 
-    while (next.kind != _XmlToken.END_COMMENT){
+    _assertKind(next, _XmlToken.STRING);
 
-      if (next.kind == _XmlToken.START_COMMENT){
-        throw new XmlException.withDebug('Nested comments not allowed.',
-          _xml, next._location);
-      }
-      next = t.next();
-
-      if (next == null){
-        throw const XmlException('Unexpected end of file.');
-      }
-    }
+    next = t.next();
+    _assertKind(next, _XmlToken.END_COMMENT);
   }
 
   _parseTag(XmlTokenizer t){
