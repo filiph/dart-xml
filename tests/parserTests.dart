@@ -193,6 +193,21 @@ parserTests(){
 '''
 );
     });
+
+    test('comments with line breaks', (){
+      var p = XML.parse('''
+  <!--
+  some comments 
+with line breaks
+
+  -->
+  <foo></foo>
+  ''');
+    }); 
+    
+    
+    
   });
 
+  
 }
