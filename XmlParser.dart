@@ -103,7 +103,6 @@ class XmlParser {
   }
 
   _parseCDATA(XmlTokenizer t){
-
     if (_scopes.isEmpty()){
       throw const XmlException('CDATA nodes are not supported in the top'
         ' level.');
