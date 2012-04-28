@@ -36,7 +36,7 @@ class XmlTokenizer {
   static final int RBRACK = 93; //]
 
   static final List _reserved = const [LT, GT, Q, B, COLON, SLASH, QUOTE,
-                                      SQUOTE, EQ, DASH, RBRACK];
+                                      SQUOTE, EQ, RBRACK];
 
   final Queue<_XmlToken> _tq;
   final String _xml;
@@ -60,9 +60,9 @@ class XmlTokenizer {
     }
 
     _XmlToken getNextToken() {
-//      if (!_tq.isEmpty()){
-//        print('token: ${_tq.first()}');
-//      }
+      if (!_tq.isEmpty()){
+        print('token: ${_tq.first()}, ${_tq.first()._str}');
+      }
       return _tq.isEmpty() ? null : _tq.removeFirst();
     }
 
@@ -77,7 +77,7 @@ class XmlTokenizer {
 
       return _xml.charCodeAt(z);
     }
-   
+
     // Returns the index of the last char of a given word, if found from
     // the current index onward; otherwise returns -1;
     int matchWord(String word){
@@ -175,16 +175,16 @@ class XmlTokenizer {
           case specialTags[0]:
             addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
             _i = endIndex + 1;
-            
+
             var endComment = _xml.indexOf('-->', _i);
             var nestedTest = _xml.indexOf('<!--', _i);
             if (endComment == -1){
-              throw const XmlException('End comment tag not found.'); 
+              throw const XmlException('End comment tag not found.');
             }
             if (nestedTest != -1 && nestedTest < endComment){
-              throw const XmlException('Nested comments not allowed.'); 
+              throw const XmlException('Nested comments not allowed.');
             }
-            
+
             addToQueue(new _XmlToken.string(_xml.substring(_i, endComment)));
             addToQueue(new _XmlToken(_XmlToken.END_COMMENT));
             _i = endComment + 3;

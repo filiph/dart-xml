@@ -203,11 +203,98 @@ with line breaks
   -->
   <foo></foo>
   ''');
-    }); 
-    
-    
-    
+    });
+
+    test('last test', (){
+      var p = XML.parse(
+        '''<!--
+        This demo shows how easy it is to build a simple, but interactive 
+        UI without having to write any code.
+
+        The controls on the left side are adjusting the properties of the
+        boarder in the display area.  This is accomplished through 
+        declarative element-to-element binding.
+        -->
+
+        <stackpanel margin="5">
+          <textblock fontsize="24" text='This demo is written entirely with Buckshot XML - no code.'></textblock>
+          <stackpanel width="650" orientation="horizontal">
+          
+            <grid margin="5" width="210">
+              <columndefinitions>
+                <columndefinition width="*1"></columndefinition>
+                <columndefinition width="*2"></columndefinition>
+                <columndefinition width="*.5"></columndefinition>
+              </columndefinitions>
+              <rowdefinitions>
+                <rowdefinition height="auto"></rowdefinition>
+                <rowdefinition height="auto"></rowdefinition>
+                <rowdefinition height="auto"></rowdefinition>
+                <rowdefinition height="auto"></rowdefinition>
+                <rowdefinition height="auto"></rowdefinition>
+              </rowdefinitions>
+            
+              <!-- labels -->
+              <textblock text="Color:"></textblock>
+              <textblock grid.row="1" text="Width:"></textblock>
+              <textblock grid.row="2" text="Height:"></textblock>
+              <textblock grid.row="3" text="Corner:"></textblock>
+            
+              <!-- controls -->
+
+              <dropdownlist name="ddlColors" width="100" grid.column="1">
+                <items>
+                  <dropdownlistitem name="Red"></dropdownlistitem>
+                  <dropdownlistitem name="Green"></dropdownlistitem>
+                  <dropdownlistitem name="Blue"></dropdownlistitem>
+                  <dropdownlistitem name="LightBlue"></dropdownlistitem>
+                  <dropdownlistitem name="Tan"></dropdownlistitem>
+                  <dropdownlistitem name="Orange"></dropdownlistitem>
+                  <dropdownlistitem name="Purple"></dropdownlistitem>
+                  <dropdownlistitem name="Lime"></dropdownlistitem>
+                  <dropdownlistitem name="DarkGreen"></dropdownlistitem>
+                  <dropdownlistitem name="Yellow"></dropdownlistitem>
+                </items>
+              </dropdownlist>
+              <slider name="slWidth" grid.row="1" grid.column="1" min="20" max="300" value="150" width="100"></slider>
+              <slider name="slHeight" grid.row="2" grid.column="1" min="20" max="300" value="150" width="100"></slider>
+              <slider name="slCorner" grid.row="3" grid.column="1" min="1" max="20" value="1" width="100"></slider>
+            
+              <!-- value labels, bound to controls via element binding -->
+              <textblock grid.column="2" grid.row="1" text="{element slWidth.value}"></textblock>
+              <textblock grid.column="2" grid.row="2" text="{element slHeight.value}"></textblock>
+              <textblock grid.column="2" grid.row="3" text="{element slCorner.value}"></textblock>
+
+              <!-- using declarative actions, we reset the values of the controls when the user clicks the button -->
+              <button grid.row="4" content='Reset'>
+                <actions>
+                  <setpropertyaction event="click" targetName="slWidth" property="value" value="150"></setpropertyaction>
+                  <setpropertyaction event="click" targetName="slHeight" property="value" value="150"></setpropertyaction>
+                  <setpropertyaction event="click" targetName="slCorner" property="value" value="1"></setpropertyaction>
+                </actions>
+              </button>
+
+            </grid>
+           
+            <border margin="5" width="400" height="400" borderthickness="1" bordercolor="Black">
+              <!-- this border is bound to the controls via element binding -->
+              <border horizontalalignment="center" 
+                      verticalalignment="center" 
+                      bordercolor="Black" 
+                      cornerradius="{element slCorner.value}" 
+                      width="{element slWidth.value}" 
+                      height="{element slHeight.value}" 
+                      background="{element ddlColors.selectedItem.name}">
+              </border>
+            </border>
+          </stackpanel>
+          <textblock margin="10,0,0,0" text="Video On How Element Binding Works:"></textblock>
+          <youtube width="300" height="250" videoid="WC25C5AHYAI"></youtube>
+        </stackpanel>''');
+    });
+
+
   });
 
-  
+
 }
