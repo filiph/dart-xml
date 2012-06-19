@@ -16,7 +16,7 @@ Dart Developers who require more robust XML handling are encouraged to fork the
 project and expand as needed.  Pull requests will certainly be welcomed.
 
 ## API ##
-    #import('Xml.dart');
+    #import('PATH_TO/lib/xml.dart');
 
 ### Parsing ###
     // Returns a strongly-typed XmlNode tree
@@ -63,6 +63,8 @@ XML trees can be created manually in code:
 	);
 
 ### Queries ###
+** Experimental **
+
 Any XmlElement can be queried a number of ways.  All queries return 
 XmlCollection&lt;XmlElement&gt;, even the first-occurance queries. 
 Query functions support these parameter types:

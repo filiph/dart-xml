@@ -1,2 +1,2 @@
 tests/xmltests.dart
-xml.dart
+lib/xml.dart

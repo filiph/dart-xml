@@ -2,7 +2,7 @@
 #import('../../../src/lib/unittest/unittest.dart');
 #import('../../../src/lib/unittest/html_enhanced_config.dart');
 
-#import('../xml.dart');
+#import('../lib/xml.dart');
 #source('parserTests.dart');
 #source('queryTests.dart');
 
