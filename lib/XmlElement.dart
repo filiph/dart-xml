@@ -40,7 +40,7 @@ class XmlElement extends XmlNode {
   /**
   * Gets a [String] of any text within this [XmlElement].
   */
-  String get text() {
+  String get text {
     var tNodes = _children.filter((el) => el is XmlText);
     if (tNodes.isEmpty()) return '';
 
@@ -53,29 +53,29 @@ class XmlElement extends XmlNode {
   * Gets a map of name/uri namespace pairs associated with
   * this [XmlElement].
   */
-  Map<String, String> get namespaces() => _namespaces;
+  Map<String, String> get namespaces => _namespaces;
 
   /**
   * Gets a map of name/value attributue pairs associated with
   * this [XmlElement].
   */
-  Map<String, String> get attributes() => _attributes;
+  Map<String, String> get attributes => _attributes;
 
   /**
   * Gets a collection of children under this [XmlElement].
   */
-  Collection<XmlNode> get children() => _children;
+  Collection<XmlNode> get children => _children;
 
   /**
   * Gets a collection of siblings related to this [XmlElement].
   */
-  Collection<XmlNode> get siblings() => parent.children;
+  Collection<XmlNode> get siblings => parent.children;
 
   /**
   * Gets a collection of [XmlNamespace]s that are in scope to this
   * [XmlElement].
   */
-  Collection<XmlNamespace> get namespacesInScope() {
+  Collection<XmlNamespace> get namespacesInScope {
     List<XmlNamespace> l = [];
 
     _namespaces.forEach((nname, uri){
@@ -99,7 +99,7 @@ class XmlElement extends XmlNode {
   /**
   * Gets the previous sibling to the this [XmlElement], or null if none exists.
   */
-  XmlNode get previousSibling() {
+  XmlNode get previousSibling {
     var i = parent._children.indexOf(this);
 
     if (i <= 0) return null;
@@ -111,7 +111,7 @@ class XmlElement extends XmlNode {
   * Gets the next sibling adjacent to this [XmlElement], or null if none
   * exists.
   */
-  XmlNode get nextSibling() {
+  XmlNode get nextSibling {
     if (parent._children.last() == this) return null;
 
     var i = parent._children.indexOf(this);
@@ -122,7 +122,7 @@ class XmlElement extends XmlNode {
   /**
   * Gets a boolean indicating of this [XmlElement] has any child elements.
   */
-  bool get hasChildren() => !_children.isEmpty();
+  bool get hasChildren => !_children.isEmpty();
 
   /**
   * Adds a child [XmlNode] to this [XmlElement].

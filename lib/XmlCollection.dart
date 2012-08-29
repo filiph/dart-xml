@@ -45,6 +45,23 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
    */
   indexOf(E element) => _collection.indexOf(element);
 
+
+  /**
+   * Reduce a collection to a single value by iteratively combining each element
+   * of the collection with an existing value using the provided function.
+   * Use [initialValue] as the initial value, and the function [combine] to
+   * create a new value from the previous one and an element.
+   *
+   * Example of calculating the sum of a collection:
+   *
+   *   collection.reduce(0, (prev, element) => prev + element);
+   */
+  Dynamic reduce(Dynamic initialValue,
+                 Dynamic combine(Dynamic previousValue, E element))
+  => _collection.reduce(initialValue, combine);
+
+
+
   /**
    * Returns the element at the given [index] in the [XmlCollection] or throws
    * an [IndexOutOfRangeException] if [index] is out of bounds.
@@ -102,7 +119,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   /**
    * Returns the number of elements in this collection.
    */
-  int get length() => _collection.length;
+  int get length => _collection.length;
 
   /**
    * Returns an [Iterator] that iterates over this [Iterable] object.
@@ -175,7 +192,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
         .filter((el) => el is XmlElement)
         .forEach((el){
           if (!list.isEmpty()) return;
-          el._queryAttributeInternal(aMap, list);
+          (el as XmlElement)._queryAttributeInternal(aMap, list);
         });
       }
     }

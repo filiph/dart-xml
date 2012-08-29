@@ -66,7 +66,7 @@ queryTests(){
       var result = books
                     .queryAll('book')
                     .filter((e) =>
-                        e.query('author')[0].dynamic.text == 'Stefan Handsomly');
+                        (e as XmlElement).query('author')[0].dynamic.text == 'Stefan Handsomly');
 
       Expect.isTrue(result is XmlCollection);
       Expect.equals(2, result.length);
