@@ -1,8 +1,8 @@
 // point this to wherever your copy of the dart source code is
-#import('../../../src/lib/unittest/unittest.dart');
-#import('../../../src/lib/unittest/html_enhanced_config.dart');
+#import('package:unittest/unittest.dart');
+#import('package:unittest/html_enhanced_config.dart');
 
-#import('../lib/xml.dart');
+#import('../xml.dart');
 #source('parserTests.dart');
 #source('queryTests.dart');
 

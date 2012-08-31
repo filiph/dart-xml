@@ -1,0 +1,6 @@
+name: dart_xml
+description: A lightweight XML Parser.
+version: 0.0.1
+dependencies:
+  unittest:
+    sdk: unittest
