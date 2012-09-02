@@ -46,7 +46,7 @@ class XmlElement extends XmlNode {
   /**
   * Gets a collection of children under this [XmlElement].
   */
-  Collection<XmlNode> get children => _children;
+  XmlCollection get children => _children;
 
   /**
   * Gets a collection of siblings related to this [XmlElement].
