@@ -128,10 +128,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     XmlCollection<XmlNode> list = new XmlCollection._internal();
 
     if (queryOn is String){
-      for (final node in this){
-        if (node is! XmlElement) continue;
-        XmlElement element = node;
-        _queryNameInternal(queryOn, list, element);
+      for (final node in this.allElements()){
+        _queryNameInternal(queryOn, list, node);
         if (!list.isEmpty()) break;
       }
     }else if (queryOn is XmlNodeType){
@@ -140,10 +138,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
         if (!list.isEmpty()) break;
       }
     }else if (queryOn is Map){
-      for (final node in this){
-        if (node is! XmlElement) continue;
-        XmlElement element = node;
-        _queryAttributeInternal(queryOn, list, element);
+      for (final node in this.allElements()){
+        _queryAttributeInternal(queryOn, list, node);
         if (!list.isEmpty()) break;
       }
     }
@@ -177,7 +173,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     }else{
       if (n.hasChildren){
         n.children
-        .filter((el) => el is XmlElement)
+        .allElements()
         .forEach((el){
           if (!list.isEmpty()) return;
           (el as XmlElement)._queryAttributeInternal(aMap, list);
@@ -219,8 +215,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     }else{
       if (element.hasChildren){
         element.children
-          .filter((el) => el is XmlElement)
-          .forEach((XmlElement el){
+          .allElements()
+          .forEach((el){
             if (!list.isEmpty()) return;
             el._queryNameInternal(tagName, list);
           });
@@ -241,20 +237,16 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     var list = new XmlCollection<XmlNode>._internal();
 
     if (queryOn is String){
-      for (final node in this){
-        if (node is! XmlElement) continue;
-        XmlElement element = node;
-        _queryAllNamesInternal(queryOn, list, element);
+      for (final node in this.allElements()){
+        _queryAllNamesInternal(queryOn, list, node);
       }
     }else if (queryOn is XmlNodeType){
       for (final node in this){
         _queryAllNodeTypesInternal(queryOn, list, node);
       }
     }else if (queryOn is Map){
-      for (final node in this){
-        if (node is! XmlElement) continue;
-        XmlElement element = node;
-        _queryAllAttributesInternal(queryOn, list, element);
+      for (final node in this.allElements()){
+        _queryAllAttributesInternal(queryOn, list, node);
       }
     }
 
@@ -285,8 +277,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     }else{
       if (element.hasChildren){
         element.children
-        .filter((el) => el is XmlElement)
-        .forEach((XmlElement el){
+        .allElements()
+        .forEach((el){
           el._queryAttributeInternal(aMap, list);
         });
       }
@@ -324,7 +316,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     if (element.hasChildren){
       element.children
       .filter((el) => el is XmlElement)
-      .forEach((XmlElement el){
+      .forEach((el){
         el._queryAllNamesInternal(tagName, list);
       });
     }

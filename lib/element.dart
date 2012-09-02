@@ -23,11 +23,11 @@ class XmlElement extends XmlNode {
   * Gets a [String] of any text within this [XmlElement].
   */
   String get text {
-    XmlCollection<XmlText> tNodes = _children.filter((el) => el is XmlText);
+    var tNodes = _children.filter((el) => el is XmlText);
     if (tNodes.isEmpty()) return '';
 
     var s = new StringBuffer();
-    tNodes.forEach((n) => s.add(n.text));
+    tNodes.forEach((XmlText n) => s.add(n.text));
     return s.toString();
   }
 
@@ -184,8 +184,8 @@ class XmlElement extends XmlNode {
     }else{
       if (hasChildren){
         children
-        .filter((el) => el is XmlElement)
-        .forEach((XmlElement el){
+        .allElements()
+        .forEach((el){
           if (!list.isEmpty()) return;
           el._queryAttributeInternal(aMap, list);
         });
@@ -224,8 +224,8 @@ class XmlElement extends XmlNode {
     }else{
       if (hasChildren){
         children
-          .filter((el) => el is XmlElement)
-          .forEach((XmlElement el){
+          .allElements()
+          .forEach((el){
             if (!list.isEmpty()) return;
             el._queryNameInternal(tagName, list);
           });
@@ -278,8 +278,8 @@ class XmlElement extends XmlNode {
     }else{
       if (hasChildren){
         children
-        .filter((el) => el is XmlElement)
-        .forEach((XmlElement el){
+        .allElements()
+        .forEach((el){
           el._queryAttributeInternal(aMap, list);
         });
       }
@@ -313,15 +313,9 @@ class XmlElement extends XmlNode {
     if (hasChildren){
       children
       .filter((el) => el is XmlElement)
-      .forEach((XmlElement el){
+      .forEach((el){
         el._queryAllNamesInternal(tagName, list);
       });
     }
   }
 }
-
-
-
-
-
-
