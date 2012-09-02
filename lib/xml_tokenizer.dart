@@ -21,6 +21,8 @@ class XmlTokenizer {
   static const List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
                                       SQUOTE, EQ];
 
+  static const List _whiteSpace = const[SPACE, TAB ,NEW_LINE, CARRIAGE_RETURN];
+
   final Queue<_XmlToken> _tq;
   final String _xml;
   int _length;
@@ -256,9 +258,7 @@ class XmlTokenizer {
   /**
   * Returns true if the charCode is considered to be whitespace.
   */
-  static bool isWhitespace(int c) {
-    return c == SPACE || c == TAB || c == NEW_LINE || c == CARRIAGE_RETURN;
-  }
+  static bool isWhitespace(int c) => _whiteSpace.indexOf(c) >= 0;
 
 }
 
