@@ -2,23 +2,23 @@
 * Returns tokenized parts of Xml document.
 */
 class XmlTokenizer {
-  static final int TAB = 9;
-  static final int NEW_LINE = 10;
-  static final int CARRIAGE_RETURN = 13;
-  static final int SPACE = 32;
-  static final int QUOTE = 34;
-  static final int SQUOTE = 39;
-  static final int SLASH = 47;
-  static final int COLON = 58;
-  static final int LT = 60; //<
-  static final int GT = 62; //>
-  static final int EQ = 61; //=
-  static final int Q = 63;  //?
-  static final int B = 33;  //!
-  static final int DASH = 45; //-
-  static final int RBRACK = 93; //]
+  static const int TAB = 9;
+  static const int NEW_LINE = 10;
+  static const int CARRIAGE_RETURN = 13;
+  static const int SPACE = 32;
+  static const int QUOTE = 34;
+  static const int SQUOTE = 39;
+  static const int SLASH = 47;
+  static const int COLON = 58;
+  static const int LT = 60; //<
+  static const int GT = 62; //>
+  static const int EQ = 61; //=
+  static const int Q = 63;  //?
+  static const int B = 33;  //!
+  static const int DASH = 45; //-
+  static const int RBRACK = 93; //]
 
-  static final List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
+  static const List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
                                       SQUOTE, EQ];
 
   final Queue<_XmlToken> _tq;
@@ -263,24 +263,24 @@ class XmlTokenizer {
 }
 
 class _XmlToken {
-  static final int LT = 1;
-  static final int GT = 2;
-  static final int QUESTION = 3;
-  static final int STRING = 4;
-  static final int BANG = 5;
-  static final int COLON = 6;
-  static final int SLASH = 7;
-  static final int EQ = 8;
-  static final int QUOTE = 9;
-  static final int IGNORE = 10;
-  static final int DASH = 11;
-  static final int START_COMMENT = 12;
-  static final int END_COMMENT = 13;
-  static final int START_CDATA = 14;
-  static final int END_CDATA = 15;
-  static final int START_PI = 16;
-  static final int END_PI = 17;
-  static final int NAMESPACE = 18;
+  static const int LT = 1;
+  static const int GT = 2;
+  static const int QUESTION = 3;
+  static const int STRING = 4;
+  static const int BANG = 5;
+  static const int COLON = 6;
+  static const int SLASH = 7;
+  static const int EQ = 8;
+  static const int QUOTE = 9;
+  static const int IGNORE = 10;
+  static const int DASH = 11;
+  static const int START_COMMENT = 12;
+  static const int END_COMMENT = 13;
+  static const int START_CDATA = 14;
+  static const int END_CDATA = 15;
+  static const int START_PI = 16;
+  static const int END_PI = 17;
+  static const int NAMESPACE = 18;
 
   final int kind;
   final int quoteKind;
