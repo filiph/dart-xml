@@ -23,7 +23,7 @@ class XmlElement extends XmlNode {
   * Gets a [String] of any text within this [XmlElement].
   */
   String get text {
-    var tNodes = _children.filter((el) => el is XmlText);
+    XmlCollection<XmlText> tNodes = _children.filter((el) => el is XmlText);
     if (tNodes.isEmpty()) return '';
 
     var s = new StringBuffer();
@@ -185,7 +185,7 @@ class XmlElement extends XmlNode {
       if (hasChildren){
         children
         .filter((el) => el is XmlElement)
-        .forEach((el){
+        .forEach((XmlElement el){
           if (!list.isEmpty()) return;
           el._queryAttributeInternal(aMap, list);
         });
@@ -225,7 +225,7 @@ class XmlElement extends XmlNode {
       if (hasChildren){
         children
           .filter((el) => el is XmlElement)
-          .forEach((el){
+          .forEach((XmlElement el){
             if (!list.isEmpty()) return;
             el._queryNameInternal(tagName, list);
           });
@@ -279,7 +279,7 @@ class XmlElement extends XmlNode {
       if (hasChildren){
         children
         .filter((el) => el is XmlElement)
-        .forEach((el){
+        .forEach((XmlElement el){
           el._queryAttributeInternal(aMap, list);
         });
       }
@@ -313,7 +313,7 @@ class XmlElement extends XmlNode {
     if (hasChildren){
       children
       .filter((el) => el is XmlElement)
-      .forEach((el){
+      .forEach((XmlElement el){
         el._queryAllNamesInternal(tagName, list);
       });
     }

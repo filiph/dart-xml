@@ -127,7 +127,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     if (queryOn is String){
       for (final node in this){
         if (node is! XmlElement) continue;
-        _queryNameInternal(queryOn, list, node);
+        XmlElement element = node;
+        _queryNameInternal(queryOn, list, element);
         if (!list.isEmpty()) break;
       }
     }else if (queryOn is XmlNodeType){
@@ -138,7 +139,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     }else if (queryOn is Map){
       for (final node in this){
         if (node is! XmlElement) continue;
-        _queryAttributeInternal(queryOn, list, node);
+        XmlElement element = node;
+        _queryAttributeInternal(queryOn, list, element);
         if (!list.isEmpty()) break;
       }
     }
@@ -215,7 +217,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
       if (element.hasChildren){
         element.children
           .filter((el) => el is XmlElement)
-          .forEach((el){
+          .forEach((XmlElement el){
             if (!list.isEmpty()) return;
             el._queryNameInternal(tagName, list);
           });
@@ -238,7 +240,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     if (queryOn is String){
       for (final node in this){
         if (node is! XmlElement) continue;
-        _queryAllNamesInternal(queryOn, list, node);
+        XmlElement element = node;
+        _queryAllNamesInternal(queryOn, list, element);
       }
     }else if (queryOn is XmlNodeType){
       for (final node in this){
@@ -247,7 +250,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     }else if (queryOn is Map){
       for (final node in this){
         if (node is! XmlElement) continue;
-        _queryAllAttributesInternal(queryOn, list, node);
+        XmlElement element = node;
+        _queryAllAttributesInternal(queryOn, list, element);
       }
     }
 
@@ -279,7 +283,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
       if (element.hasChildren){
         element.children
         .filter((el) => el is XmlElement)
-        .forEach((el){
+        .forEach((XmlElement el){
           el._queryAttributeInternal(aMap, list);
         });
       }
@@ -317,7 +321,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     if (element.hasChildren){
       element.children
       .filter((el) => el is XmlElement)
-      .forEach((el){
+      .forEach((XmlElement el){
         el._queryAllNamesInternal(tagName, list);
       });
     }
