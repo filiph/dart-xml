@@ -82,6 +82,9 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   XmlCollection<E> filter(bool f(E element))
   => new XmlCollection._from(_collection.filter(f));
 
+  XmlCollection<XmlElement> allElements() =>
+      new XmlCollection._from(_collection.filter((n) => n is XmlElement));
+
   /**
    * Returns true if every elements of this collection satisify the
    * predicate [f]. Returns false otherwise.
