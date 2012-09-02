@@ -1,8 +1,7 @@
 /**
 * Represents an namespace declaration of an XML element.
 */
-class XmlNamespace extends XmlNode
-{
+class XmlNamespace extends XmlNode {
   final String name;
   final String uri;
 

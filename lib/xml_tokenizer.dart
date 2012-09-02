@@ -26,17 +26,14 @@ class XmlTokenizer {
   int _length;
   int _i = 0;
 
-  XmlTokenizer(this._xml)
-  :
+  XmlTokenizer(this._xml) :
     _i = 0,
-    _tq = new Queue<_XmlToken>()
-  {
+    _tq = new Queue<_XmlToken>() {
     _length = _xml.length;
   }
 
 
-  _XmlToken next()
-  {
+  _XmlToken next() {
     void addToQueue(_XmlToken token){
       token._location = _i;
       _tq.addLast(token);

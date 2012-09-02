@@ -10,8 +10,7 @@ class XmlParser {
   final bool _withQuirks;
   XmlElement _root;
 
-  static XmlElement _parse(String xml, [withQuirks = false])
-  {
+  static XmlElement _parse(String xml, [withQuirks = false])  {
     if (xml.isEmpty()){
       throw const XmlException('Nothing to parse.');
     }
@@ -24,12 +23,10 @@ class XmlParser {
     return p._root;
   }
 
-  XmlParser._internal(this._xml, this._withQuirks)
-  :
-    _scopes = new Queue<XmlElement>()
-  ;
+  XmlParser._internal(this._xml, this._withQuirks) :
+    _scopes = new Queue<XmlElement>();
 
-  void _parseElement(XmlTokenizer t){
+  void _parseElement(XmlTokenizer t) {
 
     _XmlToken tok = t.next();
 

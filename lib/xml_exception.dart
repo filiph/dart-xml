@@ -1,11 +1,9 @@
-class XmlException implements Exception
-{
+class XmlException implements Exception {
   final String msg;
   final String debugXml;
   final int errorLocation;
 
-  const XmlException(this.msg)
-  :
+  const XmlException(this.msg) :
     debugXml = '',
     errorLocation = 0;
 

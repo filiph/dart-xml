@@ -1,12 +1,10 @@
 /**
 * Represents a text node component of XML.
 */
-class XmlText extends XmlNode
-{
+class XmlText extends XmlNode {
   final String text;
 
-  XmlText(this.text)
-  :
+  XmlText(this.text) :
     super(XmlNodeType.Text);
 
   String toString() => text;
