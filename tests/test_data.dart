@@ -1,21 +1,4 @@
-// point this to wherever your copy of the dart source code is
-#import('package:unittest/unittest.dart');
-#import('package:unittest/html_enhanced_config.dart');
-
-#import('../xml.dart');
-#source('parserTests.dart');
-#source('queryTests.dart');
-
-void main() {
-  useHtmlEnhancedConfiguration();
-
-  parserTests();
-
-  queryTests();
-}
-
-
-final String dbXml =
+const String dbXml =
 '''
 <books>
   <book id='1'>
@@ -51,7 +34,7 @@ final String dbXml =
 </books>
 ''';
 
-final String testXml =
+const String testXml =
 '''
 <!-- comment -->
 <StackPanel xmlns:test='http://www.lucastudios.com/'>

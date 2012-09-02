@@ -27,7 +27,7 @@ class XmlElement extends XmlNode {
     if (tNodes.isEmpty()) return '';
 
     var s = new StringBuffer();
-    tNodes.forEach((n) => s.add(n.text));
+    tNodes.forEach((XmlText n) => s.add(n.text));
     return s.toString();
   }
 
@@ -46,7 +46,7 @@ class XmlElement extends XmlNode {
   /**
   * Gets a collection of children under this [XmlElement].
   */
-  Collection<XmlNode> get children => _children;
+  XmlCollection get children => _children;
 
   /**
   * Gets a collection of siblings related to this [XmlElement].
@@ -184,7 +184,7 @@ class XmlElement extends XmlNode {
     }else{
       if (hasChildren){
         children
-        .filter((el) => el is XmlElement)
+        .allElements()
         .forEach((el){
           if (!list.isEmpty()) return;
           el._queryAttributeInternal(aMap, list);
@@ -224,7 +224,7 @@ class XmlElement extends XmlNode {
     }else{
       if (hasChildren){
         children
-          .filter((el) => el is XmlElement)
+          .allElements()
           .forEach((el){
             if (!list.isEmpty()) return;
             el._queryNameInternal(tagName, list);
@@ -278,7 +278,7 @@ class XmlElement extends XmlNode {
     }else{
       if (hasChildren){
         children
-        .filter((el) => el is XmlElement)
+        .allElements()
         .forEach((el){
           el._queryAttributeInternal(aMap, list);
         });
@@ -319,9 +319,3 @@ class XmlElement extends XmlNode {
     }
   }
 }
-
-
-
-
-
-

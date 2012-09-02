@@ -2,24 +2,23 @@
 // See README.md for more info on features and limitations.
 
 #library('xml_utils_prujohn');
-#source('lib/element.dart');
-#source('lib/parser.dart');
-#source('lib/tokenizer.dart');
-#source('lib/node.dart');
-#source('lib/node_type.dart');
-#source('lib/text.dart');
-#source('lib/attribute.dart');
-#source('lib/exception.dart');
-#source('lib/cdata.dart');
-#source('lib/processing_instruction.dart');
-#source('lib/collection.dart');
-#source('lib/namespace.dart');
+#source('lib/xml_element.dart');
+#source('lib/xml_parser.dart');
+#source('lib/xml_tokenizer.dart');
+#source('lib/xml_node.dart');
+#source('lib/xml_node_type.dart');
+#source('lib/xml_text.dart');
+#source('lib/xml_attribute.dart');
+#source('lib/xml_exception.dart');
+#source('lib/xml_cdata.dart');
+#source('lib/xml_processing_instruction.dart');
+#source('lib/xml_collection.dart');
+#source('lib/xml_namespace.dart');
 
 /**
 * Utility class to work with XML data.
 */
-class XML
-{
+class XML {
 
   /**
   * Returns a [XmlElement] tree representing the raw XML fragment [String].
@@ -36,7 +35,4 @@ class XML
   * You can also call .toString() on any [XmlElement].
   */
   static String stringify(XmlElement element) => element.toString();
-
 }
-
-

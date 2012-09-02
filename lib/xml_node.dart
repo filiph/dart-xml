@@ -67,6 +67,8 @@ class XmlNode {
       case XmlNodeType.CDATA:
         b.add('\r$n');
         break;
+      default:
+        throw new XmlException("Node Type ${n.type} is not supported.");
     }
   }
 

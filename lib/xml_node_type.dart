@@ -1,7 +1,7 @@
 /**
 * Enumerates [XmlNode] types.
 */
-class XmlNodeType{
+class XmlNodeType {
   final String _type;
 
   const XmlNodeType(this._type);
