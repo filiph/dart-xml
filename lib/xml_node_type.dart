@@ -6,12 +6,12 @@ class XmlNodeType {
 
   const XmlNodeType(this._type);
 
-  static final Element = const XmlNodeType('Element');
-  static final Attribute = const XmlNodeType('Attribute');
-  static final Text = const XmlNodeType('Text');
-  static final Namespace = const XmlNodeType('Namespace');
-  static final CDATA = const XmlNodeType('CDATA');
-  static final PI = const XmlNodeType('PI'); //Processing Instruction
+  static const Element = const XmlNodeType('Element');
+  static const Attribute = const XmlNodeType('Attribute');
+  static const Text = const XmlNodeType('Text');
+  static const Namespace = const XmlNodeType('Namespace');
+  static const CDATA = const XmlNodeType('CDATA');
+  static const PI = const XmlNodeType('PI'); //Processing Instruction
 
   String toString() => _type;
 }
