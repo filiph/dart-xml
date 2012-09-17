@@ -1,7 +1,7 @@
 #library('test_runner');
 
 #import('package:unittest/unittest.dart');
-#import('../lib/xml.dart');
+#import('package:dart_xml/xml.dart');
 
 #source('parserTests.dart');
 #source('queryTests.dart');

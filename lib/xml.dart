@@ -2,18 +2,19 @@
 // See README.md for more info on features and limitations.
 
 #library('xml_utils_prujohn');
-#source('xml_element.dart');
-#source('xml_parser.dart');
-#source('xml_tokenizer.dart');
-#source('xml_node.dart');
-#source('xml_node_type.dart');
-#source('xml_text.dart');
-#source('xml_attribute.dart');
-#source('xml_exception.dart');
-#source('xml_cdata.dart');
-#source('xml_processing_instruction.dart');
-#source('xml_collection.dart');
-#source('xml_namespace.dart');
+
+#source('src/xml_element.dart');
+#source('src/xml_parser.dart');
+#source('src/xml_tokenizer.dart');
+#source('src/xml_node.dart');
+#source('src/xml_node_type.dart');
+#source('src/xml_text.dart');
+#source('src/xml_attribute.dart');
+#source('src/xml_exception.dart');
+#source('src/xml_cdata.dart');
+#source('src/xml_processing_instruction.dart');
+#source('src/xml_collection.dart');
+#source('src/xml_namespace.dart');
 
 /**
 * Utility class to work with XML data.

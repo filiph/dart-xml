@@ -114,7 +114,7 @@ class XmlTokenizer {
         addToQueue(new _XmlToken(_XmlToken.SLASH));
         break;
       case LT:
-        final specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
+        const specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
         var found = '';
         var endIndex = -1;
 
