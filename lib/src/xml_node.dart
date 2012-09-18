@@ -30,29 +30,29 @@ class XmlNode {
   static void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
       case XmlNodeType.Element:
-        b.add('\r${_space(indent)}<${n.dynamic.name}');
+        b.add('\r${_space(indent)}<${n.name}');
 
-        if (n.dynamic.namespaces.length > 0){
-          n.dynamic.namespaces.forEach((k, v) =>
+        if (n.namespaces.length > 0){
+          n.namespaces.forEach((k, v) =>
               b.add(new XmlNamespace(k, v).toString()));
         }
 
-        if (n.dynamic.attributes.length > 0){
-          n.dynamic.attributes.forEach((k, v) =>
+        if (n.attributes.length > 0){
+          n.attributes.forEach((k, v) =>
               b.add(new XmlAttribute(k, v).toString()));
         }
 
         b.add('>');
 
-        if (n.dynamic.hasChildren){
-          n.dynamic.children.forEach((e) =>
+        if (n.hasChildren){
+          n.children.forEach((e) =>
               _stringifyInternal(b, e, indent + 3));
         }
 
-        if (n.dynamic.children.length > 0){
-          b.add('\r${_space(indent)}</${n.dynamic.name}>');
+        if (n.children.length > 0){
+          b.add('\r${_space(indent)}</${n.name}>');
         }else{
-          b.add('</${n.dynamic.name}>');
+          b.add('</${n.name}>');
         }
 
         break;

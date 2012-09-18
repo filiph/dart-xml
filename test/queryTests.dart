@@ -6,7 +6,7 @@ queryTests(){
       var parsed = XML.parse(testXml);
       var result = parsed.query('TextBlock');
       Expect.equals(1, result.length);
-      Expect.equals('hello', result[0].dynamic.attributes['text']);
+      Expect.equals('hello', result[0].attributes['text']);
     });
 
     test('single XmlNodeType query succeeds', (){
@@ -23,7 +23,7 @@ queryTests(){
       var result = parsed.query({'text':'hello world!'});
 
       Expect.equals(1, result.length);
-      Expect.equals('hello world!', result[0].dynamic.attributes['text']);
+      Expect.equals('hello world!', result[0].attributes['text']);
     });
 
     test('all on tag name succeeds', (){
@@ -31,8 +31,8 @@ queryTests(){
 
       var result = parsed.queryAll('TextBlock');
       Expect.equals(2, result.length);
-      Expect.equals('hello', result[0].dynamic.attributes['text']);
-      Expect.equals('hello world!', result[1].dynamic.attributes['text']);
+      Expect.equals('hello', result[0].attributes['text']);
+      Expect.equals('hello world!', result[1].attributes['text']);
     });
 
     test('all on XmlNodeType succeeds', (){
@@ -42,8 +42,8 @@ queryTests(){
       Expect.equals(2, result.length);
       Expect.isTrue(result[0] is XmlProcessingInstruction);
       Expect.isTrue(result[1] is XmlProcessingInstruction);
-      Expect.equals('hello world', result[0].dynamic.text);
-      Expect.equals('PI entry #2', result[1].dynamic.text);
+      Expect.equals('hello world', result[0].text);
+      Expect.equals('PI entry #2', result[1].text);
     });
 
     test('all on attributes succeeds', (){
@@ -53,10 +53,10 @@ queryTests(){
       Expect.equals(2, result.length);
       Expect.isTrue(result[0] is XmlElement);
       Expect.isTrue(result[1] is XmlElement);
-      Expect.equals('12', result[0].dynamic.attributes['fontSize']);
-      Expect.equals('12', result[1].dynamic.attributes['fontSize']);
-      Expect.equals('hello', result[0].dynamic.attributes['text']);
-      Expect.equals('hello world!', result[1].dynamic.attributes['text']);
+      Expect.equals('12', result[0].attributes['fontSize']);
+      Expect.equals('12', result[1].attributes['fontSize']);
+      Expect.equals('hello', result[0].attributes['text']);
+      Expect.equals('hello world!', result[1].attributes['text']);
     });
 
     test('Xml DB query', (){
@@ -66,11 +66,11 @@ queryTests(){
       var result = books
                     .queryAll('book')
                     .filter((e) =>
-                        (e as XmlElement).query('author')[0].dynamic.text == 'Stefan Handsomly');
+                        (e as XmlElement).query('author')[0].text == 'Stefan Handsomly');
 
       Expect.isTrue(result is XmlCollection);
       Expect.equals(2, result.length);
-      Expect.equals('book', result[0].dynamic.name);
+      Expect.equals('book', result[0].name);
     });
 
   });

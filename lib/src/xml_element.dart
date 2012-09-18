@@ -112,13 +112,13 @@ class XmlElement extends XmlNode {
   void addChild(XmlNode element){
     //shunt any XmlAttributes into the map
     if (element is XmlAttribute){
-      attributes[element.dynamic.name] = element.dynamic.value;
+      attributes[element.name] = element.value;
       return;
     }
 
     //shunt any XmlNamespaces into the map
     if (element is XmlNamespace){
-      namespaces[element.dynamic.name] = element.dynamic.uri;
+      namespaces[element.name] = element.uri;
       return;
     }
 
