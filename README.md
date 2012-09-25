@@ -16,4 +16,21 @@ Dart Developers who require more robust XML handling are encouraged to fork the
 project and expand as needed.  Pull requests will certainly be welcomed.
 
 ## Getting Started ##
-See the "getting_started.md" file in the doc/ directory of the project.
+See the "getting_started.md" file in the **doc/** directory of the project.
+
+## Supports ##
+* Standard well-formed XML
+* Comment nodes
+* CDATA nodes
+* Text nodes
+* Namespace declarations and usage
+* Processing Instruction (PI) nodes
+* Querying of XML nodes by tagName, attribute(s), or XmlNodeType (combinators
+soon hopefully)
+
+## Limitations ##
+* Doesn't enforce DTD
+* Doesn't enforce any local schema declarations
+
+## License ##
+Apache 2.0
