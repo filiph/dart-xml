@@ -1,6 +1,8 @@
 name: dart_xml
 description: A lightweight XML Parser.
 version: 0.0.1
+author: John Evans <prujohn@gmail.com>
+homepage: https://github.com/prujohn/dart-xml
 dependencies:
   unittest:
     sdk: unittest
