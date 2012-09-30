@@ -189,7 +189,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
       list._add(node);
       return;
     }else{
-      if (node is XmlElement && node.hasChildren){
+      if ((node as XmlElement).hasChildren){
         node.children
           .forEach((el){
             if (!list.isEmpty()) return;
@@ -291,7 +291,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     if (node.type == nodeType){
       list._add(node);
     }else{
-      if (node is XmlElement && node.hasChildren){
+      if ((node as XmlElement).hasChildren){
         node.children
           .forEach((el){
             if (el is XmlElement){
