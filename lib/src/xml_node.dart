@@ -27,7 +27,7 @@ class XmlNode {
     return s.toString();
   }
 
-  static void _stringifyInternal(StringBuffer b, XmlElement n, int indent){
+  static void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
     switch(n.type){
       case XmlNodeType.Element:
         b.add('\r${_space(indent)}<${n.name}');
