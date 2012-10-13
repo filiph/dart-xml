@@ -27,11 +27,17 @@ class XmlNode {
     return s.toString();
   }
 
-  static void _stringifyInternal(StringBuffer b, XmlNode n, int indent){
+  static void _stringifyInternal(
+                  StringBuffer b, XmlNode n, int indent, 
+                  {bool leadingWhiteSpace:true}) {
     switch(n.type){
       case XmlNodeType.Element:
         XmlElement el = n as XmlElement;
-        b.add('\r${_space(indent)}<${el.name}');
+        
+        if (leadingWhiteSpace) {
+          b.add('\r${_space(indent)}');
+        }
+        b.add('<${el.name}');
 
         if (el.namespaces.length > 0){
           el.namespaces.forEach((k, v) =>
@@ -45,12 +51,17 @@ class XmlNode {
 
         b.add('>');
 
-        if (el.hasChildren){
-          el.children.forEach((e) =>
-              _stringifyInternal(b, e, indent + 3));
+        if (el.hasChildren) {
+          for (int i = 0; i < el.children.length; i++) {
+            bool whitespace = 
+                !(i > 0 && el.children[i-1].type == XmlNodeType.Text);
+            _stringifyInternal(
+                b, el.children[i], indent + 3, leadingWhiteSpace:whitespace);
+          }
         }
 
-        if (el.children.length > 0){
+        if (el.children.length > 0 
+            && el.children.last().type != XmlNodeType.Text) {
           b.add('\r${_space(indent)}</${el.name}>');
         } else {
           b.add('</${el.name}>');
@@ -62,7 +73,7 @@ class XmlNode {
         b.add(n.toString());
         break;
       case XmlNodeType.Text:
-        b.add('\r${_space(indent)}$n');
+        b.add('$n');
         break;
       case XmlNodeType.PI:
       case XmlNodeType.CDATA:
