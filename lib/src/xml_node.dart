@@ -27,32 +27,44 @@ class XmlNode {
     return s.toString();
   }
 
-  static void _stringifyInternal(StringBuffer b, XmlElement n, int indent){
+  static void _stringifyInternal(
+                  StringBuffer b, XmlNode n, int indent, 
+                  {bool leadingWhiteSpace:true}) {
     switch(n.type){
       case XmlNodeType.Element:
-        b.add('\r${_space(indent)}<${n.name}');
+        XmlElement el = n as XmlElement;
+        
+        if (leadingWhiteSpace) {
+          b.add('\r${_space(indent)}');
+        }
+        b.add('<${el.name}');
 
-        if (n.namespaces.length > 0){
-          n.namespaces.forEach((k, v) =>
+        if (el.namespaces.length > 0){
+          el.namespaces.forEach((k, v) =>
               b.add(new XmlNamespace(k, v).toString()));
         }
 
-        if (n.attributes.length > 0){
-          n.attributes.forEach((k, v) =>
+        if (el.attributes.length > 0){
+          el.attributes.forEach((k, v) =>
               b.add(new XmlAttribute(k, v).toString()));
         }
 
         b.add('>');
 
-        if (n.hasChildren){
-          n.children.forEach((e) =>
-              _stringifyInternal(b, e, indent + 3));
+        if (el.hasChildren) {
+          for (int i = 0; i < el.children.length; i++) {
+            bool whitespace = 
+                !(i > 0 && el.children[i-1].type == XmlNodeType.Text);
+            _stringifyInternal(
+                b, el.children[i], indent + 3, leadingWhiteSpace:whitespace);
+          }
         }
 
-        if (n.children.length > 0){
-          b.add('\r${_space(indent)}</${n.name}>');
-        }else{
-          b.add('</${n.name}>');
+        if (el.children.length > 0 
+            && el.children.last().type != XmlNodeType.Text) {
+          b.add('\r${_space(indent)}</${el.name}>');
+        } else {
+          b.add('</${el.name}>');
         }
 
         break;
@@ -61,7 +73,7 @@ class XmlNode {
         b.add(n.toString());
         break;
       case XmlNodeType.Text:
-        b.add('\r${_space(indent)}$n');
+        b.add('$n');
         break;
       case XmlNodeType.PI:
       case XmlNodeType.CDATA:
