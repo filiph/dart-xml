@@ -23,6 +23,8 @@ class XmlTokenizer {
 
   static const List _whiteSpace = const[SPACE, TAB ,NEW_LINE, CARRIAGE_RETURN];
 
+  const _specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
+
   final Queue<_XmlToken> _tq;
   final String _xml;
   int _length;
@@ -114,11 +116,10 @@ class XmlTokenizer {
         addToQueue(new _XmlToken(_XmlToken.SLASH));
         break;
       case LT:
-        const specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
         var found = '';
         var endIndex = -1;
 
-        for(final tag in specialTags){
+        for(final tag in _specialTags){
           var m = matchWord(tag);
           if (m != -1){
             found = tag;
@@ -129,7 +130,7 @@ class XmlTokenizer {
 
         switch(found)
         {
-          case specialTags[0]:
+          case _specialTags[0]:
             addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
             _i = endIndex + 1;
 
@@ -148,7 +149,7 @@ class XmlTokenizer {
             addToQueue(new _XmlToken(_XmlToken.END_COMMENT));
             _i = endComment + 3;
             break;
-          case specialTags[1]:
+          case _specialTags[1]:
             addToQueue(new _XmlToken(_XmlToken.START_CDATA));
             _i = endIndex + 1;
 
@@ -167,7 +168,7 @@ class XmlTokenizer {
             addToQueue(new _XmlToken(_XmlToken.END_CDATA));
             _i = endCDATA + 3;
             break;
-          case specialTags[2]:
+          case _specialTags[2]:
             addToQueue(new _XmlToken(_XmlToken.START_PI));
             _i = endIndex + 1;
 
@@ -186,7 +187,7 @@ class XmlTokenizer {
             addToQueue(new _XmlToken(_XmlToken.END_PI));
             _i = endPI+ 2;
             break;
-          case specialTags[3]:
+          case _specialTags[3]:
             addToQueue(new _XmlToken(_XmlToken.LT));
             addToQueue(new _XmlToken(_XmlToken.SLASH));
             _i = endIndex + 1;
