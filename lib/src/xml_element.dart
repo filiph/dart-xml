@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Represents an element node of XML.
 */
@@ -9,7 +11,7 @@ class XmlElement extends XmlNode {
 
   //final String namespace; //future
 
-  XmlElement(this.name, [List<XmlNode> elements = const []])
+  XmlElement(this.name, {List<XmlNode> elements: const []})
   :
     _children = new XmlCollection<XmlNode>._internal(),
     _attributes = {},

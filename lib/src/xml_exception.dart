@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 class XmlException implements Exception {
   final String msg;
   final String debugXml;

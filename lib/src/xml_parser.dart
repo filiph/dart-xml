@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * ## XML Parser ##
 *
@@ -228,8 +230,9 @@ class XmlParser {
 
     writeStringNode(){
       var string = s.toString();
-      if (!string.isEmpty())
+      if (!string.isEmpty()) {
         _peek().addChild(new XmlText(s.toString()));
+      }
     }
 
     s.add(text);

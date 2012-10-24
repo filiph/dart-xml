@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Represents an attribute component of an XML element.
 */

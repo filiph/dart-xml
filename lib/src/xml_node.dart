@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Represents a base class for XML nodes.  This node is essentially
 * read-only.  Use [XmlElement] for manipulating attributes

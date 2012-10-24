@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Represents a queryable collection of [XmlNode] elements.
 */
