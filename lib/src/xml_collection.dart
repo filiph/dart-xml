@@ -16,6 +16,11 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   }
 
   /**
+   * Check whether the collection contains an element equal to [element].
+   */
+  bool contains(E element) => _collection.contains(element);
+
+  /**
    * Returns the last element of the [XmlCollection], or throws an out of bounds
    * exception if the [XmlCollection] is empty.
    */
