@@ -1,7 +1,15 @@
+part of test_runner;
+
 
 parserTests(){
 
   group('parser', (){
+
+    test('namespace attribute appears before xmlns declaration in same tag',
+    (){
+      var parsed = XML.parse(xmlnsXml);
+    });
+
     test('no fidelity lost during successive parse/stringify', (){
       var parsed = XML.parse(testXml);
       var str1 = parsed.toString();

@@ -1,15 +1,17 @@
-#library('test_runner');
+library test_runner;
 
-#import('package:unittest/unittest.dart');
-#import('package:xml/xml.dart');
+import 'package:unittest/unittest.dart';
+import 'package:xml/xml.dart';
 
-#source('parserTests.dart');
-#source('queryTests.dart');
-#source('test_data.dart');
+part 'parserTests.dart';
+part 'queryTests.dart';
+part 'tokenizerTests.dart';
+part 'test_data.dart';
 
 void runXmlTests() {
   groupSep = ' - ';
 
+  tokenizerTests();
   parserTests();
   queryTests();
 }

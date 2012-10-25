@@ -30,24 +30,24 @@ class XmlParser {
 
   void _parseElement(XmlTokenizer t) {
 
-    _XmlToken tok = t.next();
+    XmlToken tok = t.next();
 
     while(tok != null){
 
       switch(tok.kind){
-        case _XmlToken.START_COMMENT:
+        case XmlToken.START_COMMENT:
           _parseComment(t);
           break;
-        case _XmlToken.START_CDATA:
+        case XmlToken.START_CDATA:
           _parseCDATA(t);
           break;
-        case _XmlToken.START_PI:
+        case XmlToken.START_PI:
           _parsePI(t);
           break;
-        case _XmlToken.LT:
+        case XmlToken.LT:
           _parseTag(t);
           break;
-        case _XmlToken.STRING:
+        case XmlToken.STRING:
           if (_scopes.isEmpty()){
             throw const XmlException('Text not allowed in root level.'
               ' Use comments instead.');
@@ -73,13 +73,13 @@ class XmlParser {
         ' level.');
     }
 
-    _XmlToken next = t.next();
+    XmlToken next = t.next();
 
-    _assertKind(next, _XmlToken.STRING);
+    _assertKind(next, XmlToken.STRING);
     var data = next._str;
 
     next = t.next();
-    _assertKind(next, _XmlToken.END_PI);
+    _assertKind(next, XmlToken.END_PI);
 
     _peek().addChild(new XmlProcessingInstruction(data));
   }
@@ -90,46 +90,46 @@ class XmlParser {
         ' level.');
     }
 
-    _XmlToken next = t.next();
+    XmlToken next = t.next();
 
-    _assertKind(next, _XmlToken.STRING);
+    _assertKind(next, XmlToken.STRING);
     var data = next._str;
 
     next = t.next();
-    _assertKind(next, _XmlToken.END_CDATA);
+    _assertKind(next, XmlToken.END_CDATA);
 
     _peek().addChild(new XmlCDATA(data));
   }
 
   //TODO create and XMLComment object instead of just ignoring?
   _parseComment(XmlTokenizer t){
-    _XmlToken next = t.next();
+    XmlToken next = t.next();
 
-    _assertKind(next, _XmlToken.STRING);
+    _assertKind(next, XmlToken.STRING);
 
     next = t.next();
-    _assertKind(next, _XmlToken.END_COMMENT);
+    _assertKind(next, XmlToken.END_COMMENT);
   }
 
   _parseTag(XmlTokenizer t){
-    _XmlToken next = t.next();
+    XmlToken next = t.next();
 
-    if (next.kind == _XmlToken.SLASH){
+    if (next.kind == XmlToken.SLASH){
       // this is a close tag
 
       next = t.next();
-      _assertKind(next, _XmlToken.STRING);
+      _assertKind(next, XmlToken.STRING);
 
       var name = next._str;
 
       next = t.next();
 
-      if (next.kind == _XmlToken.COLON){
+      if (next.kind == XmlToken.COLON){
         //process as namespace
         next = t.next();
 
-        _assertKind(next, _XmlToken.STRING, 'Namespace prefix must pair with'
-        ' an tag name: (<myNamespace:tagName ...)');
+        _assertKind(next, XmlToken.STRING, 'Namespace prefix must pair with'
+        ' a tag name: (<myNamespace:tagName ...)');
 
         name = '${name}:${next._str}';
         next = t.next();
@@ -142,7 +142,7 @@ class XmlParser {
         ' but found "${name}" instead.', _xml, next._location);
       }
 
-      _assertKind(next, _XmlToken.GT);
+      _assertKind(next, XmlToken.GT);
 
       _pop();
 
@@ -151,7 +151,7 @@ class XmlParser {
 
     //otherwise this is an open tag
 
-    _assertKind(next, _XmlToken.STRING);
+    _assertKind(next, XmlToken.STRING);
 
     //TODO check tag name for invalid chars
 
@@ -159,12 +159,12 @@ class XmlParser {
 
     next = t.next();
 
-    if (next.kind == _XmlToken.COLON){
+    if (next.kind == XmlToken.COLON){
       //process as namespace
       next = t.next();
 
-      _assertKind(next, _XmlToken.STRING, 'Namespace prefix must pair with'
-      ' an tag name: (<myNamespace:tagName ...)');
+      _assertKind(next, XmlToken.STRING, 'Namespace prefix must pair with'
+      ' a tag name: (<myNamespace:tagName ...)');
 
       name = '${name}:${next._str}';
     }
@@ -194,18 +194,18 @@ class XmlParser {
     while(next != null){
 
       switch(next.kind){
-        case _XmlToken.NAMESPACE:
+        case XmlToken.NAMESPACE:
           _parseNamespace(t);
           break;
-        case _XmlToken.STRING:
+        case XmlToken.STRING:
           _parseAttribute(t, next._str);
           break;
-        case _XmlToken.GT:
+        case XmlToken.GT:
           _parseElement(t);
           return;
-        case _XmlToken.SLASH:
+        case XmlToken.SLASH:
           next = t.next();
-          _assertKind(next, _XmlToken.GT);
+          _assertKind(next, XmlToken.GT);
           _pop();
           return;
         default:
@@ -237,21 +237,21 @@ class XmlParser {
 
     s.add(text);
 
-    _XmlToken next = t.next();
+    XmlToken next = t.next();
 
-    while(next.kind != _XmlToken.LT){
+    while(next.kind != XmlToken.LT){
       switch(next.kind){
-        case _XmlToken.START_COMMENT:
+        case XmlToken.START_COMMENT:
           writeStringNode();
           _parseComment(t);
           s = new StringBuffer();
           break;
-        case _XmlToken.START_CDATA:
+        case XmlToken.START_CDATA:
           writeStringNode();
           _parseCDATA(t);
           s = new StringBuffer();
           break;
-        case _XmlToken.START_PI:
+        case XmlToken.START_PI:
           writeStringNode();
           _parsePI(t);
           s = new StringBuffer();
@@ -278,12 +278,12 @@ class XmlParser {
       el.namespaces[name] = uri;
     }
 
-    _XmlToken next = t.next();
-    _assertKind(next, _XmlToken.STRING, "Must declare namespace name.");
+    XmlToken next = t.next();
+    _assertKind(next, XmlToken.STRING, "Must declare namespace name.");
     var name = next._str;
 
     next = t.next();
-    _assertKind(next, _XmlToken.EQ, "Must have an = after a"
+    _assertKind(next, XmlToken.EQ, "Must have an = after a"
       " namespace name.");
 
     next = t.next();
@@ -291,7 +291,7 @@ class XmlParser {
     void quotesRequired(){
       //require quotes
 
-      _assertKind(next, _XmlToken.QUOTE, "Quotes are required around"
+      _assertKind(next, XmlToken.QUOTE, "Quotes are required around"
         " attribute values.");
 
       StringBuffer s = new StringBuffer();
@@ -305,7 +305,7 @@ class XmlParser {
           throw const XmlException('Unexpected end of file.');
         }
 
-        if (next.kind != _XmlToken.QUOTE){
+        if (next.kind != XmlToken.QUOTE){
           s.add(next.toStringLiteral());
         }else{
           if (next.quoteKind != qkind){
@@ -323,9 +323,9 @@ class XmlParser {
 
 
     if (_withQuirks){
-      if (next.kind == _XmlToken.STRING){
+      if (next.kind == XmlToken.STRING){
         setNamespace(name, next._str);
-      }else if (next.kind == _XmlToken.QUOTE){
+      }else if (next.kind == XmlToken.QUOTE){
         quotesRequired();
       }
     }else{
@@ -341,17 +341,29 @@ class XmlParser {
       el.attributes[name] = value;
     }
 
-    _XmlToken next = t.next();
+    XmlToken next = t.next();
 
-    if (next.kind == _XmlToken.COLON){
+    if (next.kind == XmlToken.COLON){
       //process as namespace
       next = t.next();
 
-      _assertKind(next, _XmlToken.STRING, 'Namespace prefix must pair with'
+      _assertKind(next, XmlToken.STRING, 'Namespace prefix must pair with'
       ' an attribute name: (myNamespace:myattribute="...")');
 
-      if (!el.isNamespaceInScope(attributeName)){
-        throw new XmlException.withDebug('Namespace "$attributeName" is'
+      var result = t.lookAheadMatch(
+       [
+       new XmlToken(XmlToken.NAMESPACE),
+       new XmlToken.string(attributeName)
+       ],
+       until:
+       [
+        new XmlToken(XmlToken.GT)
+       ],
+       index: t.lastTokenIndex);
+
+      if (!el.isNamespaceInScope(attributeName) && result == false){
+        print('$result $attributeName');
+        throw new XmlException.withDebug('xxNamespace "$attributeName" is'
           ' not declared in scope.', _xml, next._location);
       }
 
@@ -359,7 +371,7 @@ class XmlParser {
       next = t.next();
     }
 
-    _assertKind(next, _XmlToken.EQ, "Must have an = after an"
+    _assertKind(next, XmlToken.EQ, "Must have an = after an"
       " attribute name.");
 
     next = t.next();
@@ -367,7 +379,7 @@ class XmlParser {
     void quotesRequired(){
       //require quotes
 
-      _assertKind(next, _XmlToken.QUOTE, "Quotes are required around"
+      _assertKind(next, XmlToken.QUOTE, "Quotes are required around"
         " attribute values.");
 
       StringBuffer s = new StringBuffer();
@@ -381,7 +393,7 @@ class XmlParser {
           throw const XmlException('Unexpected end of file.');
         }
 
-        if (next.kind != _XmlToken.QUOTE){
+        if (next.kind != XmlToken.QUOTE){
           s.add(next.toStringLiteral());
         }else{
           if (next.quoteKind != qkind){
@@ -399,9 +411,9 @@ class XmlParser {
 
 
     if (_withQuirks){
-      if (next.kind == _XmlToken.STRING){
+      if (next.kind == XmlToken.STRING){
         setAttribute(attributeName, next._str);
-      }else if (next.kind == _XmlToken.QUOTE){
+      }else if (next.kind == XmlToken.QUOTE){
         quotesRequired();
       }
     }else{
@@ -420,8 +432,8 @@ class XmlParser {
   }
   XmlElement _peek() => _scopes.first();
 
-  void _assertKind(_XmlToken tok, int matchID, [String info = null]){
-    _XmlToken match = new _XmlToken(matchID);
+  void _assertKind(XmlToken tok, int matchID, [String info = null]){
+    XmlToken match = new XmlToken(matchID);
 
     var msg = 'Expected ${match}, but found ${tok}. ${info == null ? "" :
       "\r$info"}';

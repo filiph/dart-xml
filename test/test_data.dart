@@ -1,3 +1,5 @@
+part of test_runner;
+
 const String dbXml =
 '''
 <books>
@@ -32,6 +34,16 @@ const String dbXml =
     <author>Stefan Handsomly</author>
   </book>
 </books>
+''';
+
+const String xmlnsXml =
+'''
+<StackPanel 
+ nstest:bar='this should work even though it appears before the xmlns declaration'
+ xmlns:nstest='http://www.lucastudios.com/'>
+  <?hello world?>
+   <TextBlock nstest:foo='namespace attribute' text='hello' fontSize="12" />
+</StackPanel>
 ''';
 
 const String testXml =
