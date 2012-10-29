@@ -51,7 +51,7 @@ class XmlTokenizer {
    * Returns the next token, or null if no tokens are available.
    */
   XmlToken next(){
-    if (_tokenized.isEmpty()){
+    if (_tokenized.isEmpty){
       return null;
     }
 
@@ -65,7 +65,7 @@ class XmlTokenizer {
    * the first instance of the token in the token sequence.
    */
   int indexOfToken(XmlToken token, {start: 0}){
-    if (_tokenized.isEmpty()) return -1;
+    if (_tokenized.isEmpty) return -1;
 
     if (start < 0 || start > _tokenized.length - 1){
       throw const IndexOutOfRangeException(0);
@@ -157,7 +157,7 @@ class XmlTokenizer {
 //      if (!_tq.isEmpty()){
 //        print('token: ${_tq.first()}, ${_tq.first()._str}');
 //      }
-      return _buffer.isEmpty() ? null : _buffer.removeFirst();
+      return _buffer.isEmpty ? null : _buffer.removeFirst();
     }
 
 
@@ -201,7 +201,7 @@ class XmlTokenizer {
     }
 
     // Peel off and return a token if there are any in the queue.
-    if (!_buffer.isEmpty()) return getNextToken();
+    if (!_buffer.isEmpty) return getNextToken();
 
     while(_i < _length && isWhitespace(_xml.charCodeAt(_i)))
       {

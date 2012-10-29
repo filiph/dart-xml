@@ -26,7 +26,7 @@ class XmlElement extends XmlNode {
   */
   String get text {
     var tNodes = _children.filter((el) => el is XmlText);
-    if (tNodes.isEmpty()) return '';
+    if (tNodes.isEmpty) return '';
 
     var s = new StringBuffer();
     tNodes.forEach((XmlText n) => s.add(n.text));
@@ -96,7 +96,7 @@ class XmlElement extends XmlNode {
   * exists.
   */
   XmlNode get nextSibling {
-    if (parent._children.last() == this) return null;
+    if (parent._children.last == this) return null;
 
     var i = parent._children.indexOf(this);
 
@@ -106,7 +106,7 @@ class XmlElement extends XmlNode {
   /**
   * Gets a boolean indicating of this [XmlElement] has any child elements.
   */
-  bool get hasChildren => !_children.isEmpty();
+  bool get hasChildren => !_children.isEmpty;
 
   /**
   * Adds a child [XmlNode] to this [XmlElement].
@@ -132,7 +132,7 @@ class XmlElement extends XmlNode {
   * Adds a collection of [XmlNode]s to this [XmlElement].
   */
   void addChildren(Collection<XmlNode> elements){
-    if (!elements.isEmpty()){
+    if (!elements.isEmpty){
       elements.forEach((XmlNode e) => addChild(e));
     }
   }
@@ -188,7 +188,7 @@ class XmlElement extends XmlNode {
         children
         .allElements()
         .forEach((el){
-          if (!list.isEmpty()) return;
+          if (!list.isEmpty) return;
           el._queryAttributeInternal(aMap, list);
         });
       }
@@ -204,7 +204,7 @@ class XmlElement extends XmlNode {
       if (hasChildren){
         children
           .forEach((el){
-            if (!list.isEmpty()) return;
+            if (!list.isEmpty) return;
             if (el is XmlElement){
               el._queryNodeTypeInternal(nodeType, list);
             }else{
@@ -228,7 +228,7 @@ class XmlElement extends XmlNode {
         children
           .allElements()
           .forEach((el){
-            if (!list.isEmpty()) return;
+            if (!list.isEmpty) return;
             el._queryNameInternal(tagName, list);
           });
       }

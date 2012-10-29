@@ -26,7 +26,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
    * Returns the last element of the [XmlCollection], or throws an out of bounds
    * exception if the [XmlCollection] is empty.
    */
-  E last() => _collection.last();
+  E get last => _collection.last;
 
   /**
    * Returns the first index of [element] in this [XmlCollection].
@@ -46,8 +46,8 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
    *
    *   collection.reduce(0, (prev, element) => prev + element);
    */
-  Dynamic reduce(Dynamic initialValue,
-                 Dynamic combine(Dynamic previousValue, E element))
+  dynamic reduce(dynamic initialValue,
+                 dynamic combine(dynamic previousValue, E element))
   => _collection.reduce(initialValue, combine);
 
 
@@ -107,7 +107,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   /**
    * Returns true if there is no element in this collection.
    */
-  bool isEmpty() => _collection.isEmpty();
+  bool get isEmpty => _collection.isEmpty;
 
   /**
    * Returns the number of elements in this collection.
@@ -137,17 +137,17 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
     if (queryOn is String){
       for (final node in this.allElements()){
         _queryNameInternal(queryOn, list, node);
-        if (!list.isEmpty()) break;
+        if (!list.isEmpty) break;
       }
     }else if (queryOn is XmlNodeType){
       for (final node in this){
         _queryNodeTypeInternal(queryOn, list, node);
-        if (!list.isEmpty()) break;
+        if (!list.isEmpty) break;
       }
     }else if (queryOn is Map){
       for (final node in this.allElements()){
         _queryAttributeInternal(queryOn, list, node);
-        if (!list.isEmpty()) break;
+        if (!list.isEmpty) break;
       }
     }
 
@@ -182,7 +182,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
         n.children
         .allElements()
         .forEach((el){
-          if (!list.isEmpty()) return;
+          if (!list.isEmpty) return;
           (el as XmlElement)._queryAttributeInternal(aMap, list);
         });
       }
@@ -199,7 +199,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
       if ((node as XmlElement).hasChildren){
         node.children
           .forEach((el){
-            if (!list.isEmpty()) return;
+            if (!list.isEmpty) return;
             if (el is XmlElement){
               el._queryNodeTypeInternal(nodeType, list);
             }else{
@@ -224,7 +224,7 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
         element.children
           .allElements()
           .forEach((el){
-            if (!list.isEmpty()) return;
+            if (!list.isEmpty) return;
             el._queryNameInternal(tagName, list);
           });
       }

@@ -13,7 +13,7 @@ class XmlParser {
   XmlElement _root;
 
   static XmlElement _parse(String xml, [withQuirks = false])  {
-    if (xml.isEmpty()){
+    if (xml.isEmpty){
       throw const XmlException('Nothing to parse.');
     }
     XmlParser p = new XmlParser._internal(xml, withQuirks);
@@ -48,7 +48,7 @@ class XmlParser {
           _parseTag(t);
           break;
         case XmlToken.STRING:
-          if (_scopes.isEmpty()){
+          if (_scopes.isEmpty){
             throw const XmlException('Text not allowed in root level.'
               ' Use comments instead.');
           }else{
@@ -60,7 +60,7 @@ class XmlParser {
       tok = t.next();
     }
 
-    if (!_scopes.isEmpty()){
+    if (!_scopes.isEmpty){
       throw const XmlException('Unexpected end of file.  Not all tags were'
         ' closed.');
     }
@@ -68,7 +68,7 @@ class XmlParser {
 
   _parsePI(XmlTokenizer t){
 
-    if (_scopes.isEmpty()){
+    if (_scopes.isEmpty){
       throw const XmlException('PI nodes are not supported in the top'
         ' level.');
     }
@@ -85,7 +85,7 @@ class XmlParser {
   }
 
   _parseCDATA(XmlTokenizer t){
-    if (_scopes.isEmpty()){
+    if (_scopes.isEmpty){
       throw const XmlException('CDATA nodes are not supported in the top'
         ' level.');
     }
@@ -230,7 +230,7 @@ class XmlParser {
 
     writeStringNode(){
       var string = s.toString();
-      if (!string.isEmpty()) {
+      if (!string.isEmpty) {
         _peek().addChild(new XmlText(s.toString()));
       }
     }
@@ -430,7 +430,7 @@ class XmlParser {
   //  print('popping element ${_peek().tagName}');
     _scopes.removeFirst();
   }
-  XmlElement _peek() => _scopes.first();
+  XmlElement _peek() => _scopes.first;
 
   void _assertKind(XmlToken tok, int matchID, [String info = null]){
     XmlToken match = new XmlToken(matchID);
