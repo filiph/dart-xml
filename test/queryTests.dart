@@ -1,3 +1,5 @@
+part of test_runner;
+
 
 
 queryTests(){

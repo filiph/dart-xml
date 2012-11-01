@@ -30,12 +30,12 @@ class XmlNode {
   }
 
   static void _stringifyInternal(
-                  StringBuffer b, XmlNode n, int indent, 
+                  StringBuffer b, XmlNode n, int indent,
                   {bool leadingWhiteSpace:true}) {
     switch(n.type){
       case XmlNodeType.Element:
         XmlElement el = n as XmlElement;
-        
+
         if (leadingWhiteSpace) {
           b.add('\r${_space(indent)}');
         }
@@ -55,15 +55,15 @@ class XmlNode {
 
         if (el.hasChildren) {
           for (int i = 0; i < el.children.length; i++) {
-            bool whitespace = 
+            bool whitespace =
                 !(i > 0 && el.children[i-1].type == XmlNodeType.Text);
             _stringifyInternal(
                 b, el.children[i], indent + 3, leadingWhiteSpace:whitespace);
           }
         }
 
-        if (el.children.length > 0 
-            && el.children.last().type != XmlNodeType.Text) {
+        if (el.children.length > 0
+            && el.children.last.type != XmlNodeType.Text) {
           b.add('\r${_space(indent)}</${el.name}>');
         } else {
           b.add('</${el.name}>');

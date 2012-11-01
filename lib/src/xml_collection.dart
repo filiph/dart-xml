@@ -18,10 +18,15 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
   }
 
   /**
+   * Check whether the collection contains an element equal to [element].
+   */
+  bool contains(E element) => _collection.contains(element);
+
+  /**
    * Returns the last element of the [XmlCollection], or throws an out of bounds
    * exception if the [XmlCollection] is empty.
    */
-  E last() => _collection.last;
+  E get last => _collection.last;
 
   /**
    * Returns the first index of [element] in this [XmlCollection].
@@ -108,16 +113,6 @@ class XmlCollection<E extends XmlNode> implements Collection<E> {
    * Returns the number of elements in this collection.
    */
   int get length => _collection.length;
-  
-  /**
-   * Check whether the collection contains an element equal to [element].
-   */
-  bool contains(E element) {
-    for (E e in _collection) {
-      if (e == element) return true;
-    }
-    return false;
-  }
 
   /**
    * Returns an [Iterator] that iterates over this [Iterable] object.

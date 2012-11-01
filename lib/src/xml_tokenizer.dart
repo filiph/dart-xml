@@ -23,31 +23,141 @@ class XmlTokenizer {
   static const List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
                                       SQUOTE, EQ];
 
-  static const List _whiteSpace = const[SPACE, TAB ,NEW_LINE, CARRIAGE_RETURN];
+  static const List _whiteSpace = const[SPACE, TAB, NEW_LINE, CARRIAGE_RETURN];
 
-  final Queue<_XmlToken> _tq;
+  const _specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
+
+  final Queue<XmlToken> _buffer = new Queue<XmlToken>();
+  final List<XmlToken> _tokenized = new List<XmlToken>();
   final String _xml;
   int _length;
   int _i = 0;
+  int _index = -1;
 
-  XmlTokenizer(this._xml) :
-    _i = 0,
-    _tq = new Queue<_XmlToken>() {
+  int get lastTokenIndex => _index;
+
+  XmlTokenizer(this._xml)
+  {
     _length = _xml.length;
+
+    var t = _next();
+    while(t != null){
+      _tokenized.add(t);
+      t = _next();
+    }
+  }
+
+  /**
+   * Returns the next token, or null if no tokens are available.
+   */
+  XmlToken next(){
+    if (_tokenized.isEmpty){
+      return null;
+    }
+
+    _index++;
+    return _tokenized.removeAt(0);
   }
 
 
-  _XmlToken next() {
-    void addToQueue(_XmlToken token){
-      token._location = _i;
-      _tq.addLast(token);
+  /**
+   * Returns -1 if the token is not found, otherwise returns the index of
+   * the first instance of the token in the token sequence.
+   */
+  int indexOfToken(XmlToken token, {start: 0}){
+    if (_tokenized.isEmpty) return -1;
+
+    if (start < 0 || start > _tokenized.length - 1){
+      throw const IndexOutOfRangeException(0);
     }
 
-    _XmlToken getNextToken() {
+    int i = start;
+    for(final t in _tokenized.getRange(start, _tokenized.length - start)){
+      if (t.kind == token.kind){
+        if (t.kind == XmlToken.STRING){
+          if (t._str == token._str){
+            return i;
+          }
+        }else if (t.kind == XmlToken.QUOTE){
+          if (t.quoteKind == token.quoteKind){
+            return i;
+          }
+        }else{
+          return i;
+        }
+      }
+      i++;
+    }
+
+    return -1;
+
+  }
+
+  /**
+   * Performs a non-destructive look-ahead in the token list and tries to match
+   * the given [sequence] of tokens.
+   *
+   * Search will continue until the end of the token list, or until optional
+   * [until] sequence of tokens is found.
+   *
+   * Search begins at [index] = 0 unless otherwise specified.
+   */
+  bool lookAheadMatch(List<XmlToken> sequence,
+            {List<XmlToken> until: null, int index : 0})
+  {
+    if (index < 0 || index > _tokenized.length - 1) return false;
+    if (index + sequence.length > _tokenized.length) return false;
+
+    var resultUntil = until == null
+        ? _tokenized.length
+        : _sequenceMatch(until, index, _tokenized.length);
+
+    if (resultUntil == -1) resultUntil = _tokenized.length;
+
+    var result = _sequenceMatch(sequence, index, resultUntil);
+
+    if (result == -1)
+    {
+      return false;
+    }
+    if (resultUntil < result)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * -1 if not found, otherwise returns start index of matching sequence
+   * in _tokenized. No boundary checks.
+   */
+  int _sequenceMatch(List<XmlToken> sequence, int index, int until){
+
+    final result = indexOfToken(sequence[0], start:index);
+
+    if (result == -1) return -1;
+
+    if (sequence.length == 1) return result;
+
+    return _sequenceMatch(
+        sequence.getRange(1, sequence.length - 1),
+        result,
+        until);
+
+  }
+
+  XmlToken _next() {
+    void addToQueue(XmlToken token){
+      token._location = _i;
+      _buffer.addLast(token);
+    }
+
+    XmlToken getNextToken() {
 //      if (!_tq.isEmpty()){
 //        print('token: ${_tq.first()}, ${_tq.first()._str}');
 //      }
-      return _tq.isEmpty ? null : _tq.removeFirst();
+      return _buffer.isEmpty ? null : _buffer.removeFirst();
     }
 
 
@@ -91,7 +201,7 @@ class XmlTokenizer {
     }
 
     // Peel off and return a token if there are any in the queue.
-    if (!_tq.isEmpty) return getNextToken();
+    if (!_buffer.isEmpty) return getNextToken();
 
     while(_i < _length && isWhitespace(_xml.charCodeAt(_i)))
       {
@@ -105,22 +215,21 @@ class XmlTokenizer {
     switch(char){
       case B:
         _i++;
-        addToQueue(new _XmlToken(_XmlToken.BANG));
+        addToQueue(new XmlToken(XmlToken.BANG));
         break;
       case COLON:
         _i++;
-        addToQueue(new _XmlToken(_XmlToken.COLON));
+        addToQueue(new XmlToken(XmlToken.COLON));
         break;
       case SLASH:
         _i++;
-        addToQueue(new _XmlToken(_XmlToken.SLASH));
+        addToQueue(new XmlToken(XmlToken.SLASH));
         break;
       case LT:
-        const specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
         var found = '';
         var endIndex = -1;
 
-        for(final tag in specialTags){
+        for(final tag in _specialTags){
           var m = matchWord(tag);
           if (m != -1){
             found = tag;
@@ -131,8 +240,8 @@ class XmlTokenizer {
 
         switch(found)
         {
-          case specialTags[0]:
-            addToQueue(new _XmlToken(_XmlToken.START_COMMENT));
+          case _specialTags[0]:
+            addToQueue(new XmlToken(XmlToken.START_COMMENT));
             _i = endIndex + 1;
 
             var endComment = _xml.indexOf('-->', _i);
@@ -146,12 +255,12 @@ class XmlTokenizer {
               throw const XmlException('Nested comments not allowed.');
             }
 
-            addToQueue(new _XmlToken.string(_xml.substring(_i, endComment)));
-            addToQueue(new _XmlToken(_XmlToken.END_COMMENT));
+            addToQueue(new XmlToken.string(_xml.substring(_i, endComment)));
+            addToQueue(new XmlToken(XmlToken.END_COMMENT));
             _i = endComment + 3;
             break;
-          case specialTags[1]:
-            addToQueue(new _XmlToken(_XmlToken.START_CDATA));
+          case _specialTags[1]:
+            addToQueue(new XmlToken(XmlToken.START_CDATA));
             _i = endIndex + 1;
 
             var endCDATA = _xml.indexOf(']]>', _i);
@@ -165,12 +274,12 @@ class XmlTokenizer {
               throw const XmlException('Nested CDATA not allowed.');
             }
 
-            addToQueue(new _XmlToken.string(_xml.substring(_i, endCDATA).trim()));
-            addToQueue(new _XmlToken(_XmlToken.END_CDATA));
+            addToQueue(new XmlToken.string(_xml.substring(_i, endCDATA).trim()));
+            addToQueue(new XmlToken(XmlToken.END_CDATA));
             _i = endCDATA + 3;
             break;
-          case specialTags[2]:
-            addToQueue(new _XmlToken(_XmlToken.START_PI));
+          case _specialTags[2]:
+            addToQueue(new XmlToken(XmlToken.START_PI));
             _i = endIndex + 1;
 
             var endPI= _xml.indexOf('?>', _i);
@@ -184,33 +293,33 @@ class XmlTokenizer {
               throw const XmlException('Nested PI not allowed.');
             }
 
-            addToQueue(new _XmlToken.string(_xml.substring(_i, endPI).trim()));
-            addToQueue(new _XmlToken(_XmlToken.END_PI));
+            addToQueue(new XmlToken.string(_xml.substring(_i, endPI).trim()));
+            addToQueue(new XmlToken(XmlToken.END_PI));
             _i = endPI+ 2;
             break;
-          case specialTags[3]:
-            addToQueue(new _XmlToken(_XmlToken.LT));
-            addToQueue(new _XmlToken(_XmlToken.SLASH));
+          case _specialTags[3]:
+            addToQueue(new XmlToken(XmlToken.LT));
+            addToQueue(new XmlToken(XmlToken.SLASH));
             _i = endIndex + 1;
             break;
           default:
             //standard start tag
             _i++;
-            addToQueue(new _XmlToken(_XmlToken.LT));
+            addToQueue(new XmlToken(XmlToken.LT));
             _i = nextNonWhitespace(_i);
             int c = peekUntil([SPACE, COLON, GT]);
             if (c == SPACE){
               var _ii = _i;
               _i = nextWhitespace(_ii);
-              addToQueue(new _XmlToken.string(_xml.substring(_ii, _i)));
+              addToQueue(new XmlToken.string(_xml.substring(_ii, _i)));
               _i = nextNonWhitespace(_i);
             }else if (c == COLON){
               var _ii = _i;
               _i = _xml.indexOf(':', _ii) + 1;
-              addToQueue(new _XmlToken.string(_xml.substring(_ii, _i - 1)));
-              addToQueue(new _XmlToken(_XmlToken.COLON));
+              addToQueue(new XmlToken.string(_xml.substring(_ii, _i - 1)));
+              addToQueue(new XmlToken(XmlToken.COLON));
               _ii = nextWhitespace(_i);
-              addToQueue(new _XmlToken.string(_xml.substring(_i, _ii)));
+              addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
               _i = nextNonWhitespace(_ii);
             }
             break;
@@ -218,25 +327,25 @@ class XmlTokenizer {
         break;
       case GT:
         _i++;
-        addToQueue(new _XmlToken(_XmlToken.GT));
+        addToQueue(new XmlToken(XmlToken.GT));
         break;
       case EQ:
         _i++;
-        addToQueue(new _XmlToken(_XmlToken.EQ));
+        addToQueue(new XmlToken(XmlToken.EQ));
         break;
       case QUOTE:
         _i++;
-        addToQueue(new _XmlToken.quote(QUOTE));
+        addToQueue(new XmlToken.quote(QUOTE));
         break;
       case SQUOTE:
         _i++;
-        addToQueue(new _XmlToken.quote(SQUOTE));
+        addToQueue(new XmlToken.quote(SQUOTE));
         break;
       default:
         var m = matchWord('xmlns:');
         if (m != -1){
           _i = m + 1;
-          addToQueue(new _XmlToken(_XmlToken.NAMESPACE));
+          addToQueue(new XmlToken(XmlToken.NAMESPACE));
         }else{
           StringBuffer s = new StringBuffer();
 
@@ -244,12 +353,14 @@ class XmlTokenizer {
             s.add(_xml.substring(_i, _i + 1));
             _i++;
           }
-          addToQueue(new _XmlToken.string(s.toString().trim()));
+          addToQueue(new XmlToken.string(s.toString().trim()));
         }
         break;
     }
     return getNextToken();
   }
+
+  String toString() => '$_tokenized ::: Length: ${_tokenized.length}';
 
   /**
   * Returns true if the charCode is one of the special reserved
@@ -264,7 +375,7 @@ class XmlTokenizer {
 
 }
 
-class _XmlToken {
+class XmlToken {
   static const int LT = 1;
   static const int GT = 2;
   static const int QUESTION = 3;
@@ -289,22 +400,19 @@ class _XmlToken {
   final String _str;
   int _location;
 
-  _XmlToken._internal(this.kind, this._str, this.quoteKind);
+  XmlToken._internal(this.kind, this._str, this.quoteKind);
 
-
-  factory _XmlToken.string(String s) {
-    return new _XmlToken._internal(STRING, s, -1);
+  factory XmlToken.string(String s) {
+    return new XmlToken._internal(STRING, s, -1);
   }
 
-  factory _XmlToken.quote(int quoteKind){
-    return new _XmlToken._internal(QUOTE, '', quoteKind);
+  factory XmlToken.quote(int quoteKind){
+    return new XmlToken._internal(QUOTE, '', quoteKind);
   }
 
-
-  factory _XmlToken(int kind) {
-    return new _XmlToken._internal(kind, '', -1);
+  factory XmlToken(int kind) {
+    return new XmlToken._internal(kind, '', -1);
   }
-
 
   String toString() {
     switch(kind){
@@ -344,7 +452,6 @@ class _XmlToken {
         return ('xmlns:');
       case IGNORE:
         return 'INVALID()';
-
     }
   }
 
@@ -374,7 +481,6 @@ class _XmlToken {
         return 'INVALID()';
       default:
         throw new XmlException('String literal unavailable for $this');
-
     }
   }
 }

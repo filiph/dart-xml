@@ -1,6 +1,6 @@
-#import('package:unittest/vm_config.dart');
+import 'package:unittest/vm_config.dart';
 
-#import('test_runner.dart');
+import 'test_runner.dart';
 
 main() {
   useVmConfiguration();

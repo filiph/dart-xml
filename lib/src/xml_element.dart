@@ -96,7 +96,7 @@ class XmlElement extends XmlNode {
   * exists.
   */
   XmlNode get nextSibling {
-    if (parent._children.last() == this) return null;
+    if (parent._children.last == this) return null;
 
     var i = parent._children.indexOf(this);
 
