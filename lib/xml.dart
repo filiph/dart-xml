@@ -1,20 +1,20 @@
 // A lightweight, XML parser and emitter.
 // See README.md for more info on features and limitations.
 
-#library('xml_utils_prujohn');
+library xml_utils_prujohn;
 
-#source('src/xml_element.dart');
-#source('src/xml_parser.dart');
-#source('src/xml_tokenizer.dart');
-#source('src/xml_node.dart');
-#source('src/xml_node_type.dart');
-#source('src/xml_text.dart');
-#source('src/xml_attribute.dart');
-#source('src/xml_exception.dart');
-#source('src/xml_cdata.dart');
-#source('src/xml_processing_instruction.dart');
-#source('src/xml_collection.dart');
-#source('src/xml_namespace.dart');
+part 'src/xml_element.dart';
+part 'src/xml_parser.dart';
+part 'src/xml_tokenizer.dart';
+part 'src/xml_node.dart';
+part 'src/xml_node_type.dart';
+part 'src/xml_text.dart';
+part 'src/xml_attribute.dart';
+part 'src/xml_exception.dart';
+part 'src/xml_cdata.dart';
+part 'src/xml_processing_instruction.dart';
+part 'src/xml_collection.dart';
+part 'src/xml_namespace.dart';
 
 /**
 * Utility class to work with XML data.

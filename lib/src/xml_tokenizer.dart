@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Returns tokenized parts of Xml document.
 */
@@ -45,7 +47,7 @@ class XmlTokenizer {
 //      if (!_tq.isEmpty()){
 //        print('token: ${_tq.first()}, ${_tq.first()._str}');
 //      }
-      return _tq.isEmpty() ? null : _tq.removeFirst();
+      return _tq.isEmpty ? null : _tq.removeFirst();
     }
 
 
@@ -89,7 +91,7 @@ class XmlTokenizer {
     }
 
     // Peel off and return a token if there are any in the queue.
-    if (!_tq.isEmpty()) return getNextToken();
+    if (!_tq.isEmpty) return getNextToken();
 
     while(_i < _length && isWhitespace(_xml.charCodeAt(_i)))
       {

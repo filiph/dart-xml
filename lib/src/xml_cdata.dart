@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Represents a CDATA node of an XML tree.
 */

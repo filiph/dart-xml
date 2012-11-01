@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /** Represents and XML Processing Instruction (PI) node. */
 class XmlProcessingInstruction extends XmlNode {
   final String text;

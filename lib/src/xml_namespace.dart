@@ -1,3 +1,5 @@
+part of xml_utils_prujohn;
+
 /**
 * Represents an namespace declaration of an XML element.
 */
