@@ -165,9 +165,12 @@ class XmlTokenizer {
     int peekUntil(List chars){
       int z = _i;
 
-      while (z < _length && chars.indexOf(_xml.charCodeAt(z)) == -1){
+      while (chars.indexOf(_xml.charCodeAt(z)) == -1){
         z++;
+        if (z >= _length) break;
       }
+
+      if (z >= _length) return -1;
 
       return _xml.charCodeAt(z);
     }
@@ -321,6 +324,9 @@ class XmlTokenizer {
               _ii = nextWhitespace(_i);
               addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
               _i = nextNonWhitespace(_ii);
+            }else if (c == -1){
+              throw new XmlException('Tokenzier unexpectedly reached end of'
+                  ' document.');
             }
             break;
         }

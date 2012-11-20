@@ -169,7 +169,7 @@ parserTests(){
     test('throw on open tag EOF', (){
       Expect.throws(
         () => XML.parse('<foo><bar'),
-        (e) => e is Exception);
+        (e) => e is XmlException);
     });
 
     test('throw on text node  EOF', (){
