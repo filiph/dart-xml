@@ -68,7 +68,7 @@ class XmlTokenizer {
     if (_tokenized.isEmpty) return -1;
 
     if (start < 0 || start > _tokenized.length - 1){
-      throw const IndexOutOfRangeException(0);
+      throw new RangeError(0);
     }
 
     int i = start;
