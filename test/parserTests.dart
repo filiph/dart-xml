@@ -1,9 +1,16 @@
 part of test_runner;
 
-
 parserTests(){
-
   group('parser', (){
+    test('default namespaces are supported',(){
+      final parsed = XML.parse('''<foo xmlns='defaultns'><bar></bar></foo>''');
+      final bar = parsed.children[0];
+      Expect.equals('bar', bar.name);
+      Expect.isTrue(
+        bar
+          .namespacesInScope
+          .some((XmlNamespace ns) => ns.name.isEmpty && ns.uri == 'defaultns'));
+    });
 
     test('namespace attribute appears before xmlns declaration in same tag',
     (){
@@ -160,7 +167,7 @@ parserTests(){
         (e) => e is XmlException);
     });
 
-    test('throw oninvalid tag open syntax', (){
+    test('throw on invalid tag open syntax', (){
       Expect.throws(
         () => XML.parse('<foo><bar !></bar></foo>'),
         (e) => e is XmlException);
@@ -300,9 +307,5 @@ with line breaks
           <youtube width="300" height="250" videoid="WC25C5AHYAI"></youtube>
         </stackpanel>''');
     });
-
-
   });
-
-
 }

@@ -353,8 +353,7 @@ class XmlTokenizer {
           _i = m + 1;
           addToQueue(new XmlToken(XmlToken.NAMESPACE));
         }else{
-          StringBuffer s = new StringBuffer();
-
+          final s = new StringBuffer();
           while(_i < _length && !isReserved(_xml.charCodeAt(_i))){
             s.add(_xml.substring(_i, _i + 1));
             _i++;

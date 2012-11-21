@@ -337,8 +337,13 @@ class XmlParser {
     XmlElement el = _peek();
 
     void setAttribute(String name, String value){
-      //TODO validate well-formed attribute names
-      el.attributes[name] = value;
+      if (name == 'xmlns'){
+        // default namespace
+        el.namespaces[''] = value;
+      }else{
+        //TODO validate well-formed attribute names
+        el.attributes[name] = value;
+      }
     }
 
     XmlToken next = t.next();
