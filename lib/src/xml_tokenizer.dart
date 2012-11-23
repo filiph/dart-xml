@@ -454,7 +454,7 @@ class XmlToken {
       case END_CDATA:
         return ('(]]>)');
       case NAMESPACE:
-        return ('xmlns:');
+        return ('xmlns');
       case IGNORE:
         return 'INVALID()';
     }
@@ -463,7 +463,7 @@ class XmlToken {
   String toStringLiteral() {
     switch(kind){
       case NAMESPACE:
-        return "xmlns:";
+        return "xmlns";
       case GT:
         return ">";
       case LT:
