@@ -165,9 +165,12 @@ class XmlTokenizer {
     int peekUntil(List chars){
       int z = _i;
 
-      while (z < _length && chars.indexOf(_xml.charCodeAt(z)) == -1){
+      while (chars.indexOf(_xml.charCodeAt(z)) == -1){
         z++;
+        if (z >= _length) break;
       }
+
+      if (z >= _length) return -1;
 
       return _xml.charCodeAt(z);
     }
@@ -321,6 +324,9 @@ class XmlTokenizer {
               _ii = nextWhitespace(_i);
               addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
               _i = nextNonWhitespace(_ii);
+            }else if (c == -1){
+              throw new XmlException('Tokenzier unexpectedly reached end of'
+                  ' document.');
             }
             break;
         }
@@ -347,8 +353,7 @@ class XmlTokenizer {
           _i = m + 1;
           addToQueue(new XmlToken(XmlToken.NAMESPACE));
         }else{
-          StringBuffer s = new StringBuffer();
-
+          final s = new StringBuffer();
           while(_i < _length && !isReserved(_xml.charCodeAt(_i))){
             s.add(_xml.substring(_i, _i + 1));
             _i++;
@@ -449,7 +454,7 @@ class XmlToken {
       case END_CDATA:
         return ('(]]>)');
       case NAMESPACE:
-        return ('xmlns:');
+        return ('xmlns');
       case IGNORE:
         return 'INVALID()';
     }
@@ -458,7 +463,7 @@ class XmlToken {
   String toStringLiteral() {
     switch(kind){
       case NAMESPACE:
-        return "xmlns:";
+        return "xmlns";
       case GT:
         return ">";
       case LT:

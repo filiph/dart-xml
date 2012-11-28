@@ -11,6 +11,10 @@ class XmlNamespace extends XmlNode {
   :
     super(XmlNodeType.Namespace);
 
-  String toString() =>
-      uri.contains('"') ? " xmlns:$name='$uri'" : ' xmlns:$name="$uri"';
+  String toString(){
+    if (name.isEmpty){
+      return uri.contains('"') ? " xmlns$name='$uri'" : ' xmlns$name="$uri"';
+    }
+    return uri.contains('"') ? " xmlns:$name='$uri'" : ' xmlns:$name="$uri"';
+  }
 }
