@@ -218,7 +218,7 @@ class XmlParser {
       next = t.next();
 
       if (next == null){
-        throw const Exception('Unexpected end of file.');
+        throw new Exception('Unexpected end of file.');
       }
     }
   }
