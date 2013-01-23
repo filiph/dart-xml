@@ -9,7 +9,7 @@ parserTests(){
       Expect.isTrue(
         bar
           .namespacesInScope
-          .some((XmlNamespace ns) => ns.name.isEmpty && ns.uri == 'defaultns'));
+          .any((XmlNamespace ns) => ns.name.isEmpty && ns.uri == 'defaultns'));
     });
 
     test('namespace attribute appears before xmlns declaration in same tag',

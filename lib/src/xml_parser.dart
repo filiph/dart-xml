@@ -114,6 +114,8 @@ class XmlParser {
   _parseTag(XmlTokenizer t){
     XmlToken next = t.next();
 
+    if (next == null) return;
+    
     if (next.kind == XmlToken.SLASH){
       // this is a close tag
 
@@ -239,7 +241,7 @@ class XmlParser {
 
     XmlToken next = t.next();
 
-    while(next.kind != XmlToken.LT){
+    while(next != null && next.kind != XmlToken.LT){
       switch(next.kind){
         case XmlToken.START_COMMENT:
           writeStringNode();
@@ -443,7 +445,7 @@ class XmlParser {
     var msg = 'Expected ${match}, but found ${tok}. ${info == null ? "" :
       "\r$info"}';
 
-    if (tok.kind != match.kind) {
+    if (tok != null && tok.kind != match.kind) {
       throw new XmlException.withDebug(msg, _xml, tok._location);
     }
   }

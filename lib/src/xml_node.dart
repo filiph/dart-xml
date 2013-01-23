@@ -19,7 +19,7 @@ class XmlNode {
       throw const XmlException('Element not found.');
     }
 
-    parent._children._removeRange(i, 1);
+    parent._children.removeRange(i, 1);
   }
 
   /// Returns a text representation of the XmlNode tree.
