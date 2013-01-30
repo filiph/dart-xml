@@ -115,7 +115,7 @@ class XmlParser {
     XmlToken next = t.next();
 
     if (next == null) return;
-    
+
     if (next.kind == XmlToken.SLASH){
       // this is a close tag
 

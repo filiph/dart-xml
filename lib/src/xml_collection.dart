@@ -15,51 +15,60 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   }
 
   // From [List].
-  
+
   /**
    * Returns the element at the given [index] in the list or throws
    * an [RangeError] if [index] is out of bounds.
    */
   E operator [](int index) => _collection[index];
-  
+
   /**
    * Sets the entry at the given [index] in the list to [value].
    * Throws an [RangeError] if [index] is out of bounds.
    */
-  void operator []=(int index, E value) { 
+  void operator []=(int index, E value) {
     _collection[index] = value;
   }
-  
+
   /**
    * Changes the length of the list. If [newLength] is greater than
    * the current [length], entries are initialized to [:null:]. Throws
    * an [UnsupportedError] if the list is not extendable.
    */
-  void set length(int newLength) { 
+  void set length(int newLength) {
     _collection.length = newLength;
   }
-  
+
   /**
    * Adds [value] at the end of the list, extending the length by
    * one. Throws an [UnsupportedError] if the list is not
    * extendable.
    */
   void add(XmlNode value) => _collection.add(value);
-  
+
   /**
    * Adds [value] at the end of the list, extending the length by
    * one. Throws an [UnsupportedError] if the list is not
    * extendable.
    */
   void addLast(E value) => _collection.addLast(value);
-  
+
   /**
    * Appends all elements of the [iterable] to the end of this list.
    * Extends the length of the list by the number of elements in [iterable].
    * Throws an [UnsupportedError] if this list is not extensible.
    */
   void addAll(Iterable<E> iterable) => _collection.addAll(iterable);
-  
+
+  /**
+   * Returns a reversed fixed-length view of this [List].
+   *
+   * The reversed list has elements in the opposite order of this list.
+   * It is backed by this list, but will stop working if this list
+   * becomes shorter than its current length.
+   */
+  List<E> get reversed => _collection.reversed;
+
   /**
    * Sorts the list according to the order specified by the [compare] function.
   *
@@ -70,7 +79,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   void sort([int compare(E a, E b)]) {
     _collection.sort(compare);
   }
-  
+
   /**
    * Returns the first index of [element] in the list.
   *
@@ -79,9 +88,9 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * the index of [:e:] is returned.
    * Returns -1 if [element] is not found.
    */
-  int indexOf(E element, [int start = 0]) => 
+  int indexOf(E element, [int start = 0]) =>
       _collection.indexOf(element, start);
-  
+
   /**
    * Returns the last index of [element] in the list.
   *
@@ -93,7 +102,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    */
   int lastIndexOf(E element, [int start]) =>
       _collection.lastIndexOf(element, start);
-  
+
   /**
    * Removes all elements in the list.
   *
@@ -104,7 +113,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   void clear() {
     _collection.clear();
   }
-  
+
   /**
    * Removes the element at position[index] from the list.
   *
@@ -118,14 +127,14 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * if the length of the list cannot be changed.
    */
   E removeAt(int index) => _collection.removeAt(index);
-  
+
   /**
    * Pops and returns the last element of the list.
    * Throws a [UnsupportedError] if the length of the
    * list cannot be changed.
    */
   E removeLast() => _collection.removeLast();
-  
+
   /**
    * Returns a new list containing [length] elements from the list,
    * starting at  [start].
@@ -134,9 +143,9 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * Throws an [RangeError] if [start] or
    * [:start + length - 1:] are out of range.
    */
-  List<E> getRange(int start, int length) => 
+  List<E> getRange(int start, int length) =>
       _collection.getRange(start, length);
-  
+
   /**
    * Copies [length] elements of [from], starting
    * at [startFrom], into the list, starting at [start].
@@ -149,7 +158,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   void setRange(int start, int length, List<E> from, [int startFrom]) {
     _collection.setRange(start, length, from, startFrom);
   }
-  
+
   /**
    * Removes [length] elements from the list, beginning at [start].
    * Throws an [UnsupportedError] if the list is
@@ -162,7 +171,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   void removeRange(int start, int length) {
     _collection.removeRange(start, length);
   }
-  
+
   /**
    * Inserts a new range into the list, starting from [start] to
    * [:start + length - 1:]. The entries are filled with [fill].
@@ -178,10 +187,10 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   void insertRange(int start, int length, [E fill]) {
     _collection.insertRange(start, length, fill);
   }
-    
-  
+
+
   // From [Collection].
-    
+
   /**
    * Adds an element to this collection.
    */
@@ -227,7 +236,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   *
    * An elements [:e:] satisfies [test] if [:test(e):] is true.
    */
-  void removeMatching(bool test(E element)) => 
+  void removeMatching(bool test(E element)) =>
       _collection.removeMatching(test);
 
   /**
@@ -235,12 +244,12 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   *
    * An elements [:e:] satisfies [test] if [:test(e):] is true.
    */
-  void retainMatching(bool test(E element)) => 
+  void retainMatching(bool test(E element)) =>
       _collection.retainMatching(test);
-    
-  
+
+
   // From [Iterable].
-  
+
   /**
    * Returns an [Iterator] that iterates over this [Iterable] object.
    */
@@ -456,8 +465,8 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * at least [index] elements in [this].
    */
   E elementAt(int index) => _collection.elementAt(index);
-  
-  
+
+
 //  /**
 //   * Check whether the collection contains an element equal to [element].
 //   */
@@ -530,12 +539,12 @@ class XmlCollection<E extends XmlNode> implements List<E> {
 //  XmlCollection<E> filter(bool f(E element))
 //  => new XmlCollection._from(_collection.where(f).toList());
 //
-  
-  
+
+
   XmlCollection<XmlElement> allElements() =>
       new XmlCollection._from(_collection.where((n) => n is XmlElement).toList());
-  
-  
+
+
 //
 //  /**
 //   * Returns true if every elements of this collection satisify the
