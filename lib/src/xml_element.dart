@@ -25,7 +25,7 @@ class XmlElement extends XmlNode {
   * Gets a [String] of any text within this [XmlElement].
   */
   String get text {
-    var tNodes = _children.filter((el) => el is XmlText);
+    var tNodes = _children.where((el) => el is XmlText);
     if (tNodes.isEmpty) return '';
 
     var s = new StringBuffer();
@@ -78,7 +78,7 @@ class XmlElement extends XmlNode {
   * scope of namespaces.
   */
   bool isNamespaceInScope(String namespace) =>
-      namespacesInScope.some((ns) => ns.name == namespace);
+      namespacesInScope.any((ns) => ns.name == namespace);
 
   /**
   * Gets the previous sibling to the this [XmlElement], or null if none exists.
@@ -125,7 +125,7 @@ class XmlElement extends XmlNode {
     }
 
     element.parent = this;
-    _children._add(element);
+    _children.add(element);
   }
 
   /**
@@ -181,7 +181,7 @@ class XmlElement extends XmlNode {
     }
 
     if (checkAttribs()){
-      list._add(this);
+      list.add(this);
       return;
     }else{
       if (hasChildren){
@@ -198,7 +198,7 @@ class XmlElement extends XmlNode {
   void _queryNodeTypeInternal(XmlNodeType nodeType,
                               XmlCollection<XmlNode> list){
     if (type == nodeType){
-      list._add(this);
+      list.add(this);
       return;
     }else{
       if (hasChildren){
@@ -209,7 +209,7 @@ class XmlElement extends XmlNode {
               el._queryNodeTypeInternal(nodeType, list);
             }else{
               if (el.type == nodeType){
-                list._add(el);
+                list.add(el);
                 return;
               }
             }
@@ -221,7 +221,7 @@ class XmlElement extends XmlNode {
   void _queryNameInternal(String tagName, XmlCollection<XmlNode> list){
 
     if (this.name == tagName){
-      list._add(this);
+      list.add(this);
       return;
     }else{
       if (hasChildren){
@@ -276,7 +276,7 @@ class XmlElement extends XmlNode {
     }
 
     if (checkAttribs()){
-      list._add(this);
+      list.add(this);
     }else{
       if (hasChildren){
         children
@@ -290,7 +290,7 @@ class XmlElement extends XmlNode {
 
   void _queryAllNodeTypesInternal(XmlNodeType nodeType, XmlCollection<XmlNode> list){
     if (type == nodeType){
-      list._add(this);
+      list.add(this);
     }else{
       if (hasChildren){
         children
@@ -299,7 +299,7 @@ class XmlElement extends XmlNode {
               el._queryAllNodeTypesInternal(nodeType, list);
             }else{
               if (el.type == nodeType){
-                list._add(el);
+                list.add(el);
               }
             }
           });
@@ -309,12 +309,12 @@ class XmlElement extends XmlNode {
 
   _queryAllNamesInternal(String tagName, XmlCollection<XmlNode> list){
     if (this.name == tagName){
-      list._add(this);
+      list.add(this);
     }
 
     if (hasChildren){
       children
-      .filter((el) => el is XmlElement)
+      .where((el) => el is XmlElement)
       .forEach((el){
         el._queryAllNamesInternal(tagName, list);
       });

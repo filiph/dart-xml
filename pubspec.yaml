@@ -4,4 +4,5 @@ version: 0.1.5
 author: John Evans <prujohn@gmail.com>
 homepage: https://github.com/prujohn/dart-xml
 dependencies:
-  unittest: 0.2.7
+  unittest:
+    sdk: unittest

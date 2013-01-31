@@ -67,11 +67,11 @@ queryTests(){
       //any book by author 'Stefan Handsomly'
       var result = books
                     .queryAll('book')
-                    .filter((e) =>
+                    .where((e) =>
                         ((e as XmlElement).query('author')[0] as XmlElement)
-                        .text == 'Stefan Handsomly');
+                        .text == 'Stefan Handsomly').toList();
 
-      Expect.isTrue(result is XmlCollection);
+//      Expect.isTrue(result is XmlCollection);
       Expect.equals(2, result.length);
       Expect.equals('book', (result[0] as XmlElement).name);
     });

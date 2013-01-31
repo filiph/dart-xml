@@ -3,6 +3,8 @@
 
 library xml_utils_prujohn;
 
+import 'dart:collection';
+
 part 'src/xml_element.dart';
 part 'src/xml_parser.dart';
 part 'src/xml_tokenizer.dart';
