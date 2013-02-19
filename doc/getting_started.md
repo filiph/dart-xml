@@ -2,14 +2,13 @@
 In your pubspec.yaml:
 
     dependencies:
-      xml:
-        git: git://github.com/prujohn/dart-xml.git	
+      xml: any
 	
 Then run pub install.
 
 Then in your application import the library:
 	
-    #import('package:xml/xml.dart');
+    import 'package:xml/xml.dart';
 
 ## API ##
 	
@@ -61,7 +60,7 @@ XML trees can be created manually in code:
 ** Experimental **
 
 Any XmlElement can be queried a number of ways.  All queries return 
-XmlCollection&lt;XmlElement&gt;, even the first-occurance queries. 
+XmlCollection&lt;XmlElement&gt;, even the first-occurrence queries.
 Query functions support these parameter types:
 
 * String (match tag name)
@@ -70,17 +69,17 @@ Query functions support these parameter types:
 
 #### Example Queries ####
     // By tag name
-    // returns the first occurance of any XmlElement matching the given tagName
+    // returns the first occurrence of any XmlElement matching the given tagName
     myXmlElement.query('div');
     myXmlElement.queryAll('div'); //returns all matches
     
     // By xml node type
-    // returns the first occurance of any XmlElement matching the XmlNodeType
+    // returns the first occurrence of any XmlElement matching the XmlNodeType
     myXmlElement.query(XmlNodeType.CDATA);
     myXmlElement.queryAll(XmlNodeType.CDATA); //returns all matches
 
     // By attribute
-    // returns the first occurance of any XmlElement that contains all of
+    // returns the first occurrence of any XmlElement that contains all of
     // the provided attributes and matching values
     myXmlElement.query({'id':'foo', 'style':'bar'});
     myXmlElement.queryAll({'id':'foo', 'style':'bar'}); //returns all matches	
