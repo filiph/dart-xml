@@ -27,7 +27,7 @@ class XmlTokenizer {
 
   const _specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
 
-  final Queue<XmlToken> _buffer = new Queue<XmlToken>();
+  final ListQueue<XmlToken> _buffer = new ListQueue<XmlToken>();
   final List<XmlToken> _tokenized = new List<XmlToken>();
   final String _xml;
   int _length;

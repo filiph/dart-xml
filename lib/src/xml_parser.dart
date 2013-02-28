@@ -8,7 +8,7 @@ part of xml_utils_prujohn;
 */
 class XmlParser {
   final String _xml;
-  final Queue<XmlElement> _scopes;
+  final ListQueue<XmlElement> _scopes;
   final bool _withQuirks;
   XmlElement _root;
 
@@ -26,7 +26,7 @@ class XmlParser {
   }
 
   XmlParser._internal(this._xml, this._withQuirks) :
-    _scopes = new Queue<XmlElement>();
+    _scopes = new ListQueue<XmlElement>();
 
   void _parseElement(XmlTokenizer t) {
 

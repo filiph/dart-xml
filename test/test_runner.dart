@@ -1,7 +1,8 @@
 library test_runner;
 
 import 'package:unittest/unittest.dart';
-import 'package:xml/xml.dart';
+//import 'package:xml/xml.dart';
+import '../lib/xml.dart';
 
 part 'parserTests.dart';
 part 'queryTests.dart';

@@ -17,6 +17,17 @@ project and expand as needed.  Pull requests will certainly be welcomed.
 
 ## Getting Started ##
 See the "getting_started.md" file in the **doc/** directory of the project.
+	
+### Parsing ###
+    // Returns a strongly-typed XmlNode tree
+    XmlElement myXmlTree = XML.parse(myXmlString);
+	
+### Serialization ###
+	// Returns a stringified xml document from a given XmlNode tree
+	String myXmlString = XML.stringify(myXmlNode);
+	
+	// or...
+	String myXmlString = myXmlNode.toString();
 
 ## Supports ##
 * Standard well-formed XML

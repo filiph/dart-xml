@@ -2,14 +2,13 @@
 In your pubspec.yaml:
 
     dependencies:
-      xml:
-        git: git://github.com/prujohn/dart-xml.git	
-	
-Then run pub install.
+      xml: any
+
+(see http://pub.dartlang.org/packages/xml for specific version constraints)
 
 Then in your application import the library:
 	
-    #import('package:xml/xml.dart');
+    import 'package:xml/xml.dart';
 
 ## API ##
 	

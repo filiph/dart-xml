@@ -81,6 +81,29 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   }
 
   /**
+   * Returns a lazy [Iterable] where each element [:e:] of [this] is replaced
+   * by the result of [:f(e):].
+   *
+   * This method returns a view of the mapped elements. As long as the
+   * returned [Iterable] is not iterated over, the supplied function [f] will
+   * not be invoked. The transformed elements will not be cached. Iterating
+   * multiple times over the the returned [Iterable] will invoke the supplied
+   * function [f] multiple times on the same element.
+   */
+  Iterable map(f(E element)) => _collection.map(f);
+
+  /**
+   * Expand each element of this [Iterable] into zero or more elements.
+   *
+   * The resulting Iterable will run through the elements returned
+   * by [f] for each element of this, in order.
+   *
+   * The returned [Iterable] is lazy, and will call [f] for each element
+   * of this every time it's iterated.
+   */
+  Iterable expand(Iterable f(E element)) => _collection.expand(f);
+
+  /**
    * Returns the first index of [element] in the list.
   *
    * Searches the list from index [start] to the length of the list.
@@ -254,18 +277,6 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * Returns an [Iterator] that iterates over this [Iterable] object.
    */
   Iterator<E> get iterator => _collection.iterator;
-
-  /**
-   * Returns a lazy [Iterable] where each element [:e:] of [this] is replaced
-   * by the result of [:f(e):].
-   *
-   * This method returns a view of the mapped elements. As long as the
-   * returned [Iterable] is not iterated over, the supplied function [f] will
-   * not be invoked. The transformed elements will not be cached. Iterating
-   * multiple times over the the returned [Iterable] will invoke the supplied
-   * function [f] multiple times on the same element.
-   */
-  Iterable mappedBy(f(E element)) => _collection.mappedBy(f);
 
   /**
     * Returns a lazy [Iterable] with all elements that satisfy the
