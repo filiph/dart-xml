@@ -237,7 +237,7 @@ class XmlParser {
       }
     }
 
-    s.add(text);
+    s.write(text);
 
     XmlToken next = t.next();
 
@@ -259,7 +259,7 @@ class XmlParser {
           s = new StringBuffer();
           break;
         default:
-          s.add(next.toStringLiteral());
+          s.write(next.toStringLiteral());
           break;
       }
 
@@ -308,10 +308,10 @@ class XmlParser {
         }
 
         if (next.kind != XmlToken.QUOTE){
-          s.add(next.toStringLiteral());
+          s.write(next.toStringLiteral());
         }else{
           if (next.quoteKind != qkind){
-            s.add(next.toStringLiteral());
+            s.write(next.toStringLiteral());
           }else{
             qkind = -1;
           }
@@ -401,10 +401,10 @@ class XmlParser {
         }
 
         if (next.kind != XmlToken.QUOTE){
-          s.add(next.toStringLiteral());
+          s.write(next.toStringLiteral());
         }else{
           if (next.quoteKind != qkind){
-            s.add(next.toStringLiteral());
+            s.write(next.toStringLiteral());
           }else{
             qkind = -1;
           }

@@ -14,8 +14,6 @@ class XmlCollection<E extends XmlNode> implements List<E> {
     _collection.addAll(list);
   }
 
-  // From [List].
-
   /**
    * Returns the element at the given [index] in the list or throws
    * an [RangeError] if [index] is out of bounds.
@@ -38,6 +36,13 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   void set length(int newLength) {
     _collection.length = newLength;
   }
+  /**
+   * Adds value at the end of the list, extending the length by one. Throws
+   * an UnsupportedError if the list is not extendable.
+   *
+   * Deprecated: Use add instead.
+   */
+  void addLast(E value) => _collection.add(value);
 
   /**
    * Adds [value] at the end of the list, extending the length by
@@ -45,13 +50,6 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * extendable.
    */
   void add(XmlNode value) => _collection.add(value);
-
-  /**
-   * Adds [value] at the end of the list, extending the length by
-   * one. Throws an [UnsupportedError] if the list is not
-   * extendable.
-   */
-  void addLast(E value) => _collection.addLast(value);
 
   /**
    * Appends all elements of the [iterable] to the end of this list.
@@ -104,8 +102,16 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   Iterable expand(Iterable f(E element)) => _collection.expand(f);
 
   /**
-   * Returns the first index of [element] in the list.
+  * Returns an unmodifiable Map view of this.
   *
+  * It has the indices of this list as keys, and the corresponding elements
+  * as values.
+  */
+  Map<int, E> asMap() => _collection.asMap();
+
+  /**
+   * Returns the first index of [element] in the list.
+   *
    * Searches the list from index [start] to the length of the list.
    * The first time an element [:e:] is encountered so that [:e == element:],
    * the index of [:e:] is returned.
@@ -337,7 +343,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    */
   bool any(bool f(E element)) => _collection.any(f);
 
-  List<E> toList() => new List<E>.from(this);
+  List<E> toList({growable : true}) => new List<E>.from(this);
   Set<E> toSet() => new Set<E>.from(this);
 
   /**

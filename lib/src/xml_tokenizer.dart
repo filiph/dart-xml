@@ -165,14 +165,14 @@ class XmlTokenizer {
     int peekUntil(List chars){
       int z = _i;
 
-      while (chars.indexOf(_xml.charCodeAt(z)) == -1){
+      while (chars.indexOf(_xml.codeUnitAt(z)) == -1){
         z++;
         if (z >= _length) break;
       }
 
       if (z >= _length) return -1;
 
-      return _xml.charCodeAt(z);
+      return _xml.codeUnitAt(z);
     }
 
     // Returns the index of the last char of a given word, if found from
@@ -181,7 +181,7 @@ class XmlTokenizer {
       int z = _i;
 
       for(int ii = 0; ii < word.length; ii++){
-        if(_xml.charCodeAt(z) != word.charCodeAt(ii)) return -1;
+        if(_xml.codeUnitAt(z) != word.codeUnitAt(ii)) return -1;
         z++;
       }
 
@@ -190,14 +190,14 @@ class XmlTokenizer {
 
     int nextNonWhitespace(int from){
 
-      while(isWhitespace(_xml.charCodeAt(from))){
+      while(isWhitespace(_xml.codeUnitAt(from))){
         from++;
       }
       return from;
     }
 
     int nextWhitespace(int from){
-      while(!isWhitespace(_xml.charCodeAt(from))){
+      while(!isWhitespace(_xml.codeUnitAt(from))){
         from++;
       }
       return from;
@@ -206,14 +206,14 @@ class XmlTokenizer {
     // Peel off and return a token if there are any in the queue.
     if (!_buffer.isEmpty) return getNextToken();
 
-    while(_i < _length && isWhitespace(_xml.charCodeAt(_i)))
+    while(_i < _length && isWhitespace(_xml.codeUnitAt(_i)))
       {
         _i++;
       }
 
     if (_i == _length) return null;
   //print('char: $_i code: ${_xml.charCodeAt(_i)} ' + _xml.substring(_i, _i+1));
-    final int char = _xml.charCodeAt(_i);
+    final int char = _xml.codeUnitAt(_i);
 
     switch(char){
       case B:
@@ -354,8 +354,8 @@ class XmlTokenizer {
           addToQueue(new XmlToken(XmlToken.NAMESPACE));
         }else{
           final s = new StringBuffer();
-          while(_i < _length && !isReserved(_xml.charCodeAt(_i))){
-            s.add(_xml.substring(_i, _i + 1));
+          while(_i < _length && !isReserved(_xml.codeUnitAt(_i))){
+            s.write(_xml.substring(_i, _i + 1));
             _i++;
           }
           addToQueue(new XmlToken.string(s.toString().trim()));

@@ -37,21 +37,21 @@ class XmlNode {
         XmlElement el = n as XmlElement;
 
         if (leadingWhiteSpace) {
-          b.add('\r${_space(indent)}');
+          b.write('\r${_space(indent)}');
         }
-        b.add('<${el.name}');
+        b.write('<${el.name}');
 
         if (el.namespaces.length > 0){
           el.namespaces.forEach((k, v) =>
-              b.add(new XmlNamespace(k, v).toString()));
+              b.write(new XmlNamespace(k, v).toString()));
         }
 
         if (el.attributes.length > 0){
           el.attributes.forEach((k, v) =>
-              b.add(new XmlAttribute(k, v).toString()));
+              b.write(new XmlAttribute(k, v).toString()));
         }
 
-        b.add('>');
+        b.write('>');
 
         if (el.hasChildren) {
           for (int i = 0; i < el.children.length; i++) {
@@ -64,22 +64,22 @@ class XmlNode {
 
         if (el.children.length > 0
             && el.children.last.type != XmlNodeType.Text) {
-          b.add('\r${_space(indent)}</${el.name}>');
+          b.write('\r${_space(indent)}</${el.name}>');
         } else {
-          b.add('</${el.name}>');
+          b.write('</${el.name}>');
         }
 
         break;
       case XmlNodeType.Namespace:
       case XmlNodeType.Attribute:
-        b.add(n.toString());
+        b.write(n.toString());
         break;
       case XmlNodeType.Text:
-        b.add('$n');
+        b.write('$n');
         break;
       case XmlNodeType.PI:
       case XmlNodeType.CDATA:
-        b.add('\r$n');
+        b.write('\r$n');
         break;
       default:
         throw new XmlException("Node Type ${n.type} is not supported.");

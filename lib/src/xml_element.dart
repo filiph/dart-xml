@@ -29,7 +29,7 @@ class XmlElement extends XmlNode {
     if (tNodes.isEmpty) return '';
 
     var s = new StringBuffer();
-    tNodes.forEach((XmlText n) => s.add(n.text));
+    tNodes.forEach((XmlText n) => s.write(n.text));
     return s.toString();
   }
 

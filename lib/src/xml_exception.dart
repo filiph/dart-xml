@@ -15,15 +15,15 @@ class XmlException implements Exception {
     if (debugXml == '') return 'Xml Exception: $msg';
 
     StringBuffer s = new StringBuffer();
-    s.add('Xml Exception: $msg');
-    s.add('\r');
+    s.write('Xml Exception: $msg');
+    s.write('\r');
 
     int bLoc = (errorLocation < 41) ? 0 : errorLocation - 40;
     int aLoc = (errorLocation > debugXml.length - 41)
         ? debugXml.length - 1
         : errorLocation + 40;
 
-    s.add(debugXml.substring(bLoc, aLoc));
+    s.write(debugXml.substring(bLoc, aLoc));
     return s.toString();
 
   }
