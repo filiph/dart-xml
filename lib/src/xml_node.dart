@@ -89,7 +89,7 @@ class XmlNode {
   static String _space(int amount) {
     StringBuffer s = new StringBuffer();
     for (int i = 0; i < amount; i++){
-      s.add(' ');
+      s.write(' ');
     }
     return s.toString();
    }
