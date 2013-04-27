@@ -131,7 +131,7 @@ class XmlElement extends XmlNode {
   /**
   * Adds a collection of [XmlNode]s to this [XmlElement].
   */
-  void addChildren(Collection<XmlNode> elements){
+  void addChildren(List<XmlNode> elements){
     if (!elements.isEmpty){
       elements.forEach((XmlNode e) => addChild(e));
     }
