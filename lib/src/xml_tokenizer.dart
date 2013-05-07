@@ -72,7 +72,7 @@ class XmlTokenizer {
     }
 
     int i = start;
-    for(final t in _tokenized.getRange(start, _tokenized.length - start)){
+    for(final t in _tokenized.skip(start).take(_tokenized.length - start)){
       if (t.kind == token.kind){
         if (t.kind == XmlToken.STRING){
           if (t._str == token._str){
@@ -132,16 +132,15 @@ class XmlTokenizer {
    * -1 if not found, otherwise returns start index of matching sequence
    * in _tokenized. No boundary checks.
    */
-  int _sequenceMatch(List<XmlToken> sequence, int index, int until){
-
-    final result = indexOfToken(sequence[0], start:index);
+  int _sequenceMatch(Iterable<XmlToken> sequence, int index, int until){
+    final result = indexOfToken(sequence.elementAt(0), start:index);
 
     if (result == -1) return -1;
 
     if (sequence.length == 1) return result;
 
     return _sequenceMatch(
-        sequence.getRange(1, sequence.length - 1),
+        sequence.skip(1).take(sequence.length - 1),
         result,
         until);
 
@@ -241,94 +240,87 @@ class XmlTokenizer {
           }
         }
 
-        switch(found)
-        {
-          case _specialTags[0]:
-            addToQueue(new XmlToken(XmlToken.START_COMMENT));
-            _i = endIndex + 1;
+        if (found == _specialTags[0]) {
+          addToQueue(new XmlToken(XmlToken.START_COMMENT));
+          _i = endIndex + 1;
+          
+          var endComment = _xml.indexOf('-->', _i);
+          var nestedTest = _xml.indexOf('<!--', _i);
+          
+          if (endComment == -1){
+            throw const XmlException('End comment tag not found.');
+          }
+          
+          if (nestedTest != -1 && nestedTest < endComment){
+            throw const XmlException('Nested comments not allowed.');
+          }
+          
+          addToQueue(new XmlToken.string(_xml.substring(_i, endComment)));
+          addToQueue(new XmlToken(XmlToken.END_COMMENT));
+          _i = endComment + 3;
+        } else if (found == _specialTags[1]) {
+          addToQueue(new XmlToken(XmlToken.START_CDATA));
+          _i = endIndex + 1;
+          
+          var endCDATA = _xml.indexOf(']]>', _i);
+          var nestedTest = _xml.indexOf('<![CDATA[', _i);
+          
+          if (endCDATA == -1){
+            throw const XmlException('End CDATA tag not found.');
+          }
+          
+          if (nestedTest != -1 && nestedTest < endCDATA){
+            throw const XmlException('Nested CDATA not allowed.');
+          }
+          
+          addToQueue(new XmlToken.string(_xml.substring(_i, endCDATA).trim()));
+          addToQueue(new XmlToken(XmlToken.END_CDATA));
+          _i = endCDATA + 3;
+        } else if (found == _specialTags[2]) {
+          addToQueue(new XmlToken(XmlToken.START_PI));
+          _i = endIndex + 1;
 
-            var endComment = _xml.indexOf('-->', _i);
-            var nestedTest = _xml.indexOf('<!--', _i);
+          var endPI= _xml.indexOf('?>', _i);
+          var nestedTest = _xml.indexOf('<?', _i);
 
-            if (endComment == -1){
-              throw const XmlException('End comment tag not found.');
-            }
+          if (endPI == -1){
+            throw const XmlException('End PI tag not found.');
+          }
 
-            if (nestedTest != -1 && nestedTest < endComment){
-              throw const XmlException('Nested comments not allowed.');
-            }
+          if (nestedTest != -1 && nestedTest < endPI){
+            throw const XmlException('Nested PI not allowed.');
+          }
 
-            addToQueue(new XmlToken.string(_xml.substring(_i, endComment)));
-            addToQueue(new XmlToken(XmlToken.END_COMMENT));
-            _i = endComment + 3;
-            break;
-          case _specialTags[1]:
-            addToQueue(new XmlToken(XmlToken.START_CDATA));
-            _i = endIndex + 1;
-
-            var endCDATA = _xml.indexOf(']]>', _i);
-            var nestedTest = _xml.indexOf('<![CDATA[', _i);
-
-            if (endCDATA == -1){
-              throw const XmlException('End CDATA tag not found.');
-            }
-
-            if (nestedTest != -1 && nestedTest < endCDATA){
-              throw const XmlException('Nested CDATA not allowed.');
-            }
-
-            addToQueue(new XmlToken.string(_xml.substring(_i, endCDATA).trim()));
-            addToQueue(new XmlToken(XmlToken.END_CDATA));
-            _i = endCDATA + 3;
-            break;
-          case _specialTags[2]:
-            addToQueue(new XmlToken(XmlToken.START_PI));
-            _i = endIndex + 1;
-
-            var endPI= _xml.indexOf('?>', _i);
-            var nestedTest = _xml.indexOf('<?', _i);
-
-            if (endPI == -1){
-              throw const XmlException('End PI tag not found.');
-            }
-
-            if (nestedTest != -1 && nestedTest < endPI){
-              throw const XmlException('Nested PI not allowed.');
-            }
-
-            addToQueue(new XmlToken.string(_xml.substring(_i, endPI).trim()));
-            addToQueue(new XmlToken(XmlToken.END_PI));
-            _i = endPI+ 2;
-            break;
-          case _specialTags[3]:
-            addToQueue(new XmlToken(XmlToken.LT));
-            addToQueue(new XmlToken(XmlToken.SLASH));
-            _i = endIndex + 1;
-            break;
-          default:
-            //standard start tag
-            _i++;
-            addToQueue(new XmlToken(XmlToken.LT));
+          addToQueue(new XmlToken.string(_xml.substring(_i, endPI).trim()));
+          addToQueue(new XmlToken(XmlToken.END_PI));
+          _i = endPI+ 2;
+        } else if (found == _specialTags[3]) {
+          addToQueue(new XmlToken(XmlToken.LT));
+          addToQueue(new XmlToken(XmlToken.SLASH));
+          _i = endIndex + 1;
+        } else {
+          //standard start tag
+          _i++;
+          addToQueue(new XmlToken(XmlToken.LT));
+          _i = nextNonWhitespace(_i);
+          int c = peekUntil([SPACE, COLON, GT]);
+          if (c == SPACE){
+            var _ii = _i;
+            _i = nextWhitespace(_ii);
+            addToQueue(new XmlToken.string(_xml.substring(_ii, _i)));
             _i = nextNonWhitespace(_i);
-            int c = peekUntil([SPACE, COLON, GT]);
-            if (c == SPACE){
-              var _ii = _i;
-              _i = nextWhitespace(_ii);
-              addToQueue(new XmlToken.string(_xml.substring(_ii, _i)));
-              _i = nextNonWhitespace(_i);
-            }else if (c == COLON){
-              var _ii = _i;
-              _i = _xml.indexOf(':', _ii) + 1;
-              addToQueue(new XmlToken.string(_xml.substring(_ii, _i - 1)));
-              addToQueue(new XmlToken(XmlToken.COLON));
-              _ii = nextWhitespace(_i);
-              addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
-              _i = nextNonWhitespace(_ii);
-            }else if (c == -1){
-              throw new XmlException('Tokenzier unexpectedly reached end of'
-                  ' document.');
-            }
-            break;
+          }else if (c == COLON){
+            var _ii = _i;
+            _i = _xml.indexOf(':', _ii) + 1;
+            addToQueue(new XmlToken.string(_xml.substring(_ii, _i - 1)));
+            addToQueue(new XmlToken(XmlToken.COLON));
+            _ii = nextWhitespace(_i);
+            addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
+            _i = nextNonWhitespace(_ii);
+          }else if (c == -1){
+            throw new XmlException('Tokenzier unexpectedly reached end of'
+                ' document.');
+          }
         }
         break;
       case GT:
