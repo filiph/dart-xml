@@ -9,7 +9,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   XmlCollection._internal() :
       _collection = new List<E>();
 
-  XmlCollection._from(Collection<E> list) :
+  XmlCollection._from(Iterable<E> list) :
       _collection = new List<E>() {
     _collection.addAll(list);
   }
@@ -213,7 +213,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * [start] is greater than the length of the list.
    */
   void insertRange(int start, int length, [E fill]) {
-    _collection.insertRange(start, length, fill);
+    _collection.fillRange(start, length, fill);
   }
 
 
@@ -249,7 +249,11 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * Equivalent to calling [remove] once for each element in
    * [elements], but may be faster for some collections.
    */
-  void removeAll(Iterable elements) => _collection.removeAll(elements);
+  void removeAll(Iterable elements) {
+    for (var element in elements) {
+      _collection.remove(element);
+    }
+  }
 
   /**
    * Removes all elements of this collection that are not
@@ -257,7 +261,9 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   *
    * For [Set]s, this is the intersection of the two original sets.
    */
-  void retainAll(Iterable elements) => _collection.retainAll(elements);
+  void retainAll(Iterable elements) {
+    _collection.retainWhere((e) => elements.contains(e));
+  }
 
   // From [Iterable].
 
