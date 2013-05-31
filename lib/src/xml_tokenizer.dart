@@ -314,7 +314,7 @@ class XmlTokenizer {
             _i = _xml.indexOf(':', _ii) + 1;
             addToQueue(new XmlToken.string(_xml.substring(_ii, _i - 1)));
             addToQueue(new XmlToken(XmlToken.COLON));
-            _ii = nextWhitespace(_i);
+            _ii = _xml.indexOf(new String.fromCharCode(peekUntil([SPACE, SLASH, GT])), _i);
             addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
             _i = nextNonWhitespace(_ii);
           }else if (c == -1){
