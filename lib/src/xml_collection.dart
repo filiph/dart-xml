@@ -194,7 +194,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * If [length] is 0, this method does not do anything.
    * Throws an [ArgumentError] if [length] is negative.
    * Throws an [RangeError] if [start] or
-   * [:start + length: - 1] are out of range.
+   * [:start + length - 1:] are out of range.
    */
   void removeRange(int start, int length) {
     _collection.removeRange(start, length);
