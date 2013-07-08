@@ -56,6 +56,8 @@ const String testXml =
    <foo bar="nested 'quotes 'are' cool' and are 'ok'"></foo>
    <test:blah test:attr="rtta" flower="power"></test:blah>
    <foo bar='nested "quotes "are" cool" and are "ok"'></foo>
+   <bar baz=' one space before, two after  '></bar>
+   <bar baz=" one space before, two after  "></bar>
    text node
    <Border xmlns:foons='http://www.foo.org' xmlns:barns='http://www.bar.org'>
 <![CDATA[

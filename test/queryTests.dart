@@ -37,6 +37,13 @@ queryTests(){
       expect('hello world!', equals((result[1] as XmlElement).attributes['text']));
     });
 
+    test('leading and trailing spaces on tag attributes are respected', (){
+      var parsed = XML.parse(testXml);
+
+      var result = parsed.queryAll({'baz':' one space before, two after  '});
+      expect(2, equals(result.length));
+    });
+
     test('all on XmlNodeType succeeds', (){
       var parsed = XML.parse(testXml);
 

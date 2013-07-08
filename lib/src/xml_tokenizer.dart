@@ -20,6 +20,10 @@ class XmlTokenizer {
   static const int DASH = 45; //-
   static const int RBRACK = 93; //]
 
+  static const String ERR_UNEXPECTED_END = 'Tokenizer unexpectedly reached end of document';
+
+  bool isInTag = false;
+
   static const List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
                                       SQUOTE, EQ];
 
@@ -318,14 +322,15 @@ class XmlTokenizer {
             addToQueue(new XmlToken.string(_xml.substring(_i, _ii)));
             _i = nextNonWhitespace(_ii);
           }else if (c == -1){
-            throw new XmlException('Tokenzier unexpectedly reached end of'
-                ' document.');
+            throw new XmlException(ERR_UNEXPECTED_END);
           }
+          isInTag = true;
         }
         break;
       case GT:
         _i++;
         addToQueue(new XmlToken(XmlToken.GT));
+        isInTag = false;
         break;
       case EQ:
         _i++;
@@ -334,10 +339,34 @@ class XmlTokenizer {
       case QUOTE:
         _i++;
         addToQueue(new XmlToken.quote(QUOTE));
+        if (isInTag) {
+          if (peekUntil([QUOTE]) == QUOTE) {
+            var _ii = _i;
+            _i = _xml.indexOf('"', _ii);
+            addToQueue(new XmlToken.string(_xml.substring(_ii, _i)));
+
+            _i++;
+            addToQueue(new XmlToken.quote(QUOTE));
+          } else {
+            throw new XmlException(ERR_UNEXPECTED_END);
+          }
+        }
         break;
       case SQUOTE:
         _i++;
         addToQueue(new XmlToken.quote(SQUOTE));
+        if (isInTag) {
+          if (peekUntil([SQUOTE]) == SQUOTE) {
+            var _ii = _i;
+            _i = _xml.indexOf("'", _ii);
+            addToQueue(new XmlToken.string(_xml.substring(_ii, _i)));
+
+            _i++;
+            addToQueue(new XmlToken.quote(SQUOTE));
+          } else {
+            throw new XmlException(ERR_UNEXPECTED_END);
+          }
+        }
         break;
       default:
         var m = matchWord('xmlns:');
