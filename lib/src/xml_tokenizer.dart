@@ -22,8 +22,6 @@ class XmlTokenizer {
 
   static const String ERR_UNEXPECTED_END = 'Tokenizer unexpectedly reached end of document';
 
-  bool isInTag = false;
-
   static const List _reserved = const [LT, GT, B, COLON, SLASH, QUOTE,
                                       SQUOTE, EQ];
 
@@ -37,6 +35,7 @@ class XmlTokenizer {
   int _length;
   int _i = 0;
   int _index = -1;
+  bool _isInTag = false;
 
   int get lastTokenIndex => _index;
 
@@ -324,13 +323,13 @@ class XmlTokenizer {
           }else if (c == -1){
             throw new XmlException(ERR_UNEXPECTED_END);
           }
-          isInTag = true;
+          _isInTag = true;
         }
         break;
       case GT:
         _i++;
         addToQueue(new XmlToken(XmlToken.GT));
-        isInTag = false;
+        _isInTag = false;
         break;
       case EQ:
         _i++;
@@ -339,7 +338,7 @@ class XmlTokenizer {
       case QUOTE:
         _i++;
         addToQueue(new XmlToken.quote(QUOTE));
-        if (isInTag) {
+        if (_isInTag) {
           if (peekUntil([QUOTE]) == QUOTE) {
             var _ii = _i;
             _i = _xml.indexOf('"', _ii);
@@ -355,7 +354,7 @@ class XmlTokenizer {
       case SQUOTE:
         _i++;
         addToQueue(new XmlToken.quote(SQUOTE));
-        if (isInTag) {
+        if (_isInTag) {
           if (peekUntil([SQUOTE]) == SQUOTE) {
             var _ii = _i;
             _i = _xml.indexOf("'", _ii);
