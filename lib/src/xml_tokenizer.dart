@@ -25,7 +25,7 @@ class XmlTokenizer {
 
   static const List _whiteSpace = const[SPACE, TAB, NEW_LINE, CARRIAGE_RETURN];
 
-  const _specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
+  static const _specialTags = const ['<!--', '<![CDATA[', '<?', '</'];
 
   final ListQueue<XmlToken> _buffer = new ListQueue<XmlToken>();
   final List<XmlToken> _tokenized = new List<XmlToken>();
@@ -243,36 +243,36 @@ class XmlTokenizer {
         if (found == _specialTags[0]) {
           addToQueue(new XmlToken(XmlToken.START_COMMENT));
           _i = endIndex + 1;
-          
+
           var endComment = _xml.indexOf('-->', _i);
           var nestedTest = _xml.indexOf('<!--', _i);
-          
+
           if (endComment == -1){
             throw const XmlException('End comment tag not found.');
           }
-          
+
           if (nestedTest != -1 && nestedTest < endComment){
             throw const XmlException('Nested comments not allowed.');
           }
-          
+
           addToQueue(new XmlToken.string(_xml.substring(_i, endComment)));
           addToQueue(new XmlToken(XmlToken.END_COMMENT));
           _i = endComment + 3;
         } else if (found == _specialTags[1]) {
           addToQueue(new XmlToken(XmlToken.START_CDATA));
           _i = endIndex + 1;
-          
+
           var endCDATA = _xml.indexOf(']]>', _i);
           var nestedTest = _xml.indexOf('<![CDATA[', _i);
-          
+
           if (endCDATA == -1){
             throw const XmlException('End CDATA tag not found.');
           }
-          
+
           if (nestedTest != -1 && nestedTest < endCDATA){
             throw const XmlException('Nested CDATA not allowed.');
           }
-          
+
           addToQueue(new XmlToken.string(_xml.substring(_i, endCDATA).trim()));
           addToQueue(new XmlToken(XmlToken.END_CDATA));
           _i = endCDATA + 3;

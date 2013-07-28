@@ -69,6 +69,28 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   List<E> sublist(int start, [int end]) => _collection.sublist(start, end);
 
   /**
+   * Returns an [Iterable] that iterates over the elements in the range
+   * [start] to [end] exclusive. The result of this function
+   * is backed by `this`.
+   *
+   * It is an error if [end] is before [start].
+   *
+   * It is an error if the [start] and [end] are not valid ranges at the time
+   * of the call to this method. The returned [Iterable] behaves similar to
+   * `skip(start).take(end - start)`. That is, it will not throw exceptions
+   * if `this` changes size.
+   *
+   * Example:
+   *
+   *     var list = [1, 2, 3, 4, 5];
+   *     var range = list.getRange(1, 4);
+   *     print(range.join(', '));  // => 2, 3, 4
+   *     list.length = 3;
+   *     print(range.join(', '));  // => 2, 3
+   */
+  List<E> getRange(int start, int end) => _collection.getRange(start, end);
+
+  /**
    * Returns a reversed fixed-length view of this [List].
    *
    * The reversed list has elements in the opposite order of this list.
@@ -110,6 +132,22 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * of this every time it's iterated.
    */
   Iterable expand(Iterable f(E element)) => _collection.expand(f);
+
+  /**
+   * Removes the elements in the range [start] to [end] exclusive and replaces
+   * them with the contents of the [iterable].
+   *
+   * It is an error if [start]..[end] is not a valid range pointing into the
+   * `this`.
+   *
+   * Example:
+   *
+   *     var list = [1, 2, 3, 4, 5];
+   *     list.replaceRange(1, 3, [6, 7, 8, 9]);
+   *     print(list);  // [1, 6, 7, 8, 9, 4, 5]
+   */
+  void replaceRange(int start, int end, Iterable<E> iterable) =>
+      _collection.replaceRange(start, end, iterable);
 
   /**
   * Returns an unmodifiable Map view of this.
@@ -201,6 +239,17 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   }
 
   /**
+   * Sets the elements in the range [start] to [end] exclusive to the given
+   * [fillValue].
+   *
+   * It is an error if [start]..[end] is not a valid range pointing into the
+   * `this`.
+   */
+  void fillRange(int start, int end, [E fillValue]) {
+    _collection.fillRange(start, end, fillValue);
+  }
+
+  /**
    * Inserts a new range into the list, starting from [start] to
    * [:start + length - 1:]. The entries are filled with [fill].
    * Throws an [UnsupportedError] if the list is
@@ -233,6 +282,20 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   //void addAll(Iterable<E> elements) => _collection.addAll(elements);
 
   /**
+   * Overwrites elements of `this` with the elemenst of [iterable] starting
+   * at position [index] in the list.
+   *
+   * This operation does not increase the length of `this`.
+   *
+   * It is an error if the [index] does not point inside the list or at the
+   * position after the last element.
+   *
+   * It is an error if the [iterable] is longer than [length] - [index].
+   */
+  void setAll(int index, Iterable<E> iterable) =>
+      _collection.setAll(index, iterable);
+
+  /**
    * Removes an instance of [element] from this collection.
   *
    * This removes only one instance of the element for collections that can
@@ -241,7 +304,7 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   *
    * Has no effect if the elements is not in this collection.
    */
-  void remove(E element) => _collection.remove(element);
+  bool remove(E element) => _collection.remove(element);
 
   /**
    * Removes all of [elements] from this collection.
@@ -297,18 +360,33 @@ class XmlCollection<E extends XmlNode> implements List<E> {
   }
 
   /**
-   * Reduce a collection to a single value by iteratively combining each element
-   * of the collection with an existing value using the provided function.
+   * Reduces a collection to a single value by iteratively combining elements
+   * of the collection using the provided function.
+   *
+   * Example of calculating the sum of an iterable:
+   *
+   *     iterable.reduce((value, element) => value + element);
+   *
+   */
+  dynamic reduce(dynamic combine(var value, E element)) =>
+      _collection.reduce(combine);
+
+  /**
+   * Reduces a collection to a single value by iteratively combining each
+   * element of the collection with an existing value using the provided
+   * function.
+   *
    * Use [initialValue] as the initial value, and the function [combine] to
    * create a new value from the previous one and an element.
    *
-   * Example of calculating the sum of a collection:
+   * Example of calculating the sum of an iterable:
    *
-   *   collection.reduce(0, (prev, element) => prev + element);
+   *     iterable.fold(0, (prev, element) => prev + element);
+   *
    */
-  dynamic reduce(var initialValue,
-                 dynamic combine(var previousValue, E element)) =>
-      _collection.reduce(initialValue, combine);
+  dynamic fold(var initialValue,
+               dynamic combine(var previousValue, E element)) =>
+                   _collection.fold(initialValue, combine);
 
   /**
    * Returns true if every elements of this collection satisify the
@@ -346,6 +424,11 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    * Returns true if there is no element in this collection.
    */
   bool get isEmpty => _collection.isEmpty;
+
+  /**
+   * Returns true if there is at least one element in this collection.
+   */
+  bool get isNotEmpty => _collection.isNotEmpty;
 
   /**
    * Returns an [Iterable] with at most [n] elements.
@@ -470,6 +553,17 @@ class XmlCollection<E extends XmlNode> implements List<E> {
    */
   void insert(int index, E element) => _collection.insert(index, element);
 
+  /**
+   * Inserts all elements of [iterable] at position [index] in the list.
+   *
+   * This increases the length of the list by the length of [iterable] and
+   * shifts all later elements towards the end of the list.
+   *
+   * It is an error if the [index] does not point inside the list or at the
+   * position after the last element.
+   */
+  void insertAll(int index, Iterable<E> iterable) =>
+      _collection.insertAll(index, iterable);
 
 
 //  /**
