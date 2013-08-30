@@ -30,6 +30,36 @@ parserTests(){
       expect('foo', equals(result.name));
     });
 
+    test('empty namespaced element', (){
+      var xml = '''
+        <foo xmlns:test="http://www.dartlang.org">
+          <test:bar/>
+        </foo>
+      ''';
+      
+      var result = XML.parse(xml);
+      expect('foo', equals(result.name));
+      
+      var element = result.children[0] as XmlElement;
+      expect(element.name, equals("test:bar"));
+      expect(element.isNamespaceInScope('test'), isTrue);
+    });
+
+    test('namespaced element with attributes', (){
+      var xml = '''
+        <foo xmlns:test="http://www.dartlang.org">
+          <test:bar id="1"/>
+        </foo>
+      ''';
+      
+      var result = XML.parse(xml);
+      expect('foo', equals(result.name));
+      
+      var element = result.children[0] as XmlElement;
+      expect(element.name, equals("test:bar"));
+      expect(element.isNamespaceInScope('test'), isTrue);
+    });
+
     test('throw on no close tag', (){
       expect(() => XML.parse('<foo><bar></bar>'), throwsA(new isInstanceOf<XmlException>()));
     });
