@@ -21,7 +21,7 @@ tokenizerTests(){
 
     test('indexOfToken() return correct index if double quote found', (){
       var result = t.indexOfToken(new XmlToken.quote(XmlTokenizer.QUOTE));
-      expect(36, equals(result), reason:'Match should be found.');
+      expect(31, equals(result), reason:'Match should be found.');
     });
 
     test('indexOfToken() return correct index if single quote found', (){
@@ -35,8 +35,8 @@ tokenizerTests(){
     });
 
     test('indexOfToken() last token index correct', (){
-      var result = t.indexOfToken(new XmlToken(XmlToken.END_COMMENT), start: 183);
-      expect(183, equals(result), reason:'Match should be found.');
+      var result = t.indexOfToken(new XmlToken(XmlToken.END_COMMENT), start: 171);
+      expect(171, equals(result), reason:'Match should be found.');
     });
 
     test('lookAheadMatch() false when token not found.', (){
