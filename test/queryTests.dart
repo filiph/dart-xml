@@ -7,16 +7,16 @@ queryTests(){
     test('single tag name query succeeds', (){
       var parsed = XML.parse(testXml);
       var result = parsed.query('TextBlock');
-      Expect.equals(1, result.length);
-      Expect.equals('hello', ((result[0] as XmlElement) as XmlElement).attributes['text']);
+      expect(1, equals(result.length));
+      expect('hello', equals(((result[0] as XmlElement) as XmlElement).attributes['text']));
     });
 
     test('single XmlNodeType query succeeds', (){
       var parsed = XML.parse(testXml);
 
       var result = parsed.query(XmlNodeType.CDATA);
-      Expect.equals(1, result.length);
-      Expect.isTrue(result[0] is XmlCDATA);
+      expect(1, equals(result.length));
+      expect(result[0] is XmlCDATA, isTrue);
     });
 
     test('single attribute match query succeeds', (){
@@ -24,41 +24,48 @@ queryTests(){
 
       var result = parsed.query({'text':'hello world!'});
 
-      Expect.equals(1, result.length);
-      Expect.equals('hello world!', (result[0] as XmlElement).attributes['text']);
+      expect(1, equals(result.length));
+      expect('hello world!', equals((result[0] as XmlElement).attributes['text']));
     });
 
     test('all on tag name succeeds', (){
       var parsed = XML.parse(testXml);
 
       var result = parsed.queryAll('TextBlock');
-      Expect.equals(2, result.length);
-      Expect.equals('hello', (result[0] as XmlElement).attributes['text']);
-      Expect.equals('hello world!', (result[1] as XmlElement).attributes['text']);
+      expect(2, equals(result.length));
+      expect('hello', equals((result[0] as XmlElement).attributes['text']));
+      expect('hello world!', equals((result[1] as XmlElement).attributes['text']));
+    });
+
+    test('leading and trailing spaces on tag attributes are respected', (){
+      var parsed = XML.parse(testXml);
+
+      var result = parsed.queryAll({'baz':' one space before, two after  '});
+      expect(2, equals(result.length));
     });
 
     test('all on XmlNodeType succeeds', (){
       var parsed = XML.parse(testXml);
 
       var result = parsed.queryAll(XmlNodeType.PI);
-      Expect.equals(2, result.length);
-      Expect.isTrue(result[0] is XmlProcessingInstruction);
-      Expect.isTrue(result[1] is XmlProcessingInstruction);
-      Expect.equals('hello world', (result[0] as XmlProcessingInstruction).text);
-      Expect.equals('PI entry #2', (result[1] as XmlProcessingInstruction).text);
+      expect(2, equals(result.length));
+      expect(result[0] is XmlProcessingInstruction, isTrue);
+      expect(result[1] is XmlProcessingInstruction, isTrue);
+      expect('hello world', equals((result[0] as XmlProcessingInstruction).text));
+      expect('PI entry #2', equals((result[1] as XmlProcessingInstruction).text));
     });
 
     test('all on attributes succeeds', (){
       var parsed = XML.parse(testXml);
 
       var result = parsed.queryAll({'fontSize':'12'});
-      Expect.equals(2, result.length);
-      Expect.isTrue((result[0] as XmlElement) is XmlElement);
-      Expect.isTrue((result[1] as XmlElement) is XmlElement);
-      Expect.equals('12', (result[0] as XmlElement).attributes['fontSize']);
-      Expect.equals('12', (result[1] as XmlElement).attributes['fontSize']);
-      Expect.equals('hello', (result[0] as XmlElement).attributes['text']);
-      Expect.equals('hello world!', (result[1] as XmlElement).attributes['text']);
+      expect(2, equals(result.length));
+      expect((result[0] as XmlElement) is XmlElement, isTrue);
+      expect((result[1] as XmlElement) is XmlElement, isTrue);
+      expect('12', equals((result[0] as XmlElement).attributes['fontSize']));
+      expect('12', equals((result[1] as XmlElement).attributes['fontSize']));
+      expect('hello', equals((result[0] as XmlElement).attributes['text']));
+      expect('hello world!', equals((result[1] as XmlElement).attributes['text']));
     });
 
     test('Xml DB query', (){
@@ -71,9 +78,9 @@ queryTests(){
                         ((e as XmlElement).query('author')[0] as XmlElement)
                         .text == 'Stefan Handsomly').toList();
 
-//      Expect.isTrue(result is XmlCollection);
-      Expect.equals(2, result.length);
-      Expect.equals('book', (result[0] as XmlElement).name);
+//      expect(result is XmlCollection, isTrue);
+      expect(2, equals(result.length));
+      expect('book', equals((result[0] as XmlElement).name));
     });
 
   });

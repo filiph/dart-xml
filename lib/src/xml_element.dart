@@ -53,13 +53,13 @@ class XmlElement extends XmlNode {
   /**
   * Gets a collection of siblings related to this [XmlElement].
   */
-  Collection<XmlNode> get siblings => parent.children;
+  Iterable<XmlNode> get siblings => parent.children;
 
   /**
   * Gets a collection of [XmlNamespace]s that are in scope to this
   * [XmlElement].
   */
-  Collection<XmlNamespace> get namespacesInScope {
+  Iterable<XmlNamespace> get namespacesInScope {
     List<XmlNamespace> l = [];
 
     _namespaces.forEach((nname, uri){
@@ -131,7 +131,7 @@ class XmlElement extends XmlNode {
   /**
   * Adds a collection of [XmlNode]s to this [XmlElement].
   */
-  void addChildren(Collection<XmlNode> elements){
+  void addChildren(List<XmlNode> elements){
     if (!elements.isEmpty){
       elements.forEach((XmlNode e) => addChild(e));
     }
